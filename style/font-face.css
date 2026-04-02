@@ -1,0 +1,68 @@
+ 
+/* =========================
+   CANELA — PRIMARY SERIF
+   ========================= */
+
+   @font-face {
+    font-family: "Canela";
+    src: url("/fonts/canela/Canela-Regular-Trial.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "Canela";
+    src: url("/fonts/canela/Canela-Medium-Trial.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "Canela";
+    src: url("/fonts/canela/Canela-Bold-Trial.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  
+  
+  
+/* ================================
+   Suisse Int’l
+   ================================ */
+
+   @font-face {
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl/SuisseIntlTrial-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl/SuisseIntlTrial-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl/SuisseIntlTrial-Semibold.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl/SuisseIntlTrial-Bold.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
