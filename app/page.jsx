@@ -238,7 +238,7 @@ function Experience() {
           <div>
             <div className="w-full h-[420px] overflow-hidden">
               <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776060335/50_yts9sx.png"
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/50_iborxy.webp"
                 alt="Open deck"
                 className="w-full h-full object-cover object-[center_65%]"
               />
