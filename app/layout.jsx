@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import Navbar from '../components/Navbar'
  
 export const metadata = {
   title: "Serenity Yacht",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
 
       <body className="antialiased">
         <Providers>
+          <Navbar />
           {children}
         </Providers>
       </body>

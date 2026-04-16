@@ -14,16 +14,19 @@ export default function Home() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
       <Hero />
+      <Introduction/>
       <QuickContext/>
       <Experience/>
+      {/* <Activities/> */}
       <Destinations/>
-      <Activities/>
+      <Yacht/>
+      {/* <Included/> */}
       {/* <OnBoard/> */}
       <About/>
       {/* <JourneyFlowSection/> */}
       {/* <YachtSection/> */}
       {/* <GalleryStrip/> */}
-      {/* <Reflections/> */}
+      {/* <Testimonials/> */}
       <Social/>
       <Closing/>
       {/* <Statement/> */}
@@ -41,8 +44,6 @@ export default function Home() {
    HERO SECTION
 ========================= */
 function Hero() {
-  const [open, setOpen] = useState(false);
-
   const bgRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -88,33 +89,9 @@ function Hero() {
           className="object-cover"
         />
 
-        {/* 🔥 BALIK KE DENSITY AWAL (TEBAL) */}
+        {/* OVERLAY */}
         <div className="absolute inset-0 bg-[#2D3C68]/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/40 via-[#2D3C68]/15 to-transparent" />
-      </div>
-
-      {/* NAV */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-[1200px]">
-        <div className="flex items-center justify-between px-6 py-3 text-[#F4F5F2]">
-
-          <button
-            onClick={() => setOpen(true)}
-            className="text-[12px] tracking-[0.25em] opacity-90 hover:opacity-100 transition"
-          >
-            MENU
-          </button>
-
-          <img
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776050011/SERENITY_LOGO-02_u1bcf2.png"
-            alt="Serenity"
-            className="h-[34px] md:h-[42px] opacity-95"
-          />
-
-          <button className="text-[12px] tracking-[0.25em] border border-[#F4F5F2]/50 px-4 py-1.5 rounded-full hover:bg-[#F4F5F2] hover:text-[#2D3C68] hover:border-[#F4F5F2] transition">
-            RESERVE
-          </button>
-
-        </div>
       </div>
 
       {/* CONTENT */}
@@ -161,97 +138,152 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* MENU */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-[#2D3C68] z-50 text-[#F4F5F2] flex flex-col justify-between px-10 py-10"
-          >
-
-            <div className="flex justify-between items-center">
-              <div className="text-[12px] tracking-[0.3em] opacity-80">
-                SERENITY
-              </div>
-
-              <button
-                onClick={() => setOpen(false)}
-                className="text-[12px] tracking-[0.3em] opacity-80"
-              >
-                CLOSE
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-6 text-[32px] md:text-[44px] font-[Gambarino]">
-              <a className="opacity-80 hover:opacity-100 transition">
-                Journeys
-              </a>
-              <a className="opacity-80 hover:opacity-100 transition">
-                The Yacht
-              </a>
-              <a className="opacity-80 hover:opacity-100 transition">
-                Destinations
-              </a>
-              <a className="opacity-80 hover:opacity-100 transition">
-                Contact
-              </a>
-            </div>
-
-            <div className="text-[12px] text-[#F4F5F2]/40">
-              Indonesia — Serenity Yacht
-            </div>
-
-          </motion.div>
-        )}
-      </AnimatePresence>
-
     </section>
   );
 }
 
+function Introduction() {
+  return (
+    <section
+      className="relative w-full bg-[#F4F5F2] py-32 px-6 overflow-hidden"
+      aria-label="Introduction"
+    >
+       {/* ================= TOP TRANSITION ================= */}
+       <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/15 to-transparent pointer-events-none" />
+       
+      <div className="max-w-5xl mx-auto relative text-center">
+
+        {/* LABEL */}
+        <div className="text-[10px] tracking-[0.4em] text-[#2D3C68]/60 mb-5 uppercase">
+          Experience
+        </div>
+
+        {/* HEADLINE */}
+        <h2 className="font-[Gambarino]  text-[48px] md:text-[64px] leading-[1.06] tracking-[-0.025em] text-[#2D3C68] max-w-[500px] mx-auto">
+          A way of living at your pace
+        </h2>
+
+        {/* DESCRIPTION */}
+        <p className="mt-6 text-[#2D3C68]/70 max-w-[400px] mx-auto text-[13px] leading-[1.6]">
+          Move with the rhythm of the ocean. Wake slowly, dive freely,
+          gather without effort. Serenity is not something you visit —
+          it is something you step into.
+        </p>
+
+        {/* CTA */}
+        <div className="mt-8">
+          <button
+            type="button"
+            className="group px-6 py-3 text-[12px] tracking-[0.15em] border border-[#2D3C68]/30 rounded-full text-[#2D3C68] transition-all duration-500 hover:bg-[#2D3C68] hover:text-white hover:border-[#2D3C68]"
+          >
+            <span className="inline-block transition-transform duration-500 group-hover:translate-x-[2px]">
+              Discover the Experience →
+            </span>
+          </button>
+        </div>
+
+        {/* CENTER IMAGE */}
+        <div className="mt-20 max-w-[340px] mx-auto">
+          <div className="aspect-[4/5] overflow-hidden relative">
+            <Image
+              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/40_oxbvdi.webp"
+              alt="Life on board Serenity yacht"
+              fill
+              sizes="(max-width: 768px) 100vw, 340px"
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
+
+      </div>
+
+      {/* ================= ORBIT (NON-INTERACTIVE) ================= */}
+
+      {/* LEFT */}
+      <div className="pointer-events-none absolute left-[12%] top-[28%] w-[180px] hidden lg:block">
+        <div className="aspect-[4/5] overflow-hidden relative">
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+            alt="Open sea moment"
+            fill
+            sizes="180px"
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      {/* RIGHT */}
+      <div className="pointer-events-none absolute right-[10%] top-[36%] w-[200px] hidden lg:block">
+        <div className="aspect-[4/5] overflow-hidden relative">
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
+            alt="Interior space on board"
+            fill
+            sizes="200px"
+            className="object-cover"
+          />
+        </div>
+      </div>
+
+      {/* RIGHT LOWER */}
+      <div className="pointer-events-none absolute right-[22%] bottom-[20%] w-[160px] hidden lg:block">
+        <div className="aspect-[4/5] overflow-hidden relative">
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068965/37_rlznw3.webp"
+            alt="Ocean environment"
+            fill
+            sizes="160px"
+            className="object-cover"
+          />
+        </div>
+      </div> 
+    </section>
+  );
+}
+
+
+
 function QuickContext() {
   return (
-    <section className="w-full bg-[#F4F5F2] py-12 md:py-16 border-t border-[#2D3C68]/10 border-b border-[#2D3C68]/10">
+    <section className="w-full bg-[#2D3C68] py-14 md:py-20">
+
       <div className="max-w-[1100px] mx-auto px-6">
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-0 text-center">
 
-          {/* ITEM */}
           <div>
-            <div className="text-[28px] md:text-[34px] font-[Gambarino] text-[#2D3C68]">
+            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
               12
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-[#2D3C68]/60">
+            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
               GUESTS
             </div>
           </div>
 
           <div>
-            <div className="text-[28px] md:text-[34px] font-[Gambarino] text-[#2D3C68]">
+            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
               4
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-[#2D3C68]/60">
+            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
               CABINS
             </div>
           </div>
 
           <div>
-            <div className="text-[28px] md:text-[34px] font-[Gambarino] text-[#2D3C68]">
+            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
               10
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-[#2D3C68]/60">
+            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
               CREW
             </div>
           </div>
 
           <div>
-            <div className="text-[28px] md:text-[34px] font-[Gambarino] text-[#2D3C68]">
+            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
               Phinisi
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-[#2D3C68]/60">
+            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
               INDONESIA
             </div>
           </div>
@@ -266,12 +298,9 @@ function QuickContext() {
 
 function Experience() {
   return (
-    <section className="relative bg-[#F4F5F2] pt-[180px] pb-[140px] px-6 overflow-hidden">
+    <section className="relative bg-[#F4F5F2] pt-[180px] pb-[100px] px-6 overflow-hidden">
 
-      {/* ================= TOP TRANSITION ================= */}
-      <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/15 to-transparent pointer-events-none" />
-
-      <div className="max-w-[1200px] mx-auto">
+      <div className="max-w-[980px] mx-auto">
 
         {/* ================= HEADER ================= */}
         <div className="text-center max-w-[720px] mx-auto mb-24">
@@ -280,82 +309,87 @@ function Experience() {
             On Board
           </p>
 
-          {/* SIGNATURE (SUBTLE BLUE) */}
-          <h2 className="mt-6 font-[Gambarino] text-[48px] md:text-[64px] leading-[1.06] tracking-[-0.025em] text-[#2D3C68]">
+          <h2 className="mt-6 font-[Gambarino] text-[40px] sm:text-[56px] leading-[1.1] tracking-[-0.01em] text-[#2D3C68]">
             Life on board, as it happens
           </h2>
 
           <p className="mt-7 text-[16px] text-[#5C5C5C] leading-relaxed max-w-[560px] mx-auto">
-          Days move between the deck, the water, and time in between. Nothing is fixed, but everything finds its place.
+            Days move between the deck, the water, and time in between. Nothing is fixed, but everything finds its place.
           </p>
 
         </div>
 
         {/* ================= GRID ================= */}
-        <div className="grid md:grid-cols-2 gap-16 items-start">
+        <div className="grid md:grid-cols-2 gap-10 items-start">
 
           {/* ================= LEFT ================= */}
-          <div>
+          <div className="flex justify-center">
 
-            <div className="relative w-full h-[440px] overflow-hidden rounded-[2px]">
-              <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176459/Afternoon_conversation_on_a_wooden_yacht_vqbsb4.png"
-                alt="Open deck"
-                className="w-full h-full object-cover object-[center_65%] scale-[1.03]"
-              />
+            <div>
 
-              {/* subtle depth */}
-              <div className="absolute inset-0 bg-black/5" />
-            </div>
-
-            <div className="mt-9">
-              <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
-                Open Deck Living
-              </h3>
-
-              <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[480px]">
-              Most of the day unfolds outside — between the sun, the sea, and conversations that stretch without a plan.
-              </p>
-
-              {/* LOW-INTENSITY CTA */}
-              <div className="mt-6">
-                <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
-                  Explore deck →
-                </button>
+              {/* 4:5 FRAME (BIGGER) */}
+              <div className="relative w-[420px] aspect-[4/5] overflow-hidden rounded-[2px]">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+                  alt="Open deck"
+                  className="w-full h-full object-cover object-[center_65%] scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-black/5" />
               </div>
+
+              <div className="mt-9">
+                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
+                  Open Deck Living
+                </h3>
+
+                <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[440px]">
+                  Most of the day unfolds outside — between the sun, the sea, and conversations that stretch without a plan.
+                </p>
+
+                <div className="mt-6">
+                  <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
+                    Explore deck →
+                  </button>
+                </div>
+              </div>
+
             </div>
+
           </div>
 
-          {/* ================= RIGHT (OFFSET) ================= */}
-          <div className="md:mt-[100px]">
+          {/* ================= RIGHT ================= */}
+          <div className="flex justify-center md:mt-[80px]">
 
-            <div className="relative w-full h-[420px] overflow-hidden rounded-[2px]">
-              <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176459/Relaxing_aboard_a_phinisi_yacht_ki4dkw.png"
-                alt="Private cabin"
-                className="w-full h-full object-cover object-[center_60%] scale-[1.02]"
-              />
+            <div>
 
-              {/* subtle depth */}
-              <div className="absolute inset-0 bg-black/5" />
-            </div>
-
-            <div className="mt-9">
-              <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
-                Quiet When You Need It
-              </h3>
-
-              <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[480px]">
-              When things slow down, private spaces offer a place to pause — simple, quiet, and your own.
-              </p>
-
-              {/* LOW-INTENSITY CTA */}
-              <div className="mt-6">
-                <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
-                  View cabins →
-                </button>
+              {/* 4:5 FRAME (BIGGER) */}
+              <div className="relative w-[400px] aspect-[4/5] overflow-hidden rounded-[2px]">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
+                  alt="Private cabin"
+                  className="w-full h-full object-cover object-[center_60%] scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-black/5" />
               </div>
+
+              <div className="mt-9">
+                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
+                  Quiet When You Need It
+                </h3>
+
+                <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[440px]">
+                  When things slow down, private spaces offer a place to pause — simple, quiet, and your own.
+                </p>
+
+                <div className="mt-6">
+                  <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
+                    View cabins →
+                  </button>
+                </div>
+              </div>
+
             </div>
+
           </div>
 
         </div>
@@ -483,7 +517,7 @@ function ParallaxImage({ src, alt }) {
 }
 
 
-function Activities() {
+function Yacht() {
   return (
     <section className="relative w-full bg-[#F4F5F2] pt-[160px] pb-[160px] px-6 overflow-hidden">
 
@@ -638,6 +672,206 @@ function Activities() {
 
     </section>
   )
+}
+
+function Activities() {
+  return (
+    <section className="relative w-full h-[110vh] overflow-hidden bg-[#F4F5F2]">
+
+      {/* ===== MAIN SCENE ===== */}
+      <div className="absolute inset-0">
+        <Image
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776152590/Phinisi_yacht_and_vibrant_coral_reef_1_i59pqn.png"
+          alt="People jumping and swimming around yacht"
+          fill
+          priority
+          className="object-cover"
+        />
+
+        <div className="absolute inset-0 bg-black/10" />
+
+        {/* SIGNATURE BLUE */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/55 via-[#2D3C68]/15 to-transparent" />
+      </div>
+
+      {/* ===== FLOATING ELEMENTS ===== */}
+
+      {/* LEFT MID — WATER */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="absolute left-[12%] top-[45%] w-[240px]"
+      >
+        <div className="aspect-[4/5] relative overflow-hidden shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
+
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_05_PM_nsfruu.png"
+            alt="Swimming near the yacht"
+            fill
+            className="object-cover"
+          />
+
+          <div className="absolute inset-0 bg-[#2D3C68]/10" />
+
+          {/* LABEL */}
+          <div className="absolute bottom-3 left-3 text-[11px] text-white/85 tracking-wide">
+            In the water
+          </div>
+        </div>
+      </motion.div>
+
+      {/* RIGHT TOP — FLOAT */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="absolute right-[6%] top-[12%] w-[260px]"
+      >
+        <div className="aspect-[4/5] relative overflow-hidden shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
+
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1775720934/Floating_in_turquoise_serenity_pu8zqp.png"
+            alt="Floating near the boat"
+            fill
+            className="object-cover"
+          />
+
+          <div className="absolute inset-0 bg-[#2D3C68]/8" />
+
+          <div className="absolute bottom-3 left-3 text-[11px] text-white/85 tracking-wide">
+            Just floating
+          </div>
+        </div>
+      </motion.div>
+
+      {/* RIGHT BOTTOM — DECK */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="absolute right-[18%] bottom-[18%] w-[250px]"
+      >
+        <div className="aspect-[4/5] relative overflow-hidden shadow-[0_12px_35px_rgba(0,0,0,0.25)]">
+
+          <Image
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1775720934/Stepping_onto_the_sunlit_deck_wmgyua.png"
+            alt="Relaxing on deck"
+            fill
+            className="object-cover"
+          />
+
+          <div className="absolute inset-0 bg-[#2D3C68]/10" />
+
+          <div className="absolute bottom-3 left-3 text-[11px] text-white/85 tracking-wide">
+            On deck
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ===== CONTENT (REPOSITIONED — CENTER LEFT) ===== */}
+      <div className="relative z-10 h-full flex items-center px-6 md:px-12">
+        <div className="max-w-[520px] text-white">
+
+          <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase">
+            On Board
+          </p>
+
+          <h2 className="mt-4 font-[Gambarino] text-[44px] md:text-[64px] leading-[1.05]">
+            What you end up doing
+          </h2>
+
+          <p className="mt-5 text-[15px] text-white/85 leading-relaxed">
+            Jump into the water, swim around the boat, or just float nearby.
+
+            Stay on deck when you feel like it, move around, or do nothing at all.
+
+            Food comes out, people gather, then drift off again.
+
+            There’s no set plan, but there’s always something happening.
+          </p>
+
+        </div>
+      </div>
+
+    </section>
+  );
+}
+
+
+function Included() {
+  return (
+    <section className="relative w-full bg-[#F4F5F2] py-[180px] px-6">
+
+      <div className="max-w-[1100px] mx-auto">
+
+        {/* ===== HEADER ===== */}
+        <div className="max-w-[520px] mb-24">
+          <p className="text-[10px] tracking-[0.35em] text-[#2D3C68]/55 uppercase">
+            What’s Included
+          </p>
+
+          <h2 className="mt-4 font-[Gambarino] text-[44px] md:text-[60px] leading-[1.1] text-[#2D3C68]">
+            Everything you’ll actually use
+          </h2>
+        </div>
+
+        {/* ===== PRIMARY (ANCHOR) ===== */}
+        <div className="max-w-[620px] mb-28">
+          <h3 className="font-[Gambarino] text-[32px] text-[#1A1A1A] leading-[1.2]">
+            Meals on board
+          </h3>
+
+          <p className="mt-5 text-[17px] text-[#2D3C68]/75 leading-relaxed">
+            Food comes out while people are already sitting around.
+            You eat, stay a bit longer, then slowly drift away.
+          </p>
+        </div>
+
+        {/* ===== SECONDARY GRID ===== */}
+        <div className="grid md:grid-cols-2 gap-x-20 gap-y-20 max-w-[900px]">
+
+          <div>
+            <h3 className="font-[Gambarino] text-[22px] text-[#1A1A1A]">
+              Crew & navigation
+            </h3>
+            <p className="mt-3 text-[14px] text-[#2D3C68]/70 leading-relaxed">
+              Routes, anchoring, and timing are handled quietly in the background.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-[Gambarino] text-[22px] text-[#1A1A1A]">
+              Water access
+            </h3>
+            <p className="mt-3 text-[14px] text-[#2D3C68]/70 leading-relaxed">
+              You can get in anytime. No setup, no waiting.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-[Gambarino] text-[22px] text-[#1A1A1A]">
+              The space is yours
+            </h3>
+            <p className="mt-3 text-[14px] text-[#2D3C68]/70 leading-relaxed">
+              Move between deck, cabins, and water without thinking twice.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-[Gambarino] text-[22px] text-[#1A1A1A]">
+              Flexible flow
+            </h3>
+            <p className="mt-3 text-[14px] text-[#2D3C68]/70 leading-relaxed">
+              The day doesn’t follow a plan. It just unfolds.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
 }
 
 
@@ -804,11 +1038,11 @@ function GalleryStrip() {
   );
 }
 
-function Reflections() {
+function Testimonials() {
   const testimonials = [
     {
       quote:
-        "Calm anchorages, hidden lagoons, and evenings filled with celestial skies — a voyage that we will treasure forever.",
+        "We thought we’d go out a lot, but most of the time we just stayed on the boat. No one really felt like leaving.",
       trip: "Bali & Nusa Penida",
       date: "May 2025",
       author: "A. Williams",
@@ -816,7 +1050,7 @@ function Reflections() {
     },
     {
       quote:
-        "An experience that felt both grounding and expansive — every moment unfolded with quiet intention.",
+        "At some point we stopped checking time. People were just moving around, eating, swimming, then sitting again.",
       trip: "Raja Ampat",
       date: "June 2025",
       author: "L. Moreau",
@@ -824,7 +1058,7 @@ function Reflections() {
     },
     {
       quote:
-        "A rare kind of stillness. Time slowed, and everything felt exactly where it should be.",
+        "Nothing big happened, but that’s kind of why it worked. We just stayed, talked, and let the day pass.",
       trip: "Banda Islands",
       date: "July 2025",
       author: "D. Tanaka",
@@ -847,49 +1081,60 @@ function Reflections() {
   const current = testimonials[index];
 
   return (
-    <section className="bg-[#E7DED2] py-[140px] px-6">
+    <section className="relative bg-[#F4F5F2] py-[160px] px-6">
 
       <div className="max-w-[1100px] mx-auto">
 
-        {/* INDEX (SUBTLE) */}
-        <div className="mb-16 text-[12px] tracking-[0.3em] text-[#6B7280]">
-          {String(index + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
-        </div>
+        {/* ===== TOP LINE ===== */}
+        <div className="flex items-center justify-between mb-16">
 
-        {/* MAIN CONTENT (OFFSET, NOT CENTER) */}
-        <div className="max-w-[720px] ml-0 md:ml-[80px]">
-
-          <p className="text-[22px] md:text-[30px] leading-[1.5] text-[#1A1A1A] font-[Canela]">
-            {current.quote}
+          <p className="text-[10px] tracking-[0.35em] text-[#2D3C68]/55 uppercase">
+            Testimonials
           </p>
 
-          <div className="mt-10 text-[14px] text-[#6B7280]">
+          <div className="text-[11px] text-[#2D3C68]/40 tracking-[0.25em]">
+            {String(index + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
+          </div>
+
+        </div>
+
+        {/* ===== MAIN ===== */}
+        <div className="max-w-[760px]">
+
+          <p className="font-[Gambarino] text-[26px] md:text-[34px] leading-[1.45] text-[#1A1A1A]">
+            “{current.quote}”
+          </p>
+
+          <div className="mt-10 text-[13px] text-[#2D3C68]/60">
             {current.trip} — {current.date}
           </div>
 
-          <div className="mt-2 text-[14px] text-[#1A1A1A]">
-            {current.author} — {current.country}
+          <div className="mt-1 text-[13px] text-[#1A1A1A]">
+            {current.author}, {current.country}
           </div>
+
+        </div>
+
+        {/* ===== NAV INLINE (NO FIXED BS) ===== */}
+        <div className="mt-20 flex gap-6">
+
+          <button
+            onClick={prev}
+            className="text-[13px] text-[#2D3C68]/40 hover:text-[#2D3C68] transition"
+          >
+            ← Previous
+          </button>
+
+          <button
+            onClick={next}
+            className="text-[13px] text-[#2D3C68]/40 hover:text-[#2D3C68] transition"
+          >
+            Next →
+          </button>
 
         </div>
 
       </div>
-
-      {/* NAV (VERY LIGHT) */}
-      <button
-        onClick={prev}
-        className="fixed left-6 bottom-10 text-[#6B7280] hover:text-[#1A1A1A] transition text-[18px]"
-      >
-        ←
-      </button>
-
-      <button
-        onClick={next}
-        className="fixed right-6 bottom-10 text-[#6B7280] hover:text-[#1A1A1A] transition text-[18px]"
-      >
-        →
-      </button>
-
     </section>
   );
 }
@@ -1589,23 +1834,29 @@ function Destinations() {
 
   const data = [
     {
-      title: "Raja Ampat",
-      desc: `Jump off the deck, swim over the reef, come back up, and repeat. 
-You move between water and boat throughout the day without any fixed plan.`,
+      place: "Raja Ampat",
+      activity: "You slip in",
+      desc: `Cold at first. It reaches your chest before your breath settles.
+You come back up, look around, take it in for a second.
+Then you go again, like you’re starting to understand it.`,
       image:
         "https://res.cloudinary.com/dombq6plz/image/upload/v1776152590/Phinisi_yacht_and_vibrant_coral_reef_1_i59pqn.png",
     },
     {
-      title: "Komodo Island",
-      desc: `Walk the island under strong sun, then return to the boat to cool down. 
-Short activity on land, followed by slow time back at sea.`,
+      place: "Komodo Island",
+      activity: "You walk slow",
+      desc: `The ground feels dry, the air barely moves.
+You don’t think much, you just keep walking.
+There’s no pressure to get anywhere, so you let the place set the pace.`,
       image:
         "https://res.cloudinary.com/dombq6plz/image/upload/v1776152688/Couple_strolling_by_a_traditional_phinisi_1_e1alaw.png",
     },
     {
-      title: "Banda Neira",
-      desc: `Stay on the boat surrounded by open water. 
-Sit, talk, or rest while the day moves slowly without interruption.`,
+      place: "Banda Neira",
+      activity: "You stay a while",
+      desc: `You sit longer than you meant to.
+Nothing interrupts, nothing pushes you forward.
+Time stretches just enough for you to forget you were tracking it.`,
       image:
         "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_09_PM_i95qhf.png",
     },
@@ -1624,80 +1875,90 @@ Sit, talk, or rest while the day moves slowly without interruption.`,
   const prev = data[prevIndex];
 
   return (
-    <section className="relative w-full bg-[#F4F5F2] pt-[0px] pb-[0px]">
+    <section className="relative w-full bg-[#F4F5F2]">
 
-      {/* ===== TOP CONTEXT (OUTSIDE FRAME) ===== */}
-      <div className="max-w-[640px] mx-auto px-6 text-center mb-10">
-        <p className="text-[12px] leading-relaxed text-[#2D3C68]/60">
-          Each journey moves across different parts of the Indonesian archipelago, 
-          from reef systems and small islands to open stretches of water. 
-          There is no fixed route — the direction follows sea conditions, 
-          local knowledge, and the pace of the group on board.
+      {/* TOP CONTEXT */}
+      <div className="max-w-[640px] mx-auto px-6 text-center pt-5 pb-6">
+        <p className="text-[11px] md:text-[12px] leading-relaxed text-[#2D3C68]/60">
+          Each journey moves across different parts of the Indonesian archipelago, from reef systems and small islands to open stretches of water. There is no fixed route — the direction follows sea conditions, local knowledge, and the pace of the group on board.
         </p>
       </div>
 
-      {/* ===== FULL BLEED FRAME ===== */}
+      {/* FRAME */}
       <div className="relative w-full h-[100vh] overflow-hidden">
 
-        {/* PREVIOUS IMAGE */}
+        {/* PREVIOUS */}
         <img
           key={`prev-${prevIndex}`}
           src={prev.image}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover will-change-transform"
           style={{
-            opacity: 0,
-            transform: "scale(1.06) translateX(-30px)",
-            transition: "all 2200ms cubic-bezier(0.22,1,0.36,1)",
+            animation: "exit 2400ms cubic-bezier(0.22,1,0.36,1) forwards",
           }}
         />
 
-        {/* CURRENT IMAGE */}
+        {/* CURRENT */}
         <img
           key={`current-${index}`}
           src={current.image}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover will-change-transform"
           style={{
-            opacity: 1,
-            transform: "scale(1.02) translateX(0px)",
-            animation: "enter 2200ms cubic-bezier(0.22,1,0.36,1)",
+            animation:
+              "enter 2400ms cubic-bezier(0.22,1,0.36,1) forwards, slowZoom 7000ms linear forwards",
           }}
         />
 
-        {/* SIDE GRADIENT */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `
-              linear-gradient(
-                to left,
-                rgba(244,245,242,0.85) 0%,
-                rgba(244,245,242,0.45) 35%,
-                rgba(244,245,242,0) 70%
-              )
-            `,
-          }}
-        />
+        {/* BLUR + GRADIENT */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{
+              backdropFilter: "blur(1px)",
+              WebkitBackdropFilter: "blur(1px)",
+              maskImage:
+                "linear-gradient(to left, black 0%, black 30%, transparent 65%)",
+              WebkitMaskImage:
+                "linear-gradient(to left, black 0%, black 30%, transparent 65%)",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `
+                linear-gradient(
+                  to left,
+                  rgba(244,245,242,0.85) 0%,
+                  rgba(244,245,242,0.4) 40%,
+                  rgba(244,245,242,0) 75%
+                )
+              `,
+            }}
+          />
+        </div>
 
-        {/* DEPTH TYPO */}
-        <div className="absolute bottom-[6%] right-[-4%] pointer-events-none select-none">
-          <h2 className="font-[Gambarino] text-[#2D3C68]/6 text-[14vw] leading-none tracking-[-0.04em] whitespace-nowrap">
-            {current.title}
+        {/* DEPTH ECHO (SMALLER) */}
+        <div className="absolute bottom-[8%] right-[-8%] pointer-events-none select-none overflow-hidden">
+          <h2 className="font-[Gambarino] text-[#2D3C68]/5 text-[14vw] leading-none tracking-[-0.05em] whitespace-nowrap text-right">
+            {current.place}
           </h2>
         </div>
 
         {/* CONTENT */}
-        <div className="relative z-10 h-full flex items-center px-6 md:px-12">
+        <div className="relative z-10 h-full flex items-center px-6 md:px-16">
           <div className="ml-auto max-w-[520px] text-right">
 
-            <p className="text-[10px] tracking-[0.35em] text-[#2D3C68]/55 uppercase">
-              Destinations
+            {/* ACTIVITY (SMALLER) */}
+            <p className="text-[12px] md:text-[13px] tracking-[0.08em] text-[#2D3C68]/65">
+              {current.activity}
             </p>
 
-            <h2 className="mt-3 font-[Gambarino] text-[44px] md:text-[68px] leading-[1.05] tracking-[-0.02em] text-[#2D3C68]">
-              {current.title}
+            {/* TITLE (REDUCED) */}
+            <h2 className="mt-2 font-[Gambarino] text-[42px] md:text-[58px] leading-[1.05] tracking-[-0.02em] text-[#2D3C68]">
+              {current.place}
             </h2>
 
-            <p className="mt-5 text-[15px] text-[#2D3C68]/80 leading-relaxed whitespace-pre-line text-right">
+            {/* DESC (SLIGHTLY SMALLER) */}
+            <p className="mt-3 max-w-[420px] ml-auto text-[14px] md:text-[15px] text-[#2D3C68]/80 leading-[1.7]">
               {current.desc}
             </p>
 
@@ -1710,7 +1971,7 @@ Sit, talk, or rest while the day moves slowly without interruption.`,
             setPrevIndex(index);
             setIndex((prev) => (prev - 1 + data.length) % data.length);
           }}
-          className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/20 hover:text-[#2D3C68]/40 transition text-[16px]"
+          className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50 transition text-[16px]"
         >
           ←
         </button>
@@ -1720,7 +1981,7 @@ Sit, talk, or rest while the day moves slowly without interruption.`,
             setPrevIndex(index);
             setIndex((prev) => (prev + 1) % data.length);
           }}
-          className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/20 hover:text-[#2D3C68]/40 transition text-[16px]"
+          className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50 transition text-[16px]"
         >
           →
         </button>
@@ -1729,11 +1990,31 @@ Sit, talk, or rest while the day moves slowly without interruption.`,
           @keyframes enter {
             from {
               opacity: 0;
-              transform: scale(1.08) translateX(40px);
+              transform: scale(1.08) translateX(60px);
             }
             to {
               opacity: 1;
               transform: scale(1.02) translateX(0px);
+            }
+          }
+
+          @keyframes exit {
+            from {
+              opacity: 1;
+              transform: scale(1.02) translateX(0px);
+            }
+            to {
+              opacity: 0;
+              transform: scale(1.1) translateX(-60px);
+            }
+          }
+
+          @keyframes slowZoom {
+            from {
+              transform: scale(1.02);
+            }
+            to {
+              transform: scale(1.08);
             }
           }
         `}</style>
@@ -1744,7 +2025,7 @@ Sit, talk, or rest while the day moves slowly without interruption.`,
 }
  
 
-function Yacht() {
+function YachtDua() {
   return (
     <section className="bg-[#FFFFFF] py-[140px] px-6">
       
