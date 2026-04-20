@@ -18,6 +18,7 @@ export default function Page() {
        <WorldDefinition/>   
        <ExperienceStructure/>
        {/* <Destinations/> */}
+       <Reservation/>
       <Footer/> 
     </main>
   )
@@ -165,7 +166,7 @@ function WorldDefinition() {
           <div className="col-span-6">
             <div className="aspect-[4/5] overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1604999333679-b86d54738315?q=80&w=1600&auto=format&fit=crop"
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
                 alt="Labuan Bajo"
                 className="w-full h-full object-cover"
               />
@@ -226,7 +227,7 @@ function WorldDefinition() {
           <div className="col-span-6 col-start-7 translate-y-[80px]">
             <div className="aspect-[4/5] overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?q=80&w=1600&auto=format&fit=crop"
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png"
                 alt="Raja Ampat"
                 className="w-full h-full object-cover"
               />
@@ -241,140 +242,171 @@ function WorldDefinition() {
   )
 }
 
- function ExperienceStructure() {
-  const sectionsRef = useRef([]);
+function ExperienceStructure() {
 
-  const experiences = [
+  const destinations = [
     {
-      title: "Diving & Snorkeling",
+      name: "Raja Ampat",
+      hero: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2000",
+      portrait: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_05_PM_nsfruu.png",
       description:
-        "Explore coral reefs across Labuan Bajo and Raja Ampat, home to one of the highest marine biodiversity levels in the world.",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776157051/Playful_moments_on_a_phinisi_yacht_n5vywa.png",
-      environment: "UNDERWATER",
-      level: "EASY / MEDIUM",
-      duration: "5 HOURS",
-    },
-    {
-      title: "Komodo Dragon Trek",
-      description:
-        "Walk through Komodo National Park and observe the Komodo dragon in its natural habitat across protected island terrain.",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_02_PM_lplfu7.png",
-      environment: "LAND",
-      level: "EASY",
-      duration: "2 HOURS",
-    },
-    {
-      title: "Padar Island Hiking",
-      description:
-        "Hike to the summit for panoramic views of layered islands and curved bays unique to this region.",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776184323/Sailing_through_tropical_waters_1_qwtnm7.png",
-      environment: "LAND",
-      level: "MEDIUM / HARD",
-      duration: "3 HOURS",
-    },
-  ];
-
-  useEffect(() => {
-    sectionsRef.current.forEach((section) => {
-      const image = section.querySelector(".parallax-image");
-      const wrapper = section.querySelector(".image-wrapper");
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 80%",
-          end: "bottom 20%",
-          scrub: 1.2, // smooth banget
-        },
-      });
-
-      // IMAGE PARALLAX (HALUS BANGET)
-      tl.fromTo(
-        image,
-        { y: -40, scale: 1 },
+        "A remote marine region in West Papua, known for its unmatched biodiversity beneath the surface.",
+      detail:
+        "Days here are shaped almost entirely by water. Movement is constant — currents shift, light refracts, and marine life moves in layered depth. You don’t simply observe it; you enter it, adjusting your pace to something that was already in motion long before you arrived.",
+      activities: [
         {
-          y: 40,
-          scale: 1.08,
-          ease: "none",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
+          text: "Snorkel across coral systems where visibility reveals dense layers of marine life.",
         },
-        0
-      );
-
-      // SOFT BLEED (GAK AGRESIF)
-      tl.fromTo(
-        wrapper,
-        { x: 0, width: "100%" },
         {
-          x: -20,
-          width: "calc(100% + 40px)",
-          ease: "none",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
+          text: "Navigate between limestone formations rising directly from open water.",
         },
-        0
-      );
-    });
-  }, []);
+        {
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
+          text: "Drift slowly through lagoons shaped by tide and geological structure.",
+        },
+      ],
+    },
+
+    {
+      name: "Labuan Bajo",
+      hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_01_PM_yfdh57.png",
+      portrait: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200",
+      description:
+        "The gateway to Komodo National Park, where rugged islands meet open ocean.",
+      detail:
+        "The rhythm shifts once you step onto land. Terrain becomes dry, distances feel longer, and movement requires more intention. The environment is exposed — sun, wind, and elevation define how you move through space.",
+      activities: [
+        {
+          img: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1200",
+          text: "Walk across open terrain where wildlife exists without enclosure.",
+        },
+        {
+          img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200",
+          text: "Swim in bays framed by dry, sculpted island ridges.",
+        },
+        {
+          img: "https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=1200",
+          text: "Observe shifting light across layered island formations.",
+        },
+      ],
+    }, 
+  ]
 
   return (
-    <section className="bg-[#F4F5F2] py-32 overflow-hidden">
+    <section className="bg-[#F4F5F2] pb-[160px]">
 
-      {/* HEADER */}
-      <div className="max-w-5xl mx-auto px-6 mb-24">
-        <p className="text-xs tracking-[0.14em] text-[#2D3C68]/50 mb-4">
-          EXPERIENCE SYSTEM
+      {/* ================= INTRO ================= */}
+      <div className="max-w-[900px] mx-auto px-6 pt-[180px] mb-[140px]">
+
+        <p className="text-[11px] tracking-[0.32em] text-[#2D3C68]/50 mb-6">
+          DESTINATIONS
         </p>
 
-        <h2 className="font-[Gambarino] text-5xl md:text-6xl leading-[1.08] text-[#2D3C68] max-w-2xl">
-          Structured Experiences
+        <h2 className="font-[Gambarino] text-[56px] md:text-[72px] leading-[1.04] text-[#2D3C68]">
+          What you’ll experience
         </h2>
+
       </div>
 
-      <div className="space-y-32">
-        {experiences.map((item, i) => (
-          <div
-            key={i}
-            ref={(el) => (sectionsRef.current[i] = el)}
-            className="max-w-5xl mx-auto px-6"
-          >
-            {/* IMAGE */}
-            <div className="image-wrapper h-[65vh] overflow-hidden bg-[#E9EBE4]">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="parallax-image w-full h-[110%] object-cover"
-              />
+      {/* ================= DESTINATIONS ================= */}
+      {destinations.map((dest, i) => (
+        <div
+          key={i}
+          className={i === destinations.length - 1 ? "" : "mb-[200px]"}
+        >
+
+          {/* HERO */}
+          <div className="w-full h-[75vh] relative overflow-hidden">
+
+            <img
+              src={dest.hero}
+              className="w-full h-full object-cover scale-[1.02]"
+            />
+
+            <div className="absolute inset-0 bg-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
+
+            <div className="absolute bottom-14 left-[max(6%,60px)] text-white max-w-[560px]">
+
+              <p className="text-[11px] tracking-[0.3em] uppercase text-white/70 mb-4">
+                Destination
+              </p>
+
+              <h3 className="font-[Gambarino] text-[56px] leading-[1.04] mb-5">
+                {dest.name}
+              </h3>
+
+              <p className="text-[16px] leading-[1.85] text-white/90">
+                {dest.description}
+              </p>
+
             </div>
 
-            {/* CONTENT */}
-            <div className="grid md:grid-cols-2 gap-12 mt-10">
-              <div>
-                <h3 className="font-[Gambarino] text-3xl text-[#2D3C68] mb-4">
-                  {item.title}
-                </h3>
+          </div>
 
-                <p className="text-base text-[#2D3C68]/80 max-w-md">
-                  {item.description}
+          {/* CONTENT */}
+          <div className="max-w-[1100px] mx-auto px-6 mt-[120px] mb-[110px]">
+
+            <div className="grid grid-cols-12 gap-16 items-start">
+
+              <div className="col-span-5">
+                <p className="text-[16px] leading-[1.95] text-[#2D3C68]">
+                  <span className="block mb-4 text-[#2D3C68]/70">
+                    {dest.detail.split(".")[0]}.
+                  </span>
+                  {dest.detail.split(".").slice(1).join(".")}
                 </p>
               </div>
 
-              <div className="border-t md:border-t-0 md:border-l border-[#2D3C68]/15 pt-6 md:pt-0 md:pl-8 grid grid-cols-2 gap-y-3 text-sm text-[#2D3C68]">
-                <div className="text-[#2D3C68]/50">ENVIRONMENT</div>
-                <div>{item.environment}</div>
-
-                <div className="text-[#2D3C68]/50">ACTIVITY LEVEL</div>
-                <div>{item.level}</div>
-
-                <div className="text-[#2D3C68]/50">DURATION</div>
-                <div>{item.duration}</div>
+              <div className="col-span-6 col-start-7">
+                <div className="aspect-[4/5] overflow-hidden translate-y-2">
+                  <img
+                    src={dest.portrait}
+                    className="w-full h-full object-cover scale-[1.03]"
+                  />
+                </div>
               </div>
+
             </div>
+
           </div>
-        ))}
-      </div>
+
+          {/* GALLERY */}
+          <div className="max-w-[1200px] mx-auto px-6">
+
+            <div className="grid grid-cols-3 gap-8">
+
+              {dest.activities.map((item, j) => (
+                <div
+                  key={j}
+                  className={j === 1 ? "translate-y-6" : ""}
+                >
+
+                  <div className="aspect-[4/3] overflow-hidden mb-5">
+                    <img
+                      src={item.img}
+                      className="w-full h-full object-cover scale-[1.02]"
+                    />
+                  </div>
+
+                  <p className="text-[15px] text-[#2D3C68]/80 leading-[1.75]">
+                    {item.text}
+                  </p>
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+      ))}
+
     </section>
-  );
+  )
 }
 
 
@@ -501,6 +533,76 @@ function Destinations() {
               alt={data[1].title}
               className="w-full h-full object-cover"
             />
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  );
+}
+
+
+function Reservation() {
+  return (
+    <section className="relative w-full min-h-[100vh] overflow-hidden">
+
+      {/* ================= BACKGROUND ================= */}
+      <img
+        src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
+        alt="Serenity Reservation"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* ================= DEPTH OVERLAY ================= */}
+      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/50" />
+
+      {/* ================= CONTENT ================= */}
+      <div className="relative z-10 min-h-[100vh] flex items-center justify-center px-6">
+
+        <div className="text-center max-w-[680px]">
+
+          {/* LABEL */}
+          <p className="text-[11px] tracking-[0.4em] text-white/50 uppercase">
+            Reservation
+          </p>
+
+          {/* HEADLINE */}
+          <h2 className="mt-8 font-[Gambarino] text-[48px] md:text-[64px] leading-[1.08] text-white">
+            Your journey begins at sea
+          </h2>
+
+          {/* SUBTEXT */}
+          <p className="mt-8 text-[15px] text-white/75 leading-[1.9] max-w-[520px] mx-auto">
+            Share your preferred dates and group size.  
+            Everything else unfolds naturally — guided, not scheduled.
+          </p>
+
+          {/* CTA */}
+          <div className="mt-14 flex flex-col md:flex-row items-center justify-center gap-5">
+
+            {/* PRIMARY */}
+            <button className="group relative px-10 py-4 bg-white text-[#1A1A1A] text-[13px] tracking-[0.18em] uppercase rounded-full overflow-hidden">
+
+              {/* subtle cinematic hover */}
+              <span className="absolute inset-0 bg-white scale-100 group-hover:scale-105 transition duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"></span>
+
+              <span className="relative z-10">
+                Enquire now
+              </span>
+            </button>
+
+            {/* SECONDARY */}
+            <a
+              href="https://wa.me/6281353613617"
+              target="_blank"
+              className="px-9 py-4 border border-white/40 text-white text-[13px] tracking-[0.18em] uppercase rounded-full hover:border-white transition duration-300"
+            >
+              WhatsApp
+            </a>
 
           </div>
 
