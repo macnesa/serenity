@@ -12,9 +12,14 @@ export default function Page() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
        <Hero/> 
-       <CharterRates/>
-       <Schedule/>
-       <InclusionsExclusions/>
+       <RateOverview/>
+       <IncludedSection/>
+       <PricingDetails/>  
+       <SampleJourney/>
+       <FinalCTA/>
+       {/* <CharterRates/> */}
+       {/* <Schedule/> */}
+       {/* <InclusionsExclusions/> */}
       <Footer/> 
     </main>
   )
@@ -23,43 +28,450 @@ export default function Page() {
 
 function Hero() {
   return (
-    <section className="relative h-[50vh] w-full overflow-hidden">
+    <section className="relative w-full bg-[#2D3C68] overflow-hidden">
 
-      {/* IMAGE */}
-      <img
-        src="https://res.cloudinary.com/dombq6plz/image/upload/v1775720933/Teak_wood_and_rope_craftsmanship_etuf8i.png"
-        alt="Rates and Schedule"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-
-      {/* CONTROLLED OVERLAY */}
-      <div className="absolute inset-0 bg-[#F5F2ED]/70" />
+      {/* SOFT DEPTH (NO DRAMA) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68] via-[#2D3C68] to-[#1f2a4a] opacity-90" />
 
       {/* CONTENT */}
-      <div className="relative z-10 h-full flex items-end">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-[140px] pb-[120px]">
 
-        <div className="w-full max-w-[1100px] mx-auto px-6 pb-12">
+        <div className="max-w-[640px]">
 
-          <p className="text-[12px] tracking-[0.35em] text-[#0F172A]/40 uppercase">
-            Rates & Schedule
-          </p>
+          {/* MICRO */}
+          <div className="mb-6 text-[11px] tracking-[0.28em] text-[#F4F5F2]/60">
+            PRIVATE CHARTER
+          </div>
 
-          <h1 className="mt-6 font-[Canela] text-[44px] md:text-[72px] leading-[1.05] text-[#0F172A] max-w-[800px]">
-            Plan Your Journey
+          {/* HEADLINE */}
+          <h1 className="font-[Gambarino] text-[44px] md:text-[64px] leading-[1.08] tracking-[-0.03em] text-[#F4F5F2]">
+            Plan your
+            <br />
+            time on board
           </h1>
 
-          <p className="mt-6 max-w-[520px] text-[15px] text-[#0F172A]/70 leading-relaxed">
-            Each voyage is tailored — but these rates and seasonal windows
-            offer a clear starting point for planning your time aboard Sanctuary.
+          {/* SUBCOPY */}
+          <p className="mt-6 text-[15px] text-[#F4F5F2]/75 max-w-[520px] mx-auto leading-[1.7]">
+            Each journey is shaped by where you go, how long you stay, and how you choose to spend your days.
           </p>
+
+          {/* MICRO CONTEXT */}
+          <div className="mt-8 text-[12px] tracking-[0.25em] text-[#F4F5F2]/50">
+            UP TO 12 GUESTS · FULL CREW · FLEXIBLE ROUTE
+          </div>
 
         </div>
 
       </div>
 
     </section>
-  );
+  )
 }
+
+
+function RateOverview() {
+  return (
+    <section className="relative w-full bg-[#F4F5F2] py-[160px] md:py-[180px] px-6 overflow-hidden">
+
+      {/* TOP FADE */}
+      <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/10 to-transparent pointer-events-none" />
+
+      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-24 items-start">
+
+        {/* ================= LEFT ================= */}
+        <div className="max-w-[420px]">
+
+          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+            Rates
+          </p>
+
+          <h2 className="mt-6 font-[Gambarino] text-[52px] md:text-[64px] leading-[1.05] text-[#2D3C68]">
+            Simple, flexible pricing
+          </h2>
+
+          <p className="mt-6 text-[15px] text-[#5C5C5C] leading-relaxed">
+            You’re booking the entire yacht, not per person.
+            The final price depends on where you go and how long you stay.
+          </p>
+
+        </div>
+
+        {/* ================= RIGHT ================= */}
+        <div className="relative md:translate-y-[60px]">
+
+          {/* ================= PEAK ================= */}
+          <div className="mb-24">
+
+            <p className="text-[12px] tracking-[0.2em] text-[#2D3C68]/60 uppercase mb-4">
+              Peak Season
+            </p>
+
+            {/* PEAK MOMENT */}
+            <div className="font-[Gambarino] text-[64px] md:text-[72px] text-[#1A1A1A] leading-none relative inline-block">
+
+              USD 8,500
+
+              {/* subtle underline = visual anchor */}
+              <div className="absolute left-0 -bottom-3 w-12 h-[1px] bg-[#2D3C68]/20" />
+            </div>
+
+            <p className="mt-3 text-[14px] text-[#5C5C5C]">
+              per night · up to 12 guests
+            </p>
+
+          </div>
+
+          {/* ================= LOW ================= */}
+          <div className="relative md:top-[40px] md:ml-[60px]">
+
+            <p className="text-[12px] tracking-[0.2em] text-[#2D3C68]/60 uppercase mb-3">
+              Low Season
+            </p>
+
+            <div className="font-[Gambarino] text-[36px] md:text-[44px] text-[#1A1A1A] leading-none">
+              USD 6,500
+            </div>
+
+            <p className="mt-2 text-[14px] text-[#5C5C5C]">
+              per night · up to 12 guests
+            </p>
+
+          </div>
+
+          {/* ================= INCLUDED ================= */}
+          <div className="mt-28 max-w-[360px] relative">
+
+            {/* divider biar punya role */}
+            <div className="w-8 h-[1px] bg-[#2D3C68]/20 mb-5" />
+
+            <p className="text-[13px] text-[#5C5C5C]/80 leading-relaxed">
+              Includes a fully crewed yacht, all meals, and access to onboard and water activities.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  )
+}
+
+function IncludedSection() {
+  return (
+    <section className="w-full bg-[#F4F5F2] py-[180px] px-6">
+
+      <div className="max-w-[1100px] mx-auto grid md:grid-cols-2 gap-20 items-start">
+
+        {/* ================= LEFT (HEADER) ================= */}
+        <div className="max-w-[360px]">
+
+          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+            Details
+          </p>
+
+          <h2 className="mt-6 font-[Gambarino] text-[42px] leading-[1.1] text-[#2D3C68]">
+            What’s included
+          </h2>
+
+          <p className="mt-6 text-[14px] text-[#5C5C5C] leading-relaxed">
+            Clear breakdown of what’s covered and what isn’t.
+          </p>
+
+        </div>
+
+        {/* ================= RIGHT (DATA GRID) ================= */}
+        <div>
+
+          {/* INCLUDED GRID */}
+          <div className="grid sm:grid-cols-2 gap-x-16 gap-y-10">
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Yacht</p>
+              <p className="text-[16px] text-[#1A1A1A]">Private use (max 12 guests)</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Crew</p>
+              <p className="text-[16px] text-[#1A1A1A]">Captain, chef, full team</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Meals</p>
+              <p className="text-[16px] text-[#1A1A1A]">Breakfast, lunch, dinner, snacks</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Drinks</p>
+              <p className="text-[16px] text-[#1A1A1A]">Water and basic beverages</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Activities</p>
+              <p className="text-[16px] text-[#1A1A1A]">Snorkeling gear, paddle boards</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Service</p>
+              <p className="text-[16px] text-[#1A1A1A]">Daily cleaning and onboard help</p>
+            </div>
+
+          </div>
+
+          {/* DIVIDER */}
+          <div className="my-16 h-[1px] bg-[#2D3C68]/10" />
+
+          {/* NOT INCLUDED */}
+          <div className="grid sm:grid-cols-2 gap-x-16 gap-y-6">
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Flights</p>
+              <p className="text-[15px] text-[#1A1A1A]">Not included</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Park fees</p>
+              <p className="text-[15px] text-[#1A1A1A]">Not included</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Alcohol</p>
+              <p className="text-[15px] text-[#1A1A1A]">Available on request</p>
+            </div>
+
+            <div>
+              <p className="text-[13px] text-[#6A6A6A] mb-2">Personal</p>
+              <p className="text-[15px] text-[#1A1A1A]">Own expenses</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  )
+}
+
+function PricingDetails() {
+  return (
+    <section className="w-full bg-[#E9EDF5] py-[180px] px-6">
+
+      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-20 items-start">
+
+        {/* ================= LEFT (IMAGE) ================= */}
+        <div className="relative w-full aspect-[4/5] overflow-hidden">
+
+          <img
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176459/Aerial_view_of_phinisi_yacht_indonesia_f4zq1l.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+
+        </div>
+
+        {/* ================= RIGHT (DATA) ================= */}
+        <div>
+
+          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+            Pricing Details
+          </p>
+
+          <h2 className="mt-6 font-[Gambarino] text-[42px] leading-[1.1] text-[#2D3C68]">
+            Where the cost comes from
+          </h2>
+
+          <div className="mt-10 space-y-10 text-[15px] text-[#1A1A1A]">
+
+            {/* FUEL */}
+            <div>
+              <p className="font-medium">Fuel</p>
+              <p className="text-[#5C5C5C] mt-1">
+                300–600 liters per day depending on route and speed.
+              </p>
+            </div>
+
+            {/* CREW */}
+            <div>
+              <p className="font-medium">Crew</p>
+              <p className="text-[#5C5C5C] mt-1">
+                8–10 crew members on board throughout the trip.
+              </p>
+            </div>
+
+            {/* FOOD */}
+            <div>
+              <p className="font-medium">Food & Supplies</p>
+              <p className="text-[#5C5C5C] mt-1">
+                Fresh ingredients restocked before each trip and during longer routes.
+              </p>
+            </div>
+
+            {/* ROUTE */}
+            <div>
+              <p className="font-medium">Distance</p>
+              <p className="text-[#5C5C5C] mt-1">
+                Longer routes (e.g. Raja Ampat) require higher fuel and logistics cost.
+              </p>
+            </div>
+
+            {/* SEASON */}
+            <div>
+              <p className="font-medium">Season</p>
+              <p className="text-[#5C5C5C] mt-1">
+                Peak season (Jun–Sep) has higher demand and limited availability.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  )
+}
+
+function SampleJourney() {
+  return (
+    <section className="w-full bg-[#F4F5F2] py-[200px] px-6 overflow-hidden">
+
+      <div className="max-w-[1200px] mx-auto">
+
+        {/* ================= HEADER ================= */}
+        <div className="max-w-[520px] mb-20">
+          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+            Sample journeys
+          </p>
+
+          <h2 className="mt-6 font-[Gambarino] text-[44px] md:text-[60px] leading-[1.08] text-[#2D3C68]">
+            What your trip could look like
+          </h2>
+        </div>
+
+        {/* ================= GRID ================= */}
+        <div className="grid md:grid-cols-2 gap-20 items-start">
+
+          {/* ================= KOMODO ================= */}
+          <div>
+
+            {/* IMAGE */}
+            <div className="relative w-full aspect-[4/5] overflow-hidden mb-8">
+              <img
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Padar_Island_Indonesia_sunrise_lwcb1h.png"
+                alt="Komodo"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* TITLE */}
+            <h3 className="font-[Gambarino] text-[28px] text-[#1A1A1A]">
+              Komodo · 4 days
+            </h3>
+
+            {/* DATA */}
+            <div className="mt-4 space-y-2 text-[15px] text-[#5C5C5C]">
+              <p>Padar Island sunrise</p>
+              <p>Pink Beach snorkeling</p>
+              <p>Komodo National Park visit</p>
+              <p>Island hopping by boat</p>
+            </div>
+
+          </div>
+
+          {/* ================= RAJA AMPAT ================= */}
+          <div className="md:mt-[100px]">
+
+            {/* IMAGE */}
+            <div className="relative w-full aspect-[4/5] overflow-hidden mb-8">
+              <img
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Raja_Ampat_Wayag_islands_aerial_qkwj3o.png"
+                alt="Raja Ampat"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* TITLE */}
+            <h3 className="font-[Gambarino] text-[28px] text-[#1A1A1A]">
+              Raja Ampat · 5 days
+            </h3>
+
+            {/* DATA */}
+            <div className="mt-4 space-y-2 text-[15px] text-[#5C5C5C]">
+              <p>Wayag viewpoint</p>
+              <p>Hidden lagoons and reefs</p>
+              <p>Remote island stops</p>
+              <p>Snorkeling across multiple sites</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* ================= NOTE ================= */}
+        <div className="mt-24 max-w-[420px] text-[14px] text-[#5C5C5C]">
+          Routes are flexible. Each trip is adjusted based on your time,
+          preferences, and weather conditions.
+        </div>
+
+      </div>
+
+    </section>
+  )
+}
+
+function FinalCTA() {
+  return (
+    <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+
+      {/* BACKGROUND IMAGE */}
+      <img
+        src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Phinisi_yacht_sunset_ocean_horizon_cinematic_lighting_x2k9sf.png"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-[#2D3C68]/70" />
+
+      {/* CONTENT */}
+      <div className="relative z-10 text-center px-6 max-w-[520px]">
+
+        {/* HEADLINE */}
+        <h2 className="font-[Gambarino] text-[44px] md:text-[60px] leading-[1.08] text-white">
+          Tell us what you have in mind
+        </h2>
+
+        {/* SUB */}
+        <p className="mt-6 text-[15px] text-white/80 leading-relaxed">
+          We’ll help you plan the route, timing, and everything else — based on what you want to do.
+        </p>
+
+        {/* CTA */}
+        <div className="mt-10 flex justify-center">
+          <button className="px-8 py-3 rounded-full border border-white/70 text-[14px] text-white hover:bg-white hover:text-[#2D3C68] transition">
+            Start planning →
+          </button>
+        </div>
+
+        {/* MICRO TRUST */}
+        <p className="mt-6 text-[12px] text-white/60">
+          No commitment. We’ll get back to you within 24 hours.
+        </p>
+
+      </div>
+
+    </section>
+  )
+}
+
+
+
+
+
 
 
 function CharterRates() {

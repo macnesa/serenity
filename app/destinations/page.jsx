@@ -15,9 +15,10 @@ export default function Page() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
        <Hero/>
-       <WorldDefinition/>   
-       <ExperienceStructure/>
-       {/* <Destinations/> */}
+       {/* <WorldDefinition/>    */}
+       <RegionSystem/>
+       {/* <BaliFragment/> */}
+       <ExperienceStructure/> 
        <Reservation/>
       <Footer/> 
     </main>
@@ -50,37 +51,37 @@ function Hero() {
   return (
     <section className="relative h-screen bg-[#2D3C68] overflow-hidden">
 
-      {/* MAP — REORIENTED TO BALI → MALUKU */}
+      {/* MAP */}
       <div className="absolute inset-0 flex items-center justify-center">
         <img
           src="https://res.cloudinary.com/dombq6plz/image/upload/v1776257972/indonesia_ruqj89.svg"
           alt="Indonesia Map"
           className="
             w-[180%]
-            opacity-[0.06]
+            opacity-[0.12]
             invert
             object-contain
             translate-x-[-18%]
             translate-y-[6%]
             scale-[1.4]
+            blur-[1px]
           "
         />
       </div>
 
-      {/* ROUTE — ADJUSTED TO EAST REGION */}
+      {/* ROUTE */}
       <svg
         viewBox="0 0 1000 500"
         className="absolute inset-0 w-full h-full pointer-events-none"
       >
         <defs>
           <linearGradient id="routeGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#B08D57" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="#B08D57" stopOpacity="1" />
-            <stop offset="100%" stopColor="#B08D57" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#B08D57" stopOpacity="0.1" />
+            <stop offset="50%" stopColor="#E0C48A" stopOpacity="1" />
+            <stop offset="100%" stopColor="#B08D57" stopOpacity="0.1" />
           </linearGradient>
         </defs>
 
-        {/* BALI → FLORES → MALUKU FLOW */}
         <path
           ref={pathRef}
           d="
@@ -90,40 +91,36 @@ function Hero() {
           "
           fill="none"
           stroke="url(#routeGradient)"
-          strokeWidth="1.4"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
       </svg>
 
       {/* DEPTH */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_50%,rgba(45,60,104,0)_30%,rgba(45,60,104,0.9)_100%)]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68] via-transparent to-transparent opacity-80" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_45%_50%,rgba(255,255,255,0.04)_0%,rgba(45,60,104,0.9)_70%)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68] via-transparent to-transparent opacity-90" />
 
-      {/* CONTENT (UNCHANGED) */}
+      {/* CONTENT */}
       <div className="relative z-10 h-full flex items-center">
         <div className="max-w-[1200px] mx-auto w-full px-6 grid grid-cols-12">
 
           <div className="col-span-7 col-start-2">
 
-            {/* MICRO */}
             <div className="mb-6 text-[11px] tracking-[0.28em] text-[#F4F5F2]/70">
               DESTINATIONS
             </div>
 
-            {/* HEADLINE */}
             <h1 className="font-[Gambarino] text-[56px] md:text-[76px] leading-[1.05] tracking-[-0.03em] text-[#F4F5F2]">
               The sea shapes
               <br />
               everything here
             </h1>
 
-            {/* SUBCOPY */}
             <p className="mt-6 text-[15px] text-[#F4F5F2]/80 max-w-[520px] leading-[1.7]">
               A chain of islands where movement, stillness, and shared moments
               unfold naturally across water, land, and time.
             </p>
 
-            {/* CTA */}
             <div className="mt-10">
               <button className="px-8 py-3 rounded-full border border-[#F4F5F2]/70 text-[13px] text-[#F4F5F2] transition hover:bg-[#F4F5F2] hover:text-[#2D3C68]">
                 Explore Destinations →
@@ -242,83 +239,273 @@ function WorldDefinition() {
   )
 }
 
-function ExperienceStructure() {
+function RegionSystem() {
+  const mapRef = useRef(null);
+  const sectionRef = useRef(null);
 
+  useEffect(() => {
+    let raf;
+    let t = 0;
+
+    const animate = () => {
+      t += 0.002;
+
+      if (mapRef.current) {
+        const x = Math.cos(t * 0.6) * 10;
+        const y = Math.sin(t) * 14;
+
+        mapRef.current.style.transform = `
+          translate(${x}px, ${y}px) scale(1.06)
+        `;
+      }
+
+      raf = requestAnimationFrame(animate);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) animate();
+        else cancelAnimationFrame(raf);
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-[#F4F5F2] py-[100px] overflow-hidden"
+    >
+      {/* DIRECTIONAL DEPTH */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2D3C68]/5 to-transparent pointer-events-none" />
+
+      <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-12 items-center relative">
+
+        {/* ================= MAP ================= */}
+        <div className="col-span-7 relative h-[640px] flex items-center justify-center">
+
+          <div
+            ref={mapRef}
+            className="relative w-[170%] will-change-transform"
+          >
+            {/* BASE MAP */}
+            <img
+              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776257972/indonesia_ruqj89.svg"
+              alt="Indonesia Map"
+              className="w-full h-auto object-contain opacity-[0.55]"
+            />
+
+            {/* WEST FADE (arah perjalanan) */}
+            <div className="absolute left-0 top-0 w-[35%] h-full bg-gradient-to-r from-[#F4F5F2] to-transparent" />
+
+            {/* EAST EMPHASIS (focal bias, super subtle) */}
+            <div className="absolute right-[5%] top-[20%] w-[300px] h-[300px] bg-[#2D3C68]/8 blur-[120px] rounded-full" />
+          </div>
+
+          {/* GLOBAL ATMOSPHERE */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="w-[420px] h-[420px] bg-[#2D3C68]/6 blur-[120px] rounded-full absolute left-[20%] top-[30%]" />
+          </div>
+        </div>
+
+        {/* ================= CONTENT ================= */}
+        <div className="col-span-5 relative z-10 -ml-[80px]">
+
+          {/* TEXT MASK */}
+          <div className="absolute -left-[40px] top-[-40px] w-[120%] h-[120%] bg-gradient-to-r from-[#F4F5F2] via-[#F4F5F2]/90 to-transparent pointer-events-none" />
+
+          <div className="relative max-w-[440px]">
+
+            <p className="text-[11px] tracking-[0.28em] text-[#2D3C68]/50 mb-6">
+              DESTINATIONS
+            </p>
+
+            <h3 className="font-[Gambarino] text-[52px] leading-[1.05] text-[#2D3C68] mb-6">
+              A country
+              <br />
+              shaped by water
+            </h3>
+
+            <p className="text-[15px] leading-[1.75] text-[#2D3C68]/75">
+              Indonesia stretches across thousands of islands, forming a landscape
+              defined by water. Each region carries a different rhythm — from dry,
+              rugged terrain to dense marine ecosystems — shaping how the sea is
+              experienced.
+            </p>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+function BaliFragment() {
+  const islandRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    let raf;
+    let t = 0;
+
+    const animate = () => {
+      t += 0.002;
+
+      if (islandRef.current) {
+        const x = Math.cos(t * 0.5) * 14;
+        const y = Math.sin(t) * 20;
+
+        islandRef.current.style.transform = `
+          translate(${x}px, ${y}px) scale(1.2)
+        `;
+      }
+
+      raf = requestAnimationFrame(animate);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) animate();
+        else cancelAnimationFrame(raf);
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-[#F4F5F2] py-[240px] overflow-hidden"
+    >
+      {/* DEPTH WASH */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2D3C68]/5 to-transparent pointer-events-none" />
+
+      <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-12 items-center relative">
+
+        {/* ================= ISLAND ================= */}
+        <div className="col-span-7 relative h-[720px]">
+
+          <div
+            ref={islandRef}
+            className="absolute left-[-35%] top-[-15%] w-[200%] opacity-[0.7] will-change-transform"
+          >
+            <img
+              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776862471/svg-image-1_rgzioi.svg"
+              alt="Bali Island"
+              className="w-full h-auto object-contain"
+            />
+
+            {/* SOFT MASS SHADOW */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_55%_50%,rgba(45,60,104,0.18),transparent_70%)]" />
+          </div>
+
+          {/* GLOBAL ATMOSPHERE */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute w-[600px] h-[600px] bg-[#2D3C68]/10 blur-[160px] rounded-full left-[45%] top-[20%]" />
+          </div>
+        </div>
+
+        {/* ================= CONTENT ================= */}
+        <div className="col-span-5 relative z-10 -ml-[120px]">
+
+          {/* MASK */}
+          <div className="absolute -left-[80px] top-[-80px] w-[140%] h-[140%] bg-gradient-to-r from-[#F4F5F2] via-[#F4F5F2]/95 to-transparent pointer-events-none" />
+
+          <div className="relative max-w-[460px]">
+
+            <p className="text-[11px] tracking-[0.28em] text-[#2D3C68]/50 mb-6">
+              A FRAGMENT
+            </p>
+
+            <h3 className="font-[Gambarino] text-[56px] leading-[1.05] text-[#2D3C68] mb-6">
+              A shape
+              <br />
+              in the water
+            </h3>
+
+            <p className="text-[15px] leading-[1.8] text-[#2D3C68]/75">
+              Removed from context, the island is no longer a destination.
+              It becomes a presence — defined by edges, distance, and the
+              surrounding sea.
+            </p>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+function ExperienceStructure() {
   const destinations = [
     {
-      name: "Raja Ampat",
-      hero: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2000",
-      portrait: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_05_PM_nsfruu.png",
+      name: "Raja Ampat Archipelago",
+      hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_18_PM_ylbg4q.png",
+      mainImage: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_28_23_PM_1_pbeqgf.png",
       description:
-        "A remote marine region in West Papua, known for its unmatched biodiversity beneath the surface.",
-      detail:
-        "Days here are shaped almost entirely by water. Movement is constant — currents shift, light refracts, and marine life moves in layered depth. You don’t simply observe it; you enter it, adjusting your pace to something that was already in motion long before you arrived.",
-      activities: [
+        "Nothing here needs to be arranged. The water moves, the light shifts, and you follow. Time softens when everything around you is already in motion.",
+      gallery: [
         {
-          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
-          text: "Snorkel across coral systems where visibility reveals dense layers of marine life.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png",
+          text: "Below the surface, everything moves on its own rhythm",
         },
         {
-          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
-          text: "Navigate between limestone formations rising directly from open water.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_29_52_PM_fzz6eu.png",
+          text: "Paths appear as you move between islands and land",
         },
         {
-          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_06_28_PM_fkhsss.png",
-          text: "Drift slowly through lagoons shaped by tide and geological structure.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869887/ChatGPT_Image_Apr_22_2026_09_57_35_PM_1_vwbdwb.png",
+          text: "Evenings settle quietly, without needing anything more",
         },
       ],
     },
-
     {
-      name: "Labuan Bajo",
-      hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_01_PM_yfdh57.png",
-      portrait: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200",
+      name: "Komodo — Padar Island",
+      hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_09_52_24_PM_ksm8ag.png",
+      mainImage: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_27_PM_sk1t1e.png",
       description:
-        "The gateway to Komodo National Park, where rugged islands meet open ocean.",
-      detail:
-        "The rhythm shifts once you step onto land. Terrain becomes dry, distances feel longer, and movement requires more intention. The environment is exposed — sun, wind, and elevation define how you move through space.",
-      activities: [
+        "The land holds a different pace. You walk through heat, through open space, through something more exposed. Not rushed, not forced — just steady movement forward.",
+      gallery: [
         {
-          img: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1200",
-          text: "Walk across open terrain where wildlife exists without enclosure.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_31_PM_maxcdv.png",
+          text: "Life here moves quietly, powerful without needing to show it",
         },
         {
-          img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200",
-          text: "Swim in bays framed by dry, sculpted island ridges.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_34_PM_ot1mm8.png",
+          text: "Higher ground opens everything at once",
         },
         {
-          img: "https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=1200",
-          text: "Observe shifting light across layered island formations.",
+          img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_38_PM_u9zpja.png",
+          text: "By the end of the day, you return and let it slow again",
         },
       ],
-    }, 
+    },
   ]
 
   return (
-    <section className="bg-[#F4F5F2] pb-[160px]">
+    <section className="bg-[#F4F5F2]">
 
-      {/* ================= INTRO ================= */}
-      <div className="max-w-[900px] mx-auto px-6 pt-[180px] mb-[140px]">
-
-        <p className="text-[11px] tracking-[0.32em] text-[#2D3C68]/50 mb-6">
-          DESTINATIONS
-        </p>
-
-        <h2 className="font-[Gambarino] text-[56px] md:text-[72px] leading-[1.04] text-[#2D3C68]">
-          What you’ll experience
-        </h2>
-
-      </div>
-
-      {/* ================= DESTINATIONS ================= */}
       {destinations.map((dest, i) => (
-        <div
-          key={i}
-          className={i === destinations.length - 1 ? "" : "mb-[200px]"}
-        >
+        <div key={i}>
 
-          {/* HERO */}
-          <div className="w-full h-[75vh] relative overflow-hidden">
+          {/* ================= HERO ================= */}
+          <div className="w-full h-[70vh] md:h-[85vh] relative overflow-hidden">
 
             <img
               src={dest.hero}
@@ -328,73 +515,82 @@ function ExperienceStructure() {
             <div className="absolute inset-0 bg-black/10" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
 
-            <div className="absolute bottom-14 left-[max(6%,60px)] text-white max-w-[560px]">
-
-              <p className="text-[11px] tracking-[0.3em] uppercase text-white/70 mb-4">
-                Destination
-              </p>
-
-              <h3 className="font-[Gambarino] text-[56px] leading-[1.04] mb-5">
+            <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
+              <h1 className="font-[Gambarino] text-[40px] md:text-[72px] text-white leading-[1.1]">
                 {dest.name}
-              </h3>
-
-              <p className="text-[16px] leading-[1.85] text-white/90">
-                {dest.description}
-              </p>
-
+              </h1>
             </div>
 
           </div>
 
-          {/* CONTENT */}
-          <div className="max-w-[1100px] mx-auto px-6 mt-[120px] mb-[110px]">
 
-            <div className="grid grid-cols-12 gap-16 items-start">
+          {/* ================= LARGE IMAGE + TEXT ================= */}
+          <div className="max-w-[1200px] mx-auto px-6 mt-[80px] md:mt-[140px]">
 
-              <div className="col-span-5">
-                <p className="text-[16px] leading-[1.95] text-[#2D3C68]">
-                  <span className="block mb-4 text-[#2D3C68]/70">
-                    {dest.detail.split(".")[0]}.
-                  </span>
-                  {dest.detail.split(".").slice(1).join(".")}
-                </p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
 
-              <div className="col-span-6 col-start-7">
-                <div className="aspect-[4/5] overflow-hidden translate-y-2">
+              {/* IMAGE */}
+              <div className="md:col-span-7">
+                <div className="aspect-[16/10] overflow-hidden">
                   <img
-                    src={dest.portrait}
+                    src={dest.mainImage}
                     className="w-full h-full object-cover scale-[1.03]"
                   />
                 </div>
               </div>
 
+              {/* TEXT */}
+              <div className="md:col-span-5 md:translate-y-6">
+
+                <div className="max-w-full md:max-w-[320px] mt-6 md:mt-0">
+
+                  <p className="text-[14px] md:text-[15px] leading-[1.8] text-[#2D3C68]/80 mb-8 md:mb-10">
+                    {dest.description}
+                  </p>
+
+                  <div className="mb-4 md:mb-6 text-[10px] md:text-[11px] tracking-[0.25em] text-[#2D3C68]/50">
+                    START YOUR JOURNEY
+                  </div>
+
+                  <button className="border border-[#2D3C68]/40 px-5 md:px-6 py-3 text-[11px] md:text-[12px] tracking-[0.15em] text-[#2D3C68] hover:bg-[#2D3C68] hover:text-white transition w-full md:w-auto">
+                    REQUEST ITINERARY
+                  </button>
+
+                </div>
+
+              </div>
+
             </div>
 
           </div>
 
-          {/* GALLERY */}
-          <div className="max-w-[1200px] mx-auto px-6">
 
-            <div className="grid grid-cols-3 gap-8">
+          {/* ================= GALLERY ================= */}
+          <div className="max-w-[1200px] mx-auto px-6 mt-[80px] md:mt-[140px] pb-[100px] md:pb-[160px]">
 
-              {dest.activities.map((item, j) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+              {dest.gallery.map((item, j) => (
                 <div
                   key={j}
-                  className={j === 1 ? "translate-y-6" : ""}
+                  className={
+                    j === 1
+                      ? "md:translate-y-10"
+                      : j === 2
+                      ? "md:-translate-y-6"
+                      : ""
+                  }
                 >
-
-                  <div className="aspect-[4/3] overflow-hidden mb-5">
+                  <div className="aspect-[4/3] overflow-hidden mb-4">
                     <img
                       src={item.img}
-                      className="w-full h-full object-cover scale-[1.02]"
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
-                  <p className="text-[15px] text-[#2D3C68]/80 leading-[1.75]">
+                  <p className="text-[13px] md:text-[14px] text-[#2D3C68]/70">
                     {item.text}
                   </p>
-
                 </div>
               ))}
 
@@ -546,70 +742,98 @@ function Destinations() {
 
 
 function Reservation() {
+  const sectionRef = useRef(null);
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    let rafId = null;
+
+    const handleScroll = () => {
+      if (!sectionRef.current || !imageRef.current) return;
+
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowH = window.innerHeight;
+
+      // progress: -1 → 1 (atas → bawah)
+      const progress = rect.top / windowH;
+
+      // subtle banget
+      const translateY = progress * -50;
+
+      imageRef.current.style.transform = `translateY(${translateY}px) scale(1.06)`;
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        handleScroll();
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
-    <section className="relative w-full min-h-[100vh] overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative h-[88vh] w-full overflow-hidden"
+    >
+      {/* ================= BACKGROUND (INNER PARALLAX) ================= */}
+      <div className="absolute inset-0 overflow-hidden">
+        <img
+          ref={imageRef}
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
+          alt="Serenity closing"
+          className="w-full h-full object-cover will-change-transform"
+          style={{
+            transform: "scale(1.06)",
+          }}
+        />
+      </div>
 
-      {/* ================= BACKGROUND ================= */}
-      <img
-        src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
-        alt="Serenity Reservation"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* ================= NATURAL OVERLAY ================= */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/45" />
 
-      {/* ================= DEPTH OVERLAY ================= */}
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/50" />
+      {/* LIGHT LIFT */}
+      <div className="absolute inset-0 bg-black/10" />
 
       {/* ================= CONTENT ================= */}
-      <div className="relative z-10 min-h-[100vh] flex items-center justify-center px-6">
-
-        <div className="text-center max-w-[680px]">
+      <div className="relative z-10 h-full flex items-center justify-center px-6">
+        <div className="text-center max-w-[760px] -mt-6">
 
           {/* LABEL */}
-          <p className="text-[11px] tracking-[0.4em] text-white/50 uppercase">
-            Reservation
+          <p className="text-[11px] tracking-[0.4em] text-white/60 uppercase">
+            Reservations
           </p>
 
           {/* HEADLINE */}
-          <h2 className="mt-8 font-[Gambarino] text-[48px] md:text-[64px] leading-[1.08] text-white">
+ {/* HEADLINE */}
+ <h2 className="mt-8 font-[Gambarino] text-[48px] md:text-[64px] leading-[1.08] text-white">
             Your journey begins at sea
           </h2>
 
-          {/* SUBTEXT */}
-          <p className="mt-8 text-[15px] text-white/75 leading-[1.9] max-w-[520px] mx-auto">
-            Share your preferred dates and group size.  
-            Everything else unfolds naturally — guided, not scheduled.
-          </p>
-
-          {/* CTA */}
-          <div className="mt-14 flex flex-col md:flex-row items-center justify-center gap-5">
+          {/* CTA GROUP */}
+          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-4">
 
             {/* PRIMARY */}
-            <button className="group relative px-10 py-4 bg-white text-[#1A1A1A] text-[13px] tracking-[0.18em] uppercase rounded-full overflow-hidden">
-
-              {/* subtle cinematic hover */}
-              <span className="absolute inset-0 bg-white scale-100 group-hover:scale-105 transition duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"></span>
-
-              <span className="relative z-10">
-                Enquire now
-              </span>
+            <button className="px-8 py-3 bg-white text-[#1A1A1A] text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:bg-white/90">
+              Reserve
             </button>
 
             {/* SECONDARY */}
-            <a
-              href="https://wa.me/6281353613617"
-              target="_blank"
-              className="px-9 py-4 border border-white/40 text-white text-[13px] tracking-[0.18em] uppercase rounded-full hover:border-white transition duration-300"
-            >
-              WhatsApp
-            </a>
+            <button className="px-8 py-3 border border-white/40 text-white text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:border-white">
+              View availability
+            </button>
 
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

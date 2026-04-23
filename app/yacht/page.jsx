@@ -32,6 +32,18 @@ function Hero() {
   return (
     <section className="relative w-full bg-[#2D3C68] overflow-hidden">
 
+      {/* ================= BACKGROUND IMAGE ================= */}
+      <div className="absolute inset-0">
+        <img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776870966/ChatGPT_Image_Apr_22_2026_10_15_17_PM_1_clrjp0.png"
+          alt="Serenity yacht"
+          className="w-full h-full object-cover scale-[1.05]"
+        />
+      </div>
+
+      {/* ================= OVERLAY ================= */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/40 via-[#2D3C68]/60 to-[#2D3C68]/85" />
+
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-[140px] pb-[120px]">
 
@@ -72,11 +84,11 @@ function Hero() {
 
 function About() {
   return (
-    <section className="bg-[#F4F5F2] py-[100px] px-6 text-[#2D3C68]">
+    <section className="bg-[#F4F5F2] pt-[120px] pb-[100px] px-6 text-[#2D3C68]">
 
-      <div className="max-w-[900px] mx-auto">
+      <div className="max-w-[1000px] mx-auto">
 
-        {/* LABEL (DI LUAR GRID) */}
+        {/* LABEL */}
         <p className="text-[11px] tracking-[0.35em] text-[#2D3C68]/40 uppercase mb-6">
           About
         </p>
@@ -84,64 +96,27 @@ function About() {
         {/* GRID */}
         <div className="grid md:grid-cols-2 gap-12 items-start">
 
-          {/* LEFT */}
+          {/* LEFT (PHILOSOPHY BRIDGE) */}
           <h2 className="font-[Gambarino] text-[36px] md:text-[44px] leading-[1.2]">
-            A 40.75 Meter
+            A Yacht Designed
             <br />
-            Phinisi Yacht
+            for Life On Board
           </h2>
 
-          {/* RIGHT */}
+          {/* RIGHT (DATA + CONTEXT) */}
           <p className="text-[15px] leading-[1.7] text-[#2D3C68]/70">
-            Serenity accommodates up to 12 guests with a full crew on board. 
-            The layout supports both shared and private use across multiple decks, 
-            designed for multi-day journeys across Indonesia.
+            Serenity is a 40.75 meter phinisi yacht accommodating up to 12 guests,
+            supported by a full crew on board. The layout is shaped to balance shared
+            moments and private space across multiple decks, allowing each journey to
+            unfold naturally over time.
           </p>
 
         </div>
 
       </div>
-
     </section>
   );
 }
-
-function Identity() {
-  return (
-    <section className="bg-[#F5F2ED] py-[140px] px-6">
-
-      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-16 items-start">
-
-        <div>
-          <p className="text-[12px] tracking-[0.3em] text-[#6B7280] uppercase">
-            The Phinisi
-          </p>
-
-          <h2 className="mt-6 font-[Canela] text-[32px] md:text-[44px] leading-[1.2] text-[#0F172A]">
-            Built for Stillness.
-            <br />
-            Designed for Distance.
-          </h2>
-        </div>
-
-        <div className="max-w-[460px]">
-          <p className="text-[15px] text-[#475569] leading-relaxed">
-            A 45-meter handcrafted phinisi, sailing quietly through Indonesia’s most remote waters — with space for only fourteen guests.
-          </p>
-
-          <div className="mt-8">
-            <button className="text-sm tracking-wide text-[#0F172A] border-b border-[#0F172A]/30 hover:border-[#0F172A] transition">
-              View Specifications
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-  );
-}
-
 
 function Experience() {
   return (
@@ -149,14 +124,14 @@ function Experience() {
       
       
 
-      <div className="max-w-[1200px] mx-auto">
+      <div className="max-w-[1000px] mx-auto">
 
         {/* ================= BLOCK 1 ================= */}
         <div className="mb-[160px] grid md:grid-cols-2 gap-16 items-center">
 
           {/* TEXT */}
           <div className="max-w-[520px]">
-            <h2 className="font-[Gambarino] text-[44px] md:text-[52px] leading-[1.1] text-[#2D3C68]">
+            <h2 className="font-[Gambarino]  text-[36px] md:text-[44px] leading-[1.2] text-[#2D3C68]">
               Life Happens
               <br />
               On the Open Deck
@@ -202,7 +177,7 @@ function Experience() {
 
           {/* TEXT */}
           <div className="max-w-[520px] md:ml-auto">
-            <h2 className="font-[Gambarino] text-[44px] md:text-[52px] leading-[1.1] text-[#2D3C68]">
+            <h2 className="font-[Gambarino]  text-[36px] md:text-[44px] leading-[1.2] text-[#2D3C68]">
               A Space Between
               <br />
               Outside and Inside
@@ -243,6 +218,45 @@ function Experience() {
     </section>
   );
 }
+
+function Identity() {
+  return (
+    <section className="bg-[#F5F2ED] py-[140px] px-6">
+
+      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-16 items-start">
+
+        <div>
+          <p className="text-[12px] tracking-[0.3em] text-[#6B7280] uppercase">
+            The Phinisi
+          </p>
+
+          <h2 className="mt-6 font-[Canela] text-[32px] md:text-[44px] leading-[1.2] text-[#0F172A]">
+            Built for Stillness.
+            <br />
+            Designed for Distance.
+          </h2>
+        </div>
+
+        <div className="max-w-[460px]">
+          <p className="text-[15px] text-[#475569] leading-relaxed">
+            A 45-meter handcrafted phinisi, sailing quietly through Indonesia’s most remote waters — with space for only fourteen guests.
+          </p>
+
+          <div className="mt-8">
+            <button className="text-sm tracking-wide text-[#0F172A] border-b border-[#0F172A]/30 hover:border-[#0F172A] transition">
+              View Specifications
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  );
+}
+
+
+
 
 /* =========================
    SPACES (DENSE, TANPA DIPAKSA)
@@ -416,7 +430,7 @@ function Cabins() {
 
   return (
     <section className="relative bg-[#F4F5F2] py-[50px] px-6 overflow-hidden">
-      <div className="max-w-[1200px] mx-auto">
+      <div className="max-w-[1000px] mx-auto">
 
         {/* HEADER */}
         <div className="mb-[60px] max-w-[520px]">

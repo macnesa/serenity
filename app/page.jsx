@@ -39,6 +39,8 @@ export default function Home() {
   )
 }
 
+const DISABLE_ANIMATION = false; // ubah ke false kalau mau animasi aktif
+
 
 /* =========================
    HERO SECTION
@@ -89,7 +91,6 @@ function Hero() {
           className="object-cover"
         />
 
-        {/* OVERLAY */}
         <div className="absolute inset-0 bg-[#2D3C68]/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/40 via-[#2D3C68]/15 to-transparent" />
       </div>
@@ -99,72 +100,282 @@ function Hero() {
         ref={contentRef}
         className="relative z-10 h-full flex items-end justify-center text-center px-6 pb-[13vh]"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-[760px]"
-        >
+        <div className="max-w-[760px]">
 
-          {/* MICRO CONTEXT */}
-          <div className="mb-6 text-[11px] md:text-[12px] tracking-[0.28em] text-[#F4F5F2]/75">
+          {/* MICRO */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 1.2,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mb-6 text-[11px] md:text-[12px] tracking-[0.28em] text-[#F4F5F2]/75"
+          >
             INDONESIAN PHINISI YACHT
-          </div>
+          </motion.div>
 
           {/* HEADLINE */}
           <h1 className="font-[Gambarino] text-[48px] md:text-[74px] lg:text-[88px] leading-[1.02] tracking-[-0.035em] text-[#F4F5F2]">
-            <span className="block opacity-90">
+
+            <motion.span
+              initial={{ opacity: 0, y: 60, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{
+                duration: 1.4,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="block opacity-90"
+            >
               Explore Indonesia
-            </span>
-            <span className="block">
+            </motion.span>
+
+            <motion.span
+              initial={{ opacity: 0, y: 60, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{
+                duration: 1.4,
+                delay: 0.15,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="block"
+            >
               by Sea
-            </span>
+            </motion.span>
+
           </h1>
 
           {/* SUBCOPY */}
-          <p className="mt-5 text-[15px] md:text-[17px] text-[#F4F5F2]/90 max-w-[520px] mx-auto leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 1.4,
+              delay: 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-5 text-[15px] md:text-[17px] text-[#F4F5F2]/90 max-w-[520px] mx-auto leading-relaxed"
+          >
             Sail through Raja Ampat and Komodo with up to 12 guests on a handcrafted phinisi yacht.
-          </p>
+          </motion.p>
 
           {/* CTA */}
-          <div className="mt-10 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.6 }}
+            className="mt-10 flex justify-center"
+          >
             <button className="group px-8 py-3 rounded-full border border-[#F4F5F2]/70 text-[13px] tracking-[0.02em] text-[#F4F5F2] transition-all duration-500 hover:bg-[#F4F5F2] hover:text-[#2D3C68] hover:border-[#F4F5F2]">
               <span className="inline-block transition-transform duration-500 group-hover:translate-y-[-2px]">
                 View Journeys →
               </span>
             </button>
-          </div>
+          </motion.div>
 
-        </motion.div>
+        </div>
       </div>
 
     </section>
   );
 }
 
+
 function Introduction() {
+  const sectionRef = useRef(null);
+  const headlineRef = useRef(null);
+  const descRef = useRef(null);
+  const imageRef = useRef(null);
+
+  const leftImgRef = useRef(null);
+  const rightImgRef = useRef(null);
+  const bottomImgRef = useRef(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    // ================= 🚫 ANIMATION OFF =================
+    if (DISABLE_ANIMATION) {
+      const headlineEl = headlineRef.current;
+      const descEl = descRef.current;
+      const imageEl = imageRef.current;
+
+      const leftEl = leftImgRef.current;
+      const rightEl = rightImgRef.current;
+      const bottomEl = bottomImgRef.current;
+
+      if (headlineEl) {
+        const lines = headlineEl.querySelectorAll(".line") || [];
+        gsap.set(lines, {
+          opacity: 1,
+          filter: "blur(0px)",
+        });
+      }
+
+      if (descEl) {
+        gsap.set(descEl, {
+          opacity: 1,
+          filter: "blur(0px)",
+        });
+      }
+
+      if (imageEl) {
+        gsap.set(imageEl, {
+          opacity: 1,
+          scale: 1,
+        });
+      }
+
+      if (leftEl) gsap.set(leftEl, { y: 0 });
+      if (rightEl) gsap.set(rightEl, { y: 0 });
+      if (bottomEl) gsap.set(bottomEl, { y: 0 });
+
+      return; // 🔥 skip semua animasi
+    }
+
+    // ================= ✅ NORMAL GSAP =================
+    const ctx = gsap.context(() => {
+      const headlineEl = headlineRef.current;
+      const descEl = descRef.current;
+      const imageEl = imageRef.current;
+
+      const leftEl = leftImgRef.current;
+      const rightEl = rightImgRef.current;
+      const bottomEl = bottomImgRef.current;
+
+      // ================= HEADLINE =================
+      if (headlineEl) {
+        const lines = headlineEl.querySelectorAll(".line") || [];
+
+        if (lines.length) {
+          gsap.fromTo(
+            lines,
+            {
+              opacity: 0,
+              filter: "blur(6px)",
+            },
+            {
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 1.4,
+              stagger: 0.2,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: headlineEl,
+                start: "top 80%",
+              },
+            }
+          );
+        }
+      }
+
+      // ================= DESCRIPTION =================
+      if (descEl) {
+        gsap.fromTo(
+          descEl,
+          {
+            opacity: 0,
+            filter: "blur(4px)",
+          },
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1.6,
+            ease: "power2.out",
+            delay: 0.2,
+            scrollTrigger: {
+              trigger: descEl,
+              start: "top 85%",
+            },
+          }
+        );
+      }
+
+      // ================= CENTER IMAGE =================
+      if (imageEl) {
+        gsap.fromTo(
+          imageEl,
+          {
+            scale: 1.06,
+            opacity: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 1.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: imageEl,
+              start: "top 85%",
+            },
+          }
+        );
+      }
+
+      // ================= PARALLAX =================
+      const parallaxConfig = {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      };
+
+      if (leftEl) {
+        gsap.to(leftEl, {
+          y: -40,
+          ease: "none",
+          scrollTrigger: parallaxConfig,
+        });
+      }
+
+      if (rightEl) {
+        gsap.to(rightEl, {
+          y: -80,
+          ease: "none",
+          scrollTrigger: parallaxConfig,
+        });
+      }
+
+      if (bottomEl) {
+        gsap.to(bottomEl, {
+          y: -120,
+          ease: "none",
+          scrollTrigger: parallaxConfig,
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       className="relative w-full bg-[#F4F5F2] py-32 px-6 overflow-hidden"
-      aria-label="Introduction"
     >
-       {/* ================= TOP TRANSITION ================= */}
-       <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/15 to-transparent pointer-events-none" />
-       
-      <div className="max-w-5xl mx-auto relative text-center">
+      {/* TOP TRANSITION */}
+      <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/15 to-transparent pointer-events-none" />
 
+      <div className="max-w-5xl mx-auto relative text-center">
         {/* LABEL */}
         <div className="text-[10px] tracking-[0.4em] text-[#2D3C68]/60 mb-5 uppercase">
           Experience
         </div>
 
         {/* HEADLINE */}
-        <h2 className="font-[Gambarino]  text-[48px] md:text-[64px] leading-[1.06] tracking-[-0.025em] text-[#2D3C68] max-w-[500px] mx-auto">
-          A way of living at your pace
+        <h2
+          ref={headlineRef}
+          className="font-[Gambarino] text-[48px] md:text-[64px] leading-[1.06] tracking-[-0.025em] text-[#2D3C68] max-w-[500px] mx-auto"
+        >
+          <span className="block line">A way of living</span>
+          <span className="block line">at your pace</span>
         </h2>
 
         {/* DESCRIPTION */}
-        <p className="mt-6 text-[#2D3C68]/70 max-w-[400px] mx-auto text-[13px] leading-[1.6]">
+        <p
+          ref={descRef}
+          className="mt-6 text-[#2D3C68]/70 max-w-[400px] mx-auto text-[13px] leading-[1.6]"
+        >
           Move with the rhythm of the ocean. Wake slowly, dive freely,
           gather without effort. Serenity is not something you visit —
           it is something you step into.
@@ -174,9 +385,9 @@ function Introduction() {
         <div className="mt-8">
           <button
             type="button"
-            className="group px-6 py-3 text-[12px] tracking-[0.15em] border border-[#2D3C68]/30 rounded-full text-[#2D3C68] transition-all duration-500 hover:bg-[#2D3C68] hover:text-white hover:border-[#2D3C68]"
+            className="group px-6 py-3 text-[12px] tracking-[0.15em] border border-[#2D3C68]/30 rounded-full text-[#2D3C68] transition-all duration-700 hover:bg-[#2D3C68] hover:text-white hover:border-[#2D3C68]"
           >
-            <span className="inline-block transition-transform duration-500 group-hover:translate-x-[2px]">
+            <span className="inline-block transition-all duration-700 group-hover:translate-x-[4px] group-hover:tracking-[0.2em]">
               Discover the Experience →
             </span>
           </button>
@@ -184,65 +395,70 @@ function Introduction() {
 
         {/* CENTER IMAGE */}
         <div className="mt-20 max-w-[340px] mx-auto">
-          <div className="aspect-[4/5] overflow-hidden relative">
+          <div
+            ref={imageRef}
+            className="aspect-[4/5] overflow-hidden relative"
+          >
             <Image
               src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/40_oxbvdi.webp"
               alt="Life on board Serenity yacht"
               fill
-              sizes="(max-width: 768px) 100vw, 340px"
               className="object-cover"
               priority
             />
           </div>
         </div>
-
       </div>
 
-      {/* ================= ORBIT (NON-INTERACTIVE) ================= */}
-
       {/* LEFT */}
-      <div className="pointer-events-none absolute left-[12%] top-[28%] w-[180px] hidden lg:block">
+      <div
+        ref={leftImgRef}
+        className="pointer-events-none absolute left-[12%] top-[28%] w-[180px] hidden lg:block"
+      >
         <div className="aspect-[4/5] overflow-hidden relative">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
             alt="Open sea moment"
             fill
-            sizes="180px"
             className="object-cover"
           />
         </div>
       </div>
 
       {/* RIGHT */}
-      <div className="pointer-events-none absolute right-[10%] top-[36%] w-[200px] hidden lg:block">
+      <div
+        ref={rightImgRef}
+        className="pointer-events-none absolute right-[10%] top-[36%] w-[200px] hidden lg:block"
+      >
         <div className="aspect-[4/5] overflow-hidden relative">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
             alt="Interior space on board"
             fill
-            sizes="200px"
             className="object-cover"
           />
         </div>
       </div>
 
       {/* RIGHT LOWER */}
-      <div className="pointer-events-none absolute right-[22%] bottom-[20%] w-[160px] hidden lg:block">
+      <div
+        ref={bottomImgRef}
+        className="pointer-events-none absolute right-[22%] bottom-[20%] w-[160px] hidden lg:block"
+      >
         <div className="aspect-[4/5] overflow-hidden relative">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068965/37_rlznw3.webp"
             alt="Ocean environment"
             fill
-            sizes="160px"
             className="object-cover"
           />
         </div>
-      </div> 
+      </div>
     </section>
   );
 }
 
-
+ 
 
 function QuickContext() {
   return (
@@ -297,14 +513,88 @@ function QuickContext() {
  
 
 function Experience() {
-  return (
-    <section className="relative bg-[#F4F5F2] pt-[180px] pb-[100px] px-6 overflow-hidden">
+  const sectionRef = useRef(null);
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      // LEFT IMAGE REVEAL
+      gsap.fromTo(
+        leftRef.current,
+        {
+          opacity: 0,
+          scale: 1.04,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.6,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: leftRef.current,
+            start: "top 85%",
+          },
+        }
+      );
+
+      // RIGHT IMAGE REVEAL
+      gsap.fromTo(
+        rightRef.current,
+        {
+          opacity: 0,
+          scale: 1.04,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.6,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: rightRef.current,
+            start: "top 85%",
+          },
+        }
+      );
+
+      // SUBTLE PARALLAX SHIFT
+      gsap.to(leftRef.current, {
+        y: -30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      gsap.to(rightRef.current, {
+        y: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-[#F4F5F2] pt-[180px] pb-[100px] px-6 overflow-hidden"
+    >
       <div className="max-w-[980px] mx-auto">
 
-        {/* ================= HEADER ================= */}
+        {/* HEADER */}
         <div className="text-center max-w-[720px] mx-auto mb-24">
-
           <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
             On Board
           </p>
@@ -316,87 +606,62 @@ function Experience() {
           <p className="mt-7 text-[16px] text-[#5C5C5C] leading-relaxed max-w-[560px] mx-auto">
             Days move between the deck, the water, and time in between. Nothing is fixed, but everything finds its place.
           </p>
-
         </div>
 
-        {/* ================= GRID ================= */}
+        {/* GRID */}
         <div className="grid md:grid-cols-2 gap-10 items-start">
 
-          {/* ================= LEFT ================= */}
-          <div className="flex justify-center">
-
+          {/* LEFT */}
+          <div ref={leftRef} className="flex justify-center">
             <div>
-
-              {/* 4:5 FRAME (BIGGER) */}
-              <div className="relative w-[420px] aspect-[4/5] overflow-hidden rounded-[2px]">
+              <div className="relative w-[420px] aspect-[4/5] overflow-hidden">
                 <img
                   src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
-                  alt="Open deck"
-                  className="w-full h-full object-cover object-[center_65%] scale-[1.03]"
+                  className="w-full h-full object-cover scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-black/5" />
               </div>
 
               <div className="mt-9">
-                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
+                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A]">
                   Open Deck Living
                 </h3>
 
-                <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[440px]">
-                  Most of the day unfolds outside — between the sun, the sea, and conversations that stretch without a plan.
+                <p className="mt-4 text-[15px] text-[#5C5C5C]">
+                  Most of the day unfolds outside — between the sun, the sea,
+                  and conversations that stretch without a plan.
                 </p>
-
-                <div className="mt-6">
-                  <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
-                    Explore deck →
-                  </button>
-                </div>
               </div>
-
             </div>
-
           </div>
 
-          {/* ================= RIGHT ================= */}
-          <div className="flex justify-center md:mt-[80px]">
-
+          {/* RIGHT */}
+          <div ref={rightRef} className="flex justify-center md:mt-[80px]">
             <div>
-
-              {/* 4:5 FRAME (BIGGER) */}
-              <div className="relative w-[400px] aspect-[4/5] overflow-hidden rounded-[2px]">
+              <div className="relative w-[400px] aspect-[4/5] overflow-hidden">
                 <img
                   src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
-                  alt="Private cabin"
-                  className="w-full h-full object-cover object-[center_60%] scale-[1.02]"
+                  className="w-full h-full object-cover scale-[1.02]"
                 />
-                <div className="absolute inset-0 bg-black/5" />
               </div>
 
               <div className="mt-9">
-                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A] leading-[1.2]">
+                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A]">
                   Quiet When You Need It
                 </h3>
 
-                <p className="mt-4 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[440px]">
-                  When things slow down, private spaces offer a place to pause — simple, quiet, and your own.
+                <p className="mt-4 text-[15px] text-[#5C5C5C]">
+                  When things slow down, private spaces offer a place to pause —
+                  simple, quiet, and your own.
                 </p>
-
-                <div className="mt-6">
-                  <button className="text-[13px] tracking-[0.12em] text-[#1A1A1A] border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] transition">
-                    View cabins →
-                  </button>
-                </div>
               </div>
-
             </div>
-
           </div>
 
         </div>
 
-        {/* ================= PRIMARY CTA ================= */}
+        {/* CTA */}
         <div className="mt-28 flex justify-center">
-          <button className="text-[13px] tracking-[0.18em] uppercase text-[#1A1A1A]/80 border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition">
+          <button className="text-[13px] tracking-[0.18em] uppercase text-[#1A1A1A]/80 border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A]">
             Step inside the yacht →
           </button>
         </div>
@@ -1140,25 +1405,69 @@ function Testimonials() {
 }
 
 function Closing() {
-  return (
-    <section className="relative h-[100vh] w-full overflow-hidden">
+  const sectionRef = useRef(null);
+  const imageRef = useRef(null);
 
-      {/* ================= BACKGROUND ================= */}
-      <img
-        src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
-        alt="Serenity closing"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+  useEffect(() => {
+    let rafId = null;
+
+    const handleScroll = () => {
+      if (!sectionRef.current || !imageRef.current) return;
+
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowH = window.innerHeight;
+
+      // progress: -1 → 1 (atas → bawah)
+      const progress = rect.top / windowH;
+
+      // subtle banget
+      const translateY = progress * -50;
+
+      imageRef.current.style.transform = `translateY(${translateY}px) scale(1.06)`;
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        handleScroll();
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative h-[88vh] w-full overflow-hidden"
+    >
+      {/* ================= BACKGROUND (INNER PARALLAX) ================= */}
+      <div className="absolute inset-0 overflow-hidden">
+        <img
+          ref={imageRef}
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
+          alt="Serenity closing"
+          className="w-full h-full object-cover will-change-transform"
+          style={{
+            transform: "scale(1.06)",
+          }}
+        />
+      </div>
 
       {/* ================= NATURAL OVERLAY ================= */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/45" />
 
-      {/* LIGHT LIFT (biar gak berat banget) */}
+      {/* LIGHT LIFT */}
       <div className="absolute inset-0 bg-black/10" />
 
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 h-full flex items-center justify-center px-6">
-
         <div className="text-center max-w-[760px] -mt-6">
 
           {/* LABEL */}
@@ -1168,37 +1477,31 @@ function Closing() {
 
           {/* HEADLINE */}
           <h2 className="mt-6 text-[44px] md:text-[64px] leading-[1.12] text-white font-[Gambarino]">
-
-           
-          <span className="block font-light">
+            <span className="block font-light">
               Find the <span className="italic">Sanctuary</span>
             </span>
 
             <span className="block mt-2">
               You’ve Been Searching For
             </span>
-
           </h2>
 
           {/* CTA GROUP */}
           <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-4">
 
             {/* PRIMARY */}
-            <button className="px-8 py-3 bg-white text-[#1A1A1A] text-[13px] tracking-[0.15em] uppercase rounded-full hover:bg-white/90 transition">
+            <button className="px-8 py-3 bg-white text-[#1A1A1A] text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:bg-white/90">
               Reserve
             </button>
 
             {/* SECONDARY */}
-            <button className="px-8 py-3 border border-white/40 text-white text-[13px] tracking-[0.15em] uppercase rounded-full hover:border-white transition">
+            <button className="px-8 py-3 border border-white/40 text-white text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:border-white">
               View availability
             </button>
 
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }
@@ -1832,6 +2135,10 @@ function Destinations() {
   const [index, setIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
 
+  const frameRef = useRef(null);
+  const currentImgRef = useRef(null);
+  const prevImgRef = useRef(null);
+
   const data = [
     {
       place: "Raja Ampat",
@@ -1862,6 +2169,7 @@ Time stretches just enough for you to forget you were tracking it.`,
     },
   ];
 
+  // AUTO SLIDE
   useEffect(() => {
     const interval = setInterval(() => {
       setPrevIndex(index);
@@ -1870,6 +2178,31 @@ Time stretches just enough for you to forget you were tracking it.`,
 
     return () => clearInterval(interval);
   }, [index]);
+
+  // PARALLAX (IMAGE INSIDE)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!frameRef.current) return;
+
+      const rect = frameRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const progress = rect.top / windowHeight;
+
+      const translate = progress * -40; // subtle
+
+      if (currentImgRef.current) {
+        currentImgRef.current.style.transform = `translateY(${translate}px) scale(1.05)`;
+      }
+
+      if (prevImgRef.current) {
+        prevImgRef.current.style.transform = `translateY(${translate}px) scale(1.08)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const current = data[index];
   const prev = data[prevIndex];
@@ -1885,30 +2218,43 @@ Time stretches just enough for you to forget you were tracking it.`,
       </div>
 
       {/* FRAME */}
-      <div className="relative w-full h-[100vh] overflow-hidden">
+      <div
+        ref={frameRef}
+        className="relative w-full h-[88vh] overflow-hidden"
+      >
 
         {/* PREVIOUS */}
-        <img
+        <div
           key={`prev-${prevIndex}`}
-          src={prev.image}
-          className="absolute inset-0 w-full h-full object-cover will-change-transform"
+          className="absolute inset-0 will-change-transform"
           style={{
-            animation: "exit 2400ms cubic-bezier(0.22,1,0.36,1) forwards",
+            animation: "exit 2600ms cubic-bezier(0.22,1,0.36,1) forwards",
           }}
-        />
+        >
+          <img
+            ref={prevImgRef}
+            src={prev.image}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         {/* CURRENT */}
-        <img
+        <div
           key={`current-${index}`}
-          src={current.image}
-          className="absolute inset-0 w-full h-full object-cover will-change-transform"
+          className="absolute inset-0 will-change-transform"
           style={{
             animation:
-              "enter 2400ms cubic-bezier(0.22,1,0.36,1) forwards, slowZoom 7000ms linear forwards",
+              "enter 2600ms cubic-bezier(0.22,1,0.36,1) forwards",
           }}
-        />
+        >
+          <img
+            ref={currentImgRef}
+            src={current.image}
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-        {/* BLUR + GRADIENT */}
+        {/* GRADIENT */}
         <div className="absolute inset-0 pointer-events-none">
           <div
             className="absolute inset-0"
@@ -1916,8 +2262,6 @@ Time stretches just enough for you to forget you were tracking it.`,
               backdropFilter: "blur(1px)",
               WebkitBackdropFilter: "blur(1px)",
               maskImage:
-                "linear-gradient(to left, black 0%, black 30%, transparent 65%)",
-              WebkitMaskImage:
                 "linear-gradient(to left, black 0%, black 30%, transparent 65%)",
             }}
           />
@@ -1936,32 +2280,39 @@ Time stretches just enough for you to forget you were tracking it.`,
           />
         </div>
 
-        {/* DEPTH ECHO (SMALLER) */}
-        <div className="absolute bottom-[8%] right-[-8%] pointer-events-none select-none overflow-hidden">
-          <h2 className="font-[Gambarino] text-[#2D3C68]/5 text-[14vw] leading-none tracking-[-0.05em] whitespace-nowrap text-right">
+        {/* ECHO */}
+        <div className="absolute bottom-[8%] right-[-8%] pointer-events-none">
+          <h2
+            key={current.place}
+            className="font-[Gambarino] text-[#2D3C68]/5 text-[14vw]"
+            style={{
+              animation: "floatSlow 12s ease-in-out infinite alternate",
+            }}
+          >
             {current.place}
           </h2>
         </div>
 
         {/* CONTENT */}
         <div className="relative z-10 h-full flex items-center px-6 md:px-16">
-          <div className="ml-auto max-w-[520px] text-right">
-
-            {/* ACTIVITY (SMALLER) */}
-            <p className="text-[12px] md:text-[13px] tracking-[0.08em] text-[#2D3C68]/65">
+          <div
+            key={index}
+            className="ml-auto max-w-[520px] text-right"
+            style={{
+              animation: "textReveal 1200ms ease forwards",
+            }}
+          >
+            <p className="text-[12px] tracking-[0.08em] text-[#2D3C68]/65">
               {current.activity}
             </p>
 
-            {/* TITLE (REDUCED) */}
-            <h2 className="mt-2 font-[Gambarino] text-[42px] md:text-[58px] leading-[1.05] tracking-[-0.02em] text-[#2D3C68]">
+            <h2 className="mt-2 font-[Gambarino] text-[42px] md:text-[58px] text-[#2D3C68]">
               {current.place}
             </h2>
 
-            {/* DESC (SLIGHTLY SMALLER) */}
-            <p className="mt-3 max-w-[420px] ml-auto text-[14px] md:text-[15px] text-[#2D3C68]/80 leading-[1.7]">
+            <p className="mt-3 max-w-[420px] ml-auto text-[14px] text-[#2D3C68]/80 leading-[1.7]">
               {current.desc}
             </p>
-
           </div>
         </div>
 
@@ -1971,7 +2322,7 @@ Time stretches just enough for you to forget you were tracking it.`,
             setPrevIndex(index);
             setIndex((prev) => (prev - 1 + data.length) % data.length);
           }}
-          className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50 transition text-[16px]"
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50"
         >
           ←
         </button>
@@ -1981,7 +2332,7 @@ Time stretches just enough for you to forget you were tracking it.`,
             setPrevIndex(index);
             setIndex((prev) => (prev + 1) % data.length);
           }}
-          className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50 transition text-[16px]"
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50"
         >
           →
         </button>
@@ -1990,35 +2341,49 @@ Time stretches just enough for you to forget you were tracking it.`,
           @keyframes enter {
             from {
               opacity: 0;
-              transform: scale(1.08) translateX(60px);
+              transform: scale(1.08);
+              filter: blur(4px);
             }
             to {
               opacity: 1;
-              transform: scale(1.02) translateX(0px);
+              transform: scale(1.02);
+              filter: blur(0px);
             }
           }
 
           @keyframes exit {
             from {
               opacity: 1;
-              transform: scale(1.02) translateX(0px);
+              transform: scale(1.02);
+              filter: blur(0px);
             }
             to {
               opacity: 0;
-              transform: scale(1.1) translateX(-60px);
+              transform: scale(1.12);
+              filter: blur(6px);
             }
           }
 
-          @keyframes slowZoom {
+          @keyframes textReveal {
             from {
-              transform: scale(1.02);
+              opacity: 0;
+              filter: blur(6px);
             }
             to {
-              transform: scale(1.08);
+              opacity: 1;
+              filter: blur(0px);
+            }
+          }
+
+          @keyframes floatSlow {
+            from {
+              transform: translateY(0px);
+            }
+            to {
+              transform: translateY(-20px);
             }
           }
         `}</style>
-
       </div>
     </section>
   );
