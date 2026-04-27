@@ -16,7 +16,7 @@ export default function Home() {
       <Hero />
       <Introduction/>
       <QuickContext/>
-      <Experience/>
+      <LifeOnBoard/>
       {/* <Activities/> */}
       <Destinations/>
       <Yacht/>
@@ -48,134 +48,179 @@ const DISABLE_ANIMATION = false; // ubah ke false kalau mau animasi aktif
 function Hero() {
   const bgRef = useRef(null);
   const contentRef = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
     let current = 0;
     let target = 0;
 
-    const handleScroll = () => {
+    const onScroll = () => {
       target = window.scrollY;
     };
 
-    const loop = () => {
-      current += (target - current) * 0.06;
+    const animate = () => {
+      current += (target - current) * 0.055;
 
       if (bgRef.current) {
-        const scale = 1 + current * 0.00005;
-        bgRef.current.style.transform = `scale(${scale})`;
+        const scale = 1 + current * 0.00004;
+        const y = current * 0.02;
+
+        bgRef.current.style.transform = `translate3d(0, ${y}px, 0) scale(${scale})`;
       }
 
       if (contentRef.current) {
-        contentRef.current.style.transform = `translateY(${current * 0.015}px)`;
+        contentRef.current.style.transform = `translate3d(0, ${
+          current * 0.012
+        }px, 0)`;
       }
 
-      requestAnimationFrame(loop);
+      rafRef.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    loop();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    rafRef.current = requestAnimationFrame(animate);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
-
+    <section className="relative h-screen w-full overflow-hidden bg-[#F4F5F2]">
       {/* BACKGROUND */}
-      <div ref={bgRef} className="absolute inset-0 will-change-transform">
+      <div
+        ref={bgRef}
+        className="absolute inset-0 scale-[1.02] will-change-transform"
+      >
         <Image
           src="https://res.cloudinary.com/dombq6plz/image/upload/v1776086743/Walking_towards_the_phinisi_bow_1_jasshx.png"
-          alt="Phinisi yacht sailing in Indonesia"
+          alt="Guests walking aboard Serenity through the Indonesian archipelago"
           fill
           priority
           className="object-cover"
         />
 
-        <div className="absolute inset-0 bg-[#2D3C68]/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/40 via-[#2D3C68]/15 to-transparent" />
+        {/* SERENITY COLOR SYSTEM OVERLAYS */}
+        <div className="absolute inset-0 bg-[#2D3C68]/14" />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/52 via-[#2D3C68]/14 to-transparent" />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-[#8B6A4F]/10 via-transparent to-transparent" />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#2D3C68]/10" />
+
+        {/* subtle atmospheric texture */}
+        <div className="absolute inset-0 opacity-[0.04] mix-blend-soft-light bg-[radial-gradient(circle_at_center,white_0%,transparent_62%)]" />
       </div>
 
       {/* CONTENT */}
       <div
         ref={contentRef}
-        className="relative z-10 h-full flex items-end justify-center text-center px-6 pb-[13vh]"
+        className="relative z-10 flex h-full items-end justify-center px-6 pb-[12vh] text-center md:px-10"
       >
-        <div className="max-w-[760px]">
-
-          {/* MICRO */}
+        <div className="mx-auto max-w-[860px]">
+          {/* MICRO LABEL */}
           <motion.div
-            initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+            initial={{ opacity: 0, y: 22, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
-              duration: 1.2,
+              duration: 1.1,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mb-6 text-[11px] md:text-[12px] tracking-[0.28em] text-[#F4F5F2]/75"
+            className="mb-6 text-[11px] md:text-[12px] tracking-[0.32em] text-[#F4F5F2]/76"
           >
             INDONESIAN PHINISI YACHT
           </motion.div>
 
           {/* HEADLINE */}
-          <h1 className="font-[Gambarino] text-[48px] md:text-[74px] lg:text-[88px] leading-[1.02] tracking-[-0.035em] text-[#F4F5F2]">
-
+          <h1 className="font-[Gambarino] text-[#F4F5F2] text-[50px] leading-[0.98] tracking-[-0.04em] md:text-[76px] lg:text-[92px]">
             <motion.span
-              initial={{ opacity: 0, y: 60, filter: "blur(8px)" }}
+              initial={{ opacity: 0, y: 48, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{
-                duration: 1.4,
+                duration: 1.35,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="block opacity-90"
+              className="block"
             >
               Explore Indonesia
             </motion.span>
 
             <motion.span
-              initial={{ opacity: 0, y: 60, filter: "blur(8px)" }}
+              initial={{ opacity: 0, y: 48, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{
-                duration: 1.4,
-                delay: 0.15,
+                duration: 1.35,
+                delay: 0.14,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="block"
+              className="block opacity-95"
             >
               by Sea
             </motion.span>
-
           </h1>
 
           {/* SUBCOPY */}
           <motion.p
-            initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+            initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
-              duration: 1.4,
-              delay: 0.3,
+              duration: 1.25,
+              delay: 0.28,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-5 text-[15px] md:text-[17px] text-[#F4F5F2]/90 max-w-[520px] mx-auto leading-relaxed"
+            className="mx-auto mt-5 max-w-[590px] text-[15px] leading-relaxed text-[#F4F5F2]/90 md:text-[17px]"
           >
-            Sail through Raja Ampat and Komodo with up to 12 guests on a handcrafted phinisi yacht.
+            Sail through Raja Ampat and Komodo with only twelve guests aboard a
+            handcrafted phinisi shaped for slow, beautiful journeys.
           </motion.p>
 
           {/* CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.6 }}
-            className="mt-10 flex justify-center"
+            transition={{
+              duration: 1.15,
+              delay: 0.48,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-10 flex flex-col items-center gap-4"
           >
-            <button className="group px-8 py-3 rounded-full border border-[#F4F5F2]/70 text-[13px] tracking-[0.02em] text-[#F4F5F2] transition-all duration-500 hover:bg-[#F4F5F2] hover:text-[#2D3C68] hover:border-[#F4F5F2]">
-              <span className="inline-block transition-transform duration-500 group-hover:translate-y-[-2px]">
-                View Journeys →
+            <button className="group rounded-full border border-[#F4F5F2]/68 px-8 py-3 text-[13px] tracking-[0.02em] text-[#F4F5F2] transition-all duration-500 hover:border-[#F4F5F2] hover:bg-[#F4F5F2] hover:text-[#2D3C68]">
+              <span className="inline-block transition-transform duration-500 group-hover:-translate-y-[2px]">
+                Explore Journeys →
               </span>
-            </button>
+            </button> 
           </motion.div>
-
         </div>
       </div>
 
+      {/* SCROLL INDICATOR */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.35, duration: 1.1 }}
+        className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2"
+      >
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-[10px] tracking-[0.24em] text-[#F4F5F2]/58">
+            SCROLL
+          </span>
+
+          <div className="relative h-8 w-[1px] overflow-hidden bg-[#B08D57]/28">
+            <motion.div
+              animate={{ y: ["-100%", "120%"] }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute left-0 top-0 h-4 w-full bg-[#F4F5F2]/80"
+            />
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
@@ -194,7 +239,8 @@ function Introduction() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    // ================= 🚫 ANIMATION OFF =================
+    const isDesktop = window.innerWidth >= 1280;
+
     if (DISABLE_ANIMATION) {
       const headlineEl = headlineRef.current;
       const descEl = descRef.current;
@@ -208,6 +254,7 @@ function Introduction() {
         const lines = headlineEl.querySelectorAll(".line") || [];
         gsap.set(lines, {
           opacity: 1,
+          y: 0,
           filter: "blur(0px)",
         });
       }
@@ -215,6 +262,7 @@ function Introduction() {
       if (descEl) {
         gsap.set(descEl, {
           opacity: 1,
+          y: 0,
           filter: "blur(0px)",
         });
       }
@@ -223,17 +271,19 @@ function Introduction() {
         gsap.set(imageEl, {
           opacity: 1,
           scale: 1,
+          y: 0,
         });
       }
 
-      if (leftEl) gsap.set(leftEl, { y: 0 });
-      if (rightEl) gsap.set(rightEl, { y: 0 });
-      if (bottomEl) gsap.set(bottomEl, { y: 0 });
+      if (isDesktop) {
+        if (leftEl) gsap.set(leftEl, { y: 0 });
+        if (rightEl) gsap.set(rightEl, { y: 0 });
+        if (bottomEl) gsap.set(bottomEl, { y: 0 });
+      }
 
-      return; // 🔥 skip semua animasi
+      return;
     }
 
-    // ================= ✅ NORMAL GSAP =================
     const ctx = gsap.context(() => {
       const headlineEl = headlineRef.current;
       const descEl = descRef.current;
@@ -243,105 +293,111 @@ function Introduction() {
       const rightEl = rightImgRef.current;
       const bottomEl = bottomImgRef.current;
 
-      // ================= HEADLINE =================
+      // HEADLINE
       if (headlineEl) {
         const lines = headlineEl.querySelectorAll(".line") || [];
 
-        if (lines.length) {
-          gsap.fromTo(
-            lines,
-            {
-              opacity: 0,
-              filter: "blur(6px)",
+        gsap.fromTo(
+          lines,
+          {
+            opacity: 0,
+            y: 34,
+            filter: "blur(8px)",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1.3,
+            stagger: 0.16,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headlineEl,
+              start: "top 84%",
             },
-            {
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.4,
-              stagger: 0.2,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: headlineEl,
-                start: "top 80%",
-              },
-            }
-          );
-        }
+          }
+        );
       }
 
-      // ================= DESCRIPTION =================
+      // DESCRIPTION
       if (descEl) {
         gsap.fromTo(
           descEl,
           {
             opacity: 0,
-            filter: "blur(4px)",
+            y: 24,
+            filter: "blur(6px)",
           },
           {
             opacity: 1,
+            y: 0,
             filter: "blur(0px)",
-            duration: 1.6,
+            duration: 1.3,
+            delay: 0.1,
             ease: "power2.out",
-            delay: 0.2,
             scrollTrigger: {
               trigger: descEl,
-              start: "top 85%",
+              start: "top 88%",
             },
           }
         );
       }
 
-      // ================= CENTER IMAGE =================
+      // CENTER IMAGE
       if (imageEl) {
         gsap.fromTo(
           imageEl,
           {
-            scale: 1.06,
             opacity: 0,
+            scale: 1.04,
+            y: 24,
           },
           {
-            scale: 1,
             opacity: 1,
-            duration: 1.8,
+            scale: 1,
+            y: 0,
+            duration: 1.5,
             ease: "power3.out",
             scrollTrigger: {
               trigger: imageEl,
-              start: "top 85%",
+              start: "top 90%",
             },
           }
         );
       }
 
-      // ================= PARALLAX =================
-      const parallaxConfig = {
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      };
+      // DESKTOP ONLY PARALLAX
+      if (isDesktop) {
+        const parallaxConfig = {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        };
 
-      if (leftEl) {
-        gsap.to(leftEl, {
-          y: -40,
-          ease: "none",
-          scrollTrigger: parallaxConfig,
-        });
-      }
+        if (leftEl) {
+          gsap.to(leftEl, {
+            y: -46,
+            ease: "none",
+            scrollTrigger: parallaxConfig,
+          });
+        }
 
-      if (rightEl) {
-        gsap.to(rightEl, {
-          y: -80,
-          ease: "none",
-          scrollTrigger: parallaxConfig,
-        });
-      }
+        if (rightEl) {
+          gsap.to(rightEl, {
+            y: -74,
+            ease: "none",
+            scrollTrigger: parallaxConfig,
+          });
+        }
 
-      if (bottomEl) {
-        gsap.to(bottomEl, {
-          y: -120,
-          ease: "none",
-          scrollTrigger: parallaxConfig,
-        });
+        if (bottomEl) {
+          gsap.to(bottomEl, {
+            y: -104,
+            ease: "none",
+            scrollTrigger: parallaxConfig,
+          });
+        }
       }
     }, sectionRef);
 
@@ -351,71 +407,76 @@ function Introduction() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[#F4F5F2] py-32 px-6 overflow-hidden"
+      className="relative w-full overflow-hidden bg-[#F4F5F2] px-6 py-24 md:px-10 md:py-32"
     >
       {/* TOP TRANSITION */}
-      <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/15 to-transparent pointer-events-none" />
+      <div className="pointer-events-none absolute left-0 top-0 h-[140px] w-full bg-gradient-to-b from-[#2D3C68]/14 via-[#2D3C68]/05 to-transparent" />
 
-      <div className="max-w-5xl mx-auto relative text-center">
+      {/* SUBTLE TEXTURE */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-multiply bg-[radial-gradient(circle_at_center,#2D3C68_0%,transparent_62%)]" />
+
+      <div className="relative mx-auto max-w-6xl text-center">
         {/* LABEL */}
-        <div className="text-[10px] tracking-[0.4em] text-[#2D3C68]/60 mb-5 uppercase">
+        <div className="mb-5 text-[10px] uppercase tracking-[0.38em] text-[#2D3C68]/58">
           Experience
         </div>
 
         {/* HEADLINE */}
         <h2
           ref={headlineRef}
-          className="font-[Gambarino] text-[48px] md:text-[64px] leading-[1.06] tracking-[-0.025em] text-[#2D3C68] max-w-[500px] mx-auto"
+          className="mx-auto max-w-[620px] font-[Gambarino] text-[40px] leading-[1.04] tracking-[-0.03em] text-[#2D3C68] sm:text-[46px] md:text-[68px]"
         >
-          <span className="block line">A way of living</span>
-          <span className="block line">at your pace</span>
+          <span className="line block">A way of living</span>
+          <span className="line block">at your pace</span>
         </h2>
 
         {/* DESCRIPTION */}
         <p
           ref={descRef}
-          className="mt-6 text-[#2D3C68]/70 max-w-[400px] mx-auto text-[13px] leading-[1.6]"
+          className="mx-auto mt-5 max-w-[520px] text-[14px] leading-[1.72] text-[#2D3C68]/72 md:mt-6 md:text-[15px]"
         >
-          Move with the rhythm of the ocean. Wake slowly, dive freely,
-          gather without effort. Serenity is not something you visit —
-          it is something you step into.
+          Move with the rhythm of the ocean. Wake slowly, dive freely, gather
+          without effort. Serenity is not something you visit — it is something
+          you step into, with only twelve guests on board.
         </p>
 
         {/* CTA */}
         <div className="mt-8">
           <button
             type="button"
-            className="group px-6 py-3 text-[12px] tracking-[0.15em] border border-[#2D3C68]/30 rounded-full text-[#2D3C68] transition-all duration-700 hover:bg-[#2D3C68] hover:text-white hover:border-[#2D3C68]"
+            className="group rounded-full border border-[#2D3C68]/24 px-7 py-3 text-[12px] tracking-[0.16em] text-[#2D3C68] transition-all duration-700 hover:border-[#2D3C68] hover:bg-[#2D3C68] hover:text-[#F4F5F2]"
           >
-            <span className="inline-block transition-all duration-700 group-hover:translate-x-[4px] group-hover:tracking-[0.2em]">
+            <span className="inline-block transition-all duration-700 group-hover:translate-x-[4px]">
               Discover the Experience →
             </span>
           </button>
         </div>
 
-        {/* CENTER IMAGE */}
-        <div className="mt-20 max-w-[340px] mx-auto">
+        {/* MAIN IMAGE */}
+        <div className="mx-auto mt-14 max-w-[320px] sm:mt-16 sm:max-w-[340px] md:mt-20 md:max-w-[360px]">
           <div
             ref={imageRef}
-            className="aspect-[4/5] overflow-hidden relative"
+            className="relative aspect-[4/5] overflow-hidden"
           >
             <Image
               src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/40_oxbvdi.webp"
               alt="Life on board Serenity yacht"
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-[1800ms] hover:scale-[1.03]"
               priority
             />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/12 to-transparent" />
           </div>
         </div>
       </div>
 
-      {/* LEFT */}
+      {/* DESKTOP ONLY LEFT */}
       <div
         ref={leftImgRef}
-        className="pointer-events-none absolute left-[12%] top-[28%] w-[180px] hidden lg:block"
+        className="pointer-events-none absolute left-[9%] top-[28%] hidden w-[190px] xl:block"
       >
-        <div className="aspect-[4/5] overflow-hidden relative">
+        <div className="relative aspect-[4/5] overflow-hidden shadow-[0_18px_40px_rgba(45,60,104,0.08)]">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
             alt="Open sea moment"
@@ -425,12 +486,12 @@ function Introduction() {
         </div>
       </div>
 
-      {/* RIGHT */}
+      {/* DESKTOP ONLY RIGHT */}
       <div
         ref={rightImgRef}
-        className="pointer-events-none absolute right-[10%] top-[36%] w-[200px] hidden lg:block"
+        className="pointer-events-none absolute right-[8%] top-[34%] hidden w-[210px] xl:block"
       >
-        <div className="aspect-[4/5] overflow-hidden relative">
+        <div className="relative aspect-[4/5] overflow-hidden shadow-[0_18px_40px_rgba(45,60,104,0.08)]">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
             alt="Interior space on board"
@@ -440,12 +501,12 @@ function Introduction() {
         </div>
       </div>
 
-      {/* RIGHT LOWER */}
+      {/* DESKTOP ONLY LOWER RIGHT */}
       <div
         ref={bottomImgRef}
-        className="pointer-events-none absolute right-[22%] bottom-[20%] w-[160px] hidden lg:block"
+        className="pointer-events-none absolute bottom-[16%] right-[20%] hidden w-[170px] xl:block"
       >
-        <div className="aspect-[4/5] overflow-hidden relative">
+        <div className="relative aspect-[4/5] overflow-hidden shadow-[0_18px_40px_rgba(45,60,104,0.08)]">
           <Image
             src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068965/37_rlznw3.webp"
             alt="Ocean environment"
@@ -462,125 +523,183 @@ function Introduction() {
 
 function QuickContext() {
   return (
-    <section className="w-full bg-[#2D3C68] py-14 md:py-20">
+    <section className="relative w-full overflow-hidden bg-[#2D3C68] py-14 md:py-20">
+      {/* SUBTLE DEPTH */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.03] via-transparent to-black/[0.06]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[radial-gradient(circle_at_center,white_0%,transparent_62%)]" />
 
-      <div className="max-w-[1100px] mx-auto px-6">
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-0 text-center">
-
-          <div>
-            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
+      <div className="relative mx-auto max-w-[1120px] px-6">
+        <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4 md:gap-y-0">
+          {/* ITEM 1 */}
+          <div className="text-center">
+            <div className="font-[Gambarino] text-[30px] leading-none text-[#F4F5F2] md:text-[40px]">
               12
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
-              GUESTS
+
+            <div className="mt-3 text-[11px] uppercase tracking-[0.22em] text-white/64">
+              Only Twelve Guests
             </div>
           </div>
 
-          <div>
-            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
+          {/* ITEM 2 */}
+          <div className="text-center md:border-l md:border-white/10">
+            <div className="font-[Gambarino] text-[30px] leading-none text-[#F4F5F2] md:text-[40px]">
               4
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
-              CABINS
+
+            <div className="mt-3 text-[11px] uppercase tracking-[0.22em] text-white/64">
+              Private Cabins
             </div>
           </div>
 
-          <div>
-            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
+          {/* ITEM 3 */}
+          <div className="text-center md:border-l md:border-white/10">
+            <div className="font-[Gambarino] text-[30px] leading-none text-[#F4F5F2] md:text-[40px]">
               10
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
-              CREW
+
+            <div className="mt-3 text-[11px] uppercase tracking-[0.22em] text-white/64">
+              Dedicated Crew
             </div>
           </div>
 
-          <div>
-            <div className="text-[28px] md:text-[36px] font-[Gambarino] text-white">
+          {/* ITEM 4 */}
+          <div className="text-center md:border-l md:border-white/10">
+            <div className="font-[Gambarino] text-[24px] leading-none text-[#F4F5F2] md:text-[34px]">
               Phinisi
             </div>
-            <div className="mt-2 text-[12px] tracking-[0.2em] text-white/70">
-              INDONESIA
+
+            <div className="mt-3 text-[11px] uppercase tracking-[0.22em] text-white/64">
+              Built in Indonesia
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );
 }
  
 
-function Experience() {
+function LifeOnBoard() {
   const sectionRef = useRef(null);
   const leftRef = useRef(null);
   const rightRef = useRef(null);
+  const headerRef = useRef(null);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // LEFT IMAGE REVEAL
+      const isDesktop = window.innerWidth >= 768;
+
+      /* HEADER */
+      gsap.fromTo(
+        headerRef.current,
+        {
+          opacity: 0,
+          y: 26,
+          filter: "blur(8px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 84%",
+          },
+        }
+      );
+
+      /* LEFT CARD */
       gsap.fromTo(
         leftRef.current,
         {
           opacity: 0,
-          scale: 1.04,
+          y: 34,
+          scale: 1.02,
         },
         {
           opacity: 1,
+          y: 0,
           scale: 1,
-          duration: 1.6,
+          duration: 1.35,
           ease: "power3.out",
           scrollTrigger: {
             trigger: leftRef.current,
-            start: "top 85%",
+            start: "top 86%",
           },
         }
       );
 
-      // RIGHT IMAGE REVEAL
+      /* RIGHT CARD */
       gsap.fromTo(
         rightRef.current,
         {
           opacity: 0,
-          scale: 1.04,
+          y: 34,
+          scale: 1.02,
         },
         {
           opacity: 1,
+          y: 0,
           scale: 1,
-          duration: 1.6,
+          duration: 1.35,
+          delay: 0.08,
           ease: "power3.out",
           scrollTrigger: {
             trigger: rightRef.current,
-            start: "top 85%",
+            start: "top 86%",
           },
         }
       );
 
-      // SUBTLE PARALLAX SHIFT
-      gsap.to(leftRef.current, {
-        y: -30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
+      /* CTA */
+      gsap.fromTo(
+        ctaRef.current,
+        {
+          opacity: 0,
+          y: 20,
         },
-      });
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ctaRef.current,
+            start: "top 92%",
+          },
+        }
+      );
 
-      gsap.to(rightRef.current, {
-        y: -50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
+      /* DESKTOP PARALLAX ONLY */
+      if (isDesktop) {
+        gsap.to(leftRef.current, {
+          y: -26,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+
+        gsap.to(rightRef.current, {
+          y: -46,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -589,83 +708,95 @@ function Experience() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#F4F5F2] pt-[180px] pb-[100px] px-6 overflow-hidden"
+      className="relative overflow-hidden bg-[#F4F5F2] px-6 pt-28 pb-24 md:px-10 md:pt-36 md:pb-28"
     >
-      <div className="max-w-[980px] mx-auto">
+      {/* TOP DEPTH */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[140px] bg-gradient-to-b from-[#2D3C68]/08 to-transparent" />
 
+      {/* SUBTLE TEXTURE */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-multiply bg-[radial-gradient(circle_at_center,#2D3C68_0%,transparent_64%)]" />
+
+      <div className="relative mx-auto max-w-[1080px]">
         {/* HEADER */}
-        <div className="text-center max-w-[720px] mx-auto mb-24">
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+        <div
+          ref={headerRef}
+          className="mx-auto mb-16 max-w-[700px] text-center md:mb-20"
+        >
+          <p className="text-[11px] uppercase tracking-[0.34em] text-[#6A6A6A]">
             On Board
           </p>
 
-          <h2 className="mt-6 font-[Gambarino] text-[40px] sm:text-[56px] leading-[1.1] tracking-[-0.01em] text-[#2D3C68]">
+          <h2 className="mt-5 font-[Gambarino] text-[40px] leading-[1.06] tracking-[-0.02em] text-[#2D3C68] sm:text-[50px] md:text-[62px]">
             Life on board, as it happens
           </h2>
 
-          <p className="mt-7 text-[16px] text-[#5C5C5C] leading-relaxed max-w-[560px] mx-auto">
-            Days move between the deck, the water, and time in between. Nothing is fixed, but everything finds its place.
+          <p className="mx-auto mt-6 max-w-[560px] text-[15px] leading-relaxed text-[#5C5C5C] md:text-[16px]">
+          Days move between the deck, the water, and time in between. Nothing is fixed, but everything finds its place.
           </p>
         </div>
 
         {/* GRID */}
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-
+        <div className="grid gap-12 md:grid-cols-2 md:gap-10 items-start">
           {/* LEFT */}
-          <div ref={leftRef} className="flex justify-center">
-            <div>
-              <div className="relative w-[420px] aspect-[4/5] overflow-hidden">
-                <img
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
-                  className="w-full h-full object-cover scale-[1.03]"
-                />
-              </div>
+          <div ref={leftRef} className="mx-auto w-full max-w-[430px]">
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <img
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+                className="h-full w-full object-cover transition-transform duration-[1800ms] hover:scale-[1.03]"
+                alt="Open deck of Serenity"
+              />
 
-              <div className="mt-9">
-                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A]">
-                  Open Deck Living
-                </h3>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/10 to-transparent" />
+            </div>
 
-                <p className="mt-4 text-[15px] text-[#5C5C5C]">
-                  Most of the day unfolds outside — between the sun, the sea,
-                  and conversations that stretch without a plan.
-                </p>
-              </div>
+            <div className="mt-7">
+              <h3 className="font-[Gambarino] text-[28px] leading-tight text-[#1A1A1A]">
+                Open Deck Living
+              </h3>
+
+              <p className="mt-3 text-[15px] leading-relaxed text-[#5C5C5C]">
+                Sunlight, sea air, and space to linger. Much of the day unfolds
+                outside, without needing a plan.
+              </p>
             </div>
           </div>
 
           {/* RIGHT */}
-          <div ref={rightRef} className="flex justify-center md:mt-[80px]">
-            <div>
-              <div className="relative w-[400px] aspect-[4/5] overflow-hidden">
-                <img
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
-                  className="w-full h-full object-cover scale-[1.02]"
-                />
-              </div>
+          <div
+            ref={rightRef}
+            className="mx-auto w-full max-w-[430px] md:mt-16"
+          >
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <img
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/41_gbpo3o.webp"
+                className="h-full w-full object-cover transition-transform duration-[1800ms] hover:scale-[1.03]"
+                alt="Interior retreat of Serenity"
+              />
 
-              <div className="mt-9">
-                <h3 className="font-[Gambarino] text-[27px] text-[#1A1A1A]">
-                  Quiet When You Need It
-                </h3>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/12 to-transparent" />
+            </div>
 
-                <p className="mt-4 text-[15px] text-[#5C5C5C]">
-                  When things slow down, private spaces offer a place to pause —
-                  simple, quiet, and your own.
-                </p>
-              </div>
+            <div className="mt-7">
+              <h3 className="font-[Gambarino] text-[28px] leading-tight text-[#1A1A1A]">
+                Quiet When You Need It
+              </h3>
+
+              <p className="mt-3 text-[15px] leading-relaxed text-[#5C5C5C]">
+                When the rhythm slows, private interiors offer calm, comfort,
+                and a place entirely your own.
+              </p>
             </div>
           </div>
-
         </div>
 
         {/* CTA */}
-        <div className="mt-28 flex justify-center">
-          <button className="text-[13px] tracking-[0.18em] uppercase text-[#1A1A1A]/80 border-b border-[#1A1A1A]/30 hover:border-[#1A1A1A]">
-            Step inside the yacht →
+        <div ref={ctaRef} className="mt-18 flex justify-center md:mt-24">
+          <button className="group border-b border-[#1A1A1A]/22 pb-1 text-[13px] uppercase tracking-[0.18em] text-[#1A1A1A]/82 transition-all duration-500 hover:border-[#1A1A1A] hover:text-[#1A1A1A]">
+            <span className="inline-block transition-transform duration-500 group-hover:translate-x-[4px]">
+              Step Inside the Yacht →
+            </span>
           </button>
         </div>
-
       </div>
     </section>
   );
@@ -2156,7 +2287,7 @@ Then you go again, like you’re starting to understand it.`,
 You don’t think much, you just keep walking.
 There’s no pressure to get anywhere, so you let the place set the pace.`,
       image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776152688/Couple_strolling_by_a_traditional_phinisi_1_e1alaw.png",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_43_23_PM_hynjkg.png",
     },
     {
       place: "Banda Neira",
@@ -2165,7 +2296,7 @@ There’s no pressure to get anywhere, so you let the place set the pace.`,
 Nothing interrupts, nothing pushes you forward.
 Time stretches just enough for you to forget you were tracking it.`,
       image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1775031031/ChatGPT_Image_Apr_1_2026_03_08_09_PM_i95qhf.png",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_59_16_PM_mp6lli.png",
     },
   ];
 
