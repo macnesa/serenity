@@ -94,7 +94,7 @@ function Hero() {
         className="absolute inset-0 scale-[1.02] will-change-transform"
       >
         <Image
-          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776086743/Walking_towards_the_phinisi_bow_1_jasshx.png"
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1777307172/ChatGPT_Image_Apr_27_2026_10_24_29_PM_1_ou4x2n.png"
           alt="Guests walking aboard Serenity through the Indonesian archipelago"
           fill
           priority
