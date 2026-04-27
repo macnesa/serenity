@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "../../lib/gsap"
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -15,11 +16,18 @@ export default function Page() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
       <Hero/> 
-      <WhySerenityExists/>
-      <PhinisiSection/>
-      <ThePeople/>
-      <ExperienceSummary/>
-      <FinalCTA/>      
+      <BuiltInIndonesia/>
+      <PrivateByDesign/>
+      <ThePeopleWhoShapeTheJourney/>
+      <WhyGuestsReturn/>
+      <PlanYourJourney/>
+      {/* <ThePeople/> */}
+      {/* <SerenityWay/> */}
+      {/* <WhySerenityExists/> */}
+      {/* <WhatMakesItDifferent/> */}
+      {/* <PhinisiSection/> */}
+      {/* <ExperienceSummary/> */}
+      {/* <ClosingCTA/>       */}
       <Footer/> 
     </main>
   )
@@ -27,204 +35,1746 @@ export default function Page() {
 
 
 function Hero() {
+  const sectionRef = useRef(null);
+  const imageWrapRef = useRef(null);
+  const imageRef = useRef(null);
+  const contentRef = useRef(null);
+  const lineRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      /* ===================================================== */
+      /* ENTRY */
+      /* ===================================================== */
+      tl.fromTo(
+        imageWrapRef.current,
+        {
+          scale: 1.04,
+          opacity: 0,
+          x: 18,
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          x: 0,
+          duration: 1.5,
+          ease: "power4.out",
+        }
+      )
+        .fromTo(
+          contentRef.current.children,
+          {
+            y: 18,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 0.72,
+          },
+          "-=0.95"
+        )
+        .fromTo(
+          lineRef.current,
+          {
+            scaleX: 0,
+            opacity: 0,
+            transformOrigin: "left center",
+          },
+          {
+            scaleX: 1,
+            opacity: 1,
+            duration: 0.7,
+          },
+          "-=0.42"
+        );
+
+      /* ===================================================== */
+      /* AMBIENT */
+      /* ===================================================== */
+      gsap.to(imageRef.current, {
+        y: -8,
+        duration: 7,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      /* ===================================================== */
+      /* SCROLL */
+      /* ===================================================== */
+      gsap.to(imageWrapRef.current, {
+        yPercent: 2,
+        scale: 1.01,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(contentRef.current, {
+        y: -18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative w-full h-[92vh] min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative flex h-[95svh] min-h-[760px] w-full items-center overflow-hidden bg-[#F4F5F2]"
+    >
+      {/* ===================================================== */}
+      {/* IMAGE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0">
+        <div ref={imageWrapRef} className="relative h-full w-full">
+          <img
+            ref={imageRef}
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1777221118/ChatGPT_Image_Apr_26_2026_11_31_27_PM_1_fd8cat.png"
+            alt="Serenity private phinisi yacht in Indonesian waters"
+            className="h-full w-full object-cover object-center"
+          />
 
-      {/* ================= BACKGROUND IMAGE ================= */}
-      <img
-        src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2000&auto=format&fit=crop"
-        alt="Phinisi yacht deck"
-        className="absolute inset-0 w-full h-full object-cover scale-[1.05]"
-      />
-
-      {/* ================= COLOR DEPTH ================= */}
-      <div className="absolute inset-0 bg-[#2D3C68]/65" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/20 via-transparent to-[#2D3C68]/80" />
-
-      {/* ================= CONTENT ================= */}
-      <div className="relative z-10 text-center px-6 max-w-[720px]">
-
-        {/* MICRO */}
-        <div className="mb-6 text-[11px] tracking-[0.32em] text-white/60 uppercase">
-          About Serenity
+          {/* overlays */}
+          <div className="absolute inset-0 bg-[#2D3C68]/26" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F4F5F2] via-[#F4F5F2]/72 via-[28%] to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-white/6" />
         </div>
-
-        {/* HEADLINE */}
-        <h1 className="font-[Gambarino] text-[46px] md:text-[72px] leading-[1.04] tracking-[-0.025em] text-white">
-          A private yacht,
-          <br />
-          fully yours
-        </h1>
-
-        {/* SUB */}
-        <p className="mt-6 text-[15px] text-white/75 max-w-[500px] mx-auto leading-[1.7]">
-          One group at a time, with everything on board arranged around how you move, rest, and spend your days.
-        </p>
-
       </div>
 
-      {/* ================= BOTTOM TRANSITION ================= */}
-      <div className="absolute bottom-0 left-0 w-full h-[160px] bg-gradient-to-b from-transparent to-[#2D3C68]" />
-
-    </section>
-  )
-}
-
-
-function WhySerenityExists() {
-  return (
-    <section className="relative w-full bg-[#F4F5F2] py-[220px] px-6 overflow-hidden">
-
-      {/* ================= BASE COLOR FADE ================= */}
-      <div className="why-gradient-base absolute top-0 left-0 w-full h-[220px] pointer-events-none" />
-
-      {/* ================= DIFFUSION LAYER ================= */}
-      <div className="why-gradient-diffuse absolute top-0 left-0 w-full h-[260px] pointer-events-none" />
-
-      <div className="max-w-[1100px] mx-auto relative">
-
-        {/* ================= BLOCK 1 ================= */}
-        <div className="max-w-[520px]">
-          <p className="text-[26px] md:text-[32px] leading-[1.4] text-[#1A1A1A] font-[Gambarino]">
-            Most trips today are built around schedules.
-          </p>
-        </div>
-
-        {/* ================= BLOCK 2 ================= */}
-        <div className="mt-20 md:mt-[-10px] md:ml-auto max-w-[440px]">
-          <p className="text-[20px] md:text-[24px] leading-[1.6] text-[#2A2A2A]">
-            Fixed routes, fixed stops, and days that feel planned before they begin.
-          </p>
-        </div>
-
-        {/* ================= BLOCK 3 ================= */}
-        <div className="mt-24 max-w-[460px]">
-          <p className="text-[20px] md:text-[24px] leading-[1.6] text-[#2A2A2A]">
-            You move through places, but rarely get to live inside them.
-          </p>
-        </div>
-
-        {/* ================= BLOCK 4 ================= */}
-        <div className="mt-28 md:ml-auto max-w-[520px]">
-          <p className="text-[28px] md:text-[36px] leading-[1.3] text-[#2D3C68] font-[Gambarino]">
-            Serenity exists to change that.
-          </p>
-        </div>
-
-      </div>
-
-      {/* ================= PURE CSS ================= */}
-      <style jsx>{`
-        /* BASE GRADIENT (COLOR FALL) */
-        .why-gradient-base {
-          background: linear-gradient(
-            to bottom,
-            rgba(45, 60, 104, 0.95) 0%,
-            rgba(45, 60, 104, 0.85) 15%,
-            rgba(45, 60, 104, 0.65) 35%,
-            rgba(45, 60, 104, 0.4) 55%,
-            rgba(45, 60, 104, 0.18) 75%,
-            rgba(45, 60, 104, 0.05) 90%,
-            rgba(45, 60, 104, 0) 100%
-          );
-        }
-
-        /* DIFFUSION LAYER (THIS IS THE MAGIC) */
-        .why-gradient-diffuse {
-          background: radial-gradient(
-            120% 80% at 50% 0%,
-            rgba(45, 60, 104, 0.35) 0%,
-            rgba(45, 60, 104, 0.2) 40%,
-            rgba(45, 60, 104, 0.08) 65%,
-            rgba(45, 60, 104, 0.02) 80%,
-            rgba(45, 60, 104, 0) 100%
-          );
-          filter: blur(28px);
-          transform: translateY(-20px);
-        }
-      `}</style>
-
-    </section>
-  )
-}
-
-function PhinisiSection() {
-  return (
-    <section className="relative w-full bg-[#F4F5F2] py-[220px] px-6 overflow-hidden">
-
-      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-24 items-center">
-
-        {/* ================= LEFT (CONTENT) ================= */}
-        <div className="max-w-[520px]">
-
+      {/* ===================================================== */}
+      {/* CONTENT */}
+      {/* ===================================================== */}
+      <div className="relative z-10 mx-auto w-full max-w-[1320px] px-6 md:px-10 lg:px-16">
+        <div ref={contentRef} className="max-w-[620px]">
           {/* MICRO */}
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
-            Phinisi
+          <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+            About Serenity
           </p>
 
           {/* HEADLINE */}
-          <h2 className="mt-6 font-[Gambarino] text-[44px] md:text-[60px] leading-[1.05] text-[#2D3C68]">
-            Not built like a modern yacht
-          </h2>
+          <h1 className="font-[Gambarino] text-[52px] leading-[0.96] tracking-[-0.035em] text-[#2D3C68] sm:text-[66px] md:text-[82px] xl:text-[94px]">
+            There is only
+            <br />
+            one Serenity
+          </h1>
 
-          {/* CORE */}
-          <p className="mt-8 text-[18px] text-[#1A1A1A] leading-[1.7]">
-            Wood, open space, and constant exposure to air, light, and movement.
+          {/* BODY */}
+          <p className="mt-7 max-w-[520px] text-[15px] leading-[1.9] text-[#2D3C68]/74 md:text-[16px]">
+            A private phinisi yacht built in Indonesia for slower, more
+            meaningful journeys at sea — reserved for one group at a time.
           </p>
 
-          {/* DATA */}
-          <div className="mt-10 space-y-6 text-[16px] text-[#2A2A2A]">
+          {/* CTA */}
+          <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-7">
+            <button className="inline-flex w-fit items-center gap-3 rounded-full bg-[#2D3C68] px-8 py-3.5 text-[14px] font-medium text-[#F4F5F2] transition-all duration-300 hover:bg-[#24345B]">
+              Discover Serenity
 
-            <p>
-              You’re not inside sealed rooms — most of the day happens out on deck, with nothing separating you from the surroundings.
-            </p>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path d="M5 12h14" />
+                <path d="M13 5l7 7-7 7" />
+              </svg>
+            </button>
 
-            <p>
-              The structure moves with the water, not against it, making the entire space feel alive rather than fixed.
-            </p>
-
-            <p>
-              Everything is arranged horizontally, so movement across the boat feels natural, without levels cutting the flow.
-            </p>
-
+            <button className="inline-flex w-fit items-center gap-2 text-[12px] font-medium uppercase tracking-[0.24em] text-[#2D3C68]/62 transition-colors duration-300 hover:text-[#2D3C68]">
+              View Life Onboard
+            </button>
           </div>
 
-        </div>
-
-        {/* ================= RIGHT (VISUAL SYSTEM) ================= */}
-        <div className="relative w-full h-full">
-
-          {/* MAIN IMAGE */}
-          <div className="relative w-[85%] aspect-[4/5] overflow-hidden ml-auto">
-
-            <img
-              src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop"
-              alt="People relaxing on phinisi deck"
-              className="w-full h-full object-cover scale-[1.04]"
+          {/* META */}
+          <div className="mt-10">
+            <div
+              ref={lineRef}
+              className="mb-4 h-px w-full max-w-[430px] bg-gradient-to-r from-[#B08D57]/42 to-transparent"
             />
 
-            {/* DEPTH */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/25 to-transparent" />
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/54">
+              <span>12 Guests</span>
+              <span>10 Crew</span>
+              <span>Built in Indonesia</span>
+              <span>Private Charter</span>
+            </div>
           </div>
-
-          {/* SECONDARY IMAGE (OFFSET) */}
-          <div className="absolute -left-6 bottom-[-40px] w-[45%] aspect-[3/4] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
-
-            <img
-              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
-              alt="Phinisi wood detail"
-              className="w-full h-full object-cover"
-            />
-
-          </div>
-
         </div>
-
       </div>
 
+      {/* ===================================================== */}
+      {/* BOTTOM TRANSITION */}
+      {/* ===================================================== */}
+      <div className="absolute bottom-0 left-0 h-[220px] w-full bg-gradient-to-b from-transparent via-[#F4F5F2]/40 to-[#F4F5F2]" />
     </section>
-  )
+  );
 }
+
+function SerenityWay  () {
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const blockOneRef = useRef(null);
+  const blockTwoRef = useRef(null);
+  const quoteRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 76%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        headerRef.current.children,
+        {
+          y: 28,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.12,
+          duration: 1,
+        }
+      )
+        .fromTo(
+          blockOneRef.current.children,
+          {
+            y: 32,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 1,
+          },
+          "-=0.45"
+        )
+        .fromTo(
+          blockTwoRef.current.children,
+          {
+            y: 32,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 1,
+          },
+          "-=0.55"
+        )
+        .fromTo(
+          quoteRef.current,
+          {
+            y: 24,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+          },
+          "-=0.4"
+        );
+
+      gsap.to(".parallax-image-a", {
+        yPercent: 8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: blockOneRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".parallax-image-b", {
+        yPercent: 10,
+        ease: "none",
+        scrollTrigger: {
+          trigger: blockTwoRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_16%,rgba(176,141,87,0.06),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_82%,rgba(45,60,104,0.04),transparent_22%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* HEADER */}
+        {/* ===================================================== */}
+        <div
+          ref={headerRef}
+          className="grid grid-cols-1 gap-10 border-b border-[#2D3C68]/10 pb-14 lg:grid-cols-[1.05fr_0.95fr]"
+        >
+          <div>
+            <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+              A Different Rhythm
+            </p>
+
+            <h2 className="font-[Gambarino] text-[44px] leading-[0.98] tracking-[-0.03em] text-[#2D3C68] sm:text-[56px] md:text-[72px]">
+              Luxury feels
+              <br />
+              quieter here
+            </h2>
+          </div>
+
+          <div className="lg:pt-8">
+            <p className="max-w-[500px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              Serenity was shaped around a slower, more human pace — where
+              privacy, comfort, and freedom are felt naturally rather than
+              announced.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* BLOCK ONE */}
+        {/* ===================================================== */}
+        <div
+          ref={blockOneRef}
+          className="grid grid-cols-1 items-center gap-10 pt-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16"
+        >
+          {/* text */}
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+              Slow Mornings
+            </p>
+
+            <h3 className="mt-5 text-[34px] leading-[1.08] tracking-[-0.02em] text-[#2D3C68] md:text-[42px]">
+              Coffee arrives quietly.
+              <br />
+              The sea is already awake.
+            </h3>
+
+            <p className="mt-6 max-w-[440px] text-[15px] leading-[1.9] text-[#2D3C68]/72">
+              No timetable pressing the day forward. Space to swim, read,
+              disappear for a while, or simply watch the water move.
+            </p>
+          </div>
+
+          {/* image */}
+          <div className="overflow-hidden rounded-[30px] shadow-[0_24px_70px_rgba(0,0,0,0.08)]">
+            <div className="parallax-image-a relative h-[380px] md:h-[500px]">
+              <img
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop"
+                alt="Morning sea view"
+                className="h-full w-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-[#2D3C68]/14" />
+            </div>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* BLOCK TWO */}
+        {/* ===================================================== */}
+        <div
+          ref={blockTwoRef}
+          className="grid grid-cols-1 items-center gap-10 pt-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16"
+        >
+          {/* image */}
+          <div className="order-2 overflow-hidden rounded-[30px] shadow-[0_24px_70px_rgba(0,0,0,0.08)] lg:order-1">
+            <div className="parallax-image-b relative h-[380px] md:h-[500px]">
+              <img
+                src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=1800&auto=format&fit=crop"
+                alt="Open sea afternoon"
+                className="h-full w-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-[#2D3C68]/16" />
+            </div>
+          </div>
+
+          {/* text */}
+          <div className="order-1 lg:order-2">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+              Open Afternoons
+            </p>
+
+            <h3 className="mt-5 text-[34px] leading-[1.08] tracking-[-0.02em] text-[#2D3C68] md:text-[42px]">
+              Routes follow weather,
+              <br />
+              not rigid plans.
+            </h3>
+
+            <p className="mt-6 max-w-[440px] text-[15px] leading-[1.9] text-[#2D3C68]/72">
+              A quieter bay. Better light. Clearer water ahead. The best days
+              rarely happen by sticking to a script.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* QUOTE / FOOTER */}
+        {/* ===================================================== */}
+        <div
+          ref={quoteRef}
+          className="mt-20 border-t border-[#2D3C68]/10 pt-10"
+        >
+          <p className="max-w-[760px] font-[Gambarino] text-[34px] leading-[1.15] tracking-[-0.02em] text-[#2D3C68] md:text-[46px]">
+            The details are quiet.
+            <br />
+            The feeling stays with you.
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/48">
+            <span>12 Guests</span>
+            <span>10 Crew</span>
+            <span>Private Charter</span>
+            <span>Indonesia</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhySerenityExists() {
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const rowsRef = useRef([]);
+  const proofRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 76%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        headerRef.current.children,
+        {
+          y: 24,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.12,
+          duration: 1,
+        }
+      )
+        .fromTo(
+          rowsRef.current,
+          {
+            y: 28,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.12,
+            duration: 0.95,
+          },
+          "-=0.45"
+        )
+        .fromTo(
+          proofRef.current.children,
+          {
+            y: 16,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.8,
+          },
+          "-=0.35"
+        );
+
+      rowsRef.current.forEach((row) => {
+        if (!row) return;
+
+        row.addEventListener("mouseenter", () => {
+          gsap.to(row, {
+            x: 6,
+            duration: 0.28,
+            ease: "power2.out",
+          });
+        });
+
+        row.addEventListener("mouseleave", () => {
+          gsap.to(row, {
+            x: 0,
+            duration: 0.28,
+            ease: "power2.out",
+          });
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const tradeoffs = [
+    {
+      left: "Large enough to impress",
+      right: "Often too large to feel personal",
+    },
+    {
+      left: "Beautifully traditional",
+      right: "Sometimes limited in comfort or capability",
+    },
+    {
+      left: "Highly structured itineraries",
+      right: "Often leave little room for instinct or spontaneity",
+    },
+  ];
+
+  const proofs = [
+    "12 Guests",
+    "10 Crew",
+    "4 Cabins",
+    "Private Charter Only",
+    "Flexible Routing",
+    "Indonesia",
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* Atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(176,141,87,0.06),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_82%,rgba(45,60,104,0.04),transparent_22%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* HEADER */}
+        {/* ===================================================== */}
+        <div
+          ref={headerRef}
+          className="grid grid-cols-1 gap-10 border-b border-[#2D3C68]/10 pb-14 lg:grid-cols-[1fr_0.9fr]"
+        >
+          <div>
+            <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+              Why Serenity Exists
+            </p>
+
+            <h2 className="font-[Gambarino] text-[44px] leading-[0.98] tracking-[-0.03em] text-[#2D3C68] sm:text-[56px] md:text-[72px]">
+              The tradeoff
+              <br />
+              never made sense
+            </h2>
+          </div>
+
+          <div className="lg:pt-8">
+            <p className="max-w-[500px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              Too many sea journeys ask guests to compromise between intimacy,
+              comfort, and freedom. Serenity was created to offer all three in
+              balance.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* TRADEOFF ROWS */}
+        {/* ===================================================== */}
+        <div className="mt-14 space-y-4">
+          {tradeoffs.map((item, index) => (
+            <div
+              key={index}
+              ref={(el) => (rowsRef.current[index] = el)}
+              className="grid cursor-default grid-cols-1 gap-5   border border-[#2D3C68]/10 bg-white/44 px-6 py-6 transition-all duration-300 hover:border-[#B08D57]/24 hover:shadow-[0_18px_50px_rgba(0,0,0,0.05)] md:grid-cols-[0.9fr_auto_1.1fr] md:items-center md:px-8"
+            >
+              {/* left */}
+              <p className="text-[17px] leading-[1.6] text-[#2D3C68]">
+                {item.left}
+              </p>
+
+              {/* divider */}
+              <div className="hidden h-px w-10 bg-gradient-to-r from-[#B08D57]/40 to-transparent md:block" />
+
+              {/* right */}
+              <p className="text-[15px] leading-[1.8] text-[#2D3C68]/62">
+                {item.right}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* ===================================================== */}
+        {/* SERENITY ANSWER */}
+        {/* ===================================================== */}
+        <div className="mt-14 grid grid-cols-1 gap-10 border-t border-[#2D3C68]/10 pt-12 lg:grid-cols-[1fr_0.9fr]">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+              The Serenity Answer
+            </p>
+
+            <h3 className="mt-5 font-[Gambarino] text-[38px] leading-[1.04] tracking-[-0.02em] text-[#2D3C68] md:text-[52px]">
+              Small enough to feel personal.
+              <br />
+              Structured enough to feel effortless.
+            </h3>
+          </div>
+
+          <div className="lg:pt-6">
+            <p className="max-w-[500px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              A private phinisi yacht with modern systems, experienced crew, and
+              the flexibility to let the best days happen naturally.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* PROOF BAR */}
+        {/* ===================================================== */}
+        <div
+          ref={proofRef}
+          className="mt-14 flex flex-wrap gap-3"
+        >
+          {proofs.map((item, index) => (
+            <div
+              key={index}
+              className="rounded-full border border-[#2D3C68]/10 bg-white/76 px-4 py-2"
+            >
+              <span className="text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/62">
+                {item}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhatMakesItDifferent() {
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const rowsRef = useRef([]);
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 76%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        headerRef.current.children,
+        {
+          y: 24,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.12,
+          duration: 1,
+        }
+      )
+        .fromTo(
+          rowsRef.current,
+          {
+            y: 28,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.12,
+            duration: 0.95,
+          },
+          "-=0.45"
+        )
+        .fromTo(
+          imageRef.current,
+          {
+            y: 24,
+            opacity: 0,
+            scale: 1.04,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.4,
+          },
+          "-=0.65"
+        );
+
+      gsap.to(imageRef.current, {
+        yPercent: 8,
+        ease: "none",
+        scrollTrigger: {
+          trigger: imageRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const items = [
+    {
+      number: "12",
+      label: "Guests",
+      body: "Enough company when desired, never enough to feel crowded.",
+    },
+    {
+      number: "10",
+      label: "Crew",
+      body: "High attention, quick response, and space to remain discreet.",
+    },
+    {
+      number: "4",
+      label: "Cabins",
+      body: "Privacy built in, with room to settle properly.",
+    },
+    {
+      number: "1",
+      label: "Private Charter",
+      body: "The yacht is yours for the journey — never shared with strangers.",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(176,141,87,0.06),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_80%,rgba(45,60,104,0.04),transparent_22%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* HEADER */}
+        {/* ===================================================== */}
+        <div
+          ref={headerRef}
+          className="grid grid-cols-1 gap-10 border-b border-[#2D3C68]/10 pb-14 lg:grid-cols-[1fr_0.9fr]"
+        >
+          <div>
+            <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+              What Makes It Different
+            </p>
+
+            <h2 className="font-[Gambarino] text-[44px] leading-[0.98] tracking-[-0.03em] text-[#2D3C68] sm:text-[56px] md:text-[72px]">
+              Scale kept small.
+              <br />
+              Standards kept high.
+            </h2>
+          </div>
+
+          <div className="lg:pt-8">
+            <p className="max-w-[500px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              Serenity was designed to feel personal, capable, and effortless —
+              where every detail works better because the scale remains
+              intentional.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* CONTENT */}
+        {/* ===================================================== */}
+        <div className="grid grid-cols-1 gap-12 pt-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+          {/* LEFT / PROOF ROWS */}
+          <div className="space-y-4">
+            {items.map((item, index) => (
+              <div
+                key={index}
+                ref={(el) => (rowsRef.current[index] = el)}
+                className="rounded-[26px] border border-[#2D3C68]/10 bg-white/76 px-6 py-6 transition-all duration-300 hover:border-[#B08D57]/26 hover:shadow-[0_18px_50px_rgba(0,0,0,0.05)] md:px-8"
+              >
+                <div className="flex items-end gap-3">
+                  <span className="font-[Gambarino] text-[48px] leading-none tracking-[-0.03em] text-[#2D3C68]">
+                    {item.number}
+                  </span>
+
+                  <span className="pb-1 text-[12px] uppercase tracking-[0.24em] text-[#8B6A4F]">
+                    {item.label}
+                  </span>
+                </div>
+
+                <div className="mt-5 h-px w-full bg-gradient-to-r from-[#B08D57]/30 to-transparent" />
+
+                <p className="mt-5 max-w-[420px] text-[15px] leading-[1.85] text-[#2D3C68]/72">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* RIGHT / IMAGE + DETAIL */}
+          <div>
+            <div className="overflow-hidden rounded-[30px] shadow-[0_24px_70px_rgba(0,0,0,0.08)]">
+              <div
+                ref={imageRef}
+                className="relative h-[420px] md:h-[620px]"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=1800&auto=format&fit=crop"
+                  alt="Luxury yacht teak deck detail"
+                  className="h-full w-full object-cover"
+                />
+
+                <div className="absolute inset-0 bg-[#2D3C68]/14" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/26 via-transparent to-white/8" />
+              </div>
+            </div>
+
+            <div className="mt-8 border-t border-[#2D3C68]/10 pt-7">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+                Heritage + Modern Systems
+              </p>
+
+              <p className="mt-4 max-w-[520px] text-[15px] leading-[1.9] text-[#2D3C68]/72">
+                A traditional phinisi silhouette paired with the operational
+                confidence expected from a modern private yacht.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BuiltInIndonesia() {
+  const sectionRef = useRef(null);
+  const introRef = useRef(null);
+  const imageRef = useRef(null);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 82%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        introRef.current.children,
+        {
+          y: 18,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.08,
+          duration: 0.72,
+        }
+      )
+        .fromTo(
+          imageRef.current,
+          {
+            y: 24,
+            opacity: 0,
+            scale: 1.02,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+          },
+          "-=0.34"
+        )
+        .fromTo(
+          textRef.current.children,
+          {
+            y: 16,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.72,
+          },
+          "-=0.58"
+        );
+
+      gsap.to(imageRef.current, {
+        yPercent: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* ===================================================== */}
+      {/* ATMOSPHERE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(176,141,87,0.05),transparent_22%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_78%,rgba(45,60,104,0.03),transparent_24%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* INTRO */}
+        {/* ===================================================== */}
+        <div
+          ref={introRef}
+          className="grid grid-cols-1 gap-10 border-b border-[#2D3C68]/10 pb-14 lg:grid-cols-[0.95fr_1.05fr]"
+        >
+          <div>
+            <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+              Built in Indonesia
+            </p>
+
+            <h2 className="font-[Gambarino] text-[42px] leading-[0.98] tracking-[-0.03em] text-[#2D3C68] sm:text-[54px] md:text-[68px]">
+              Crafted where the
+              <br />
+              phinisi began
+            </h2>
+          </div>
+
+          <div className="lg:pt-7">
+            <p className="max-w-[560px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              Serenity was built in Indonesia, where shipbuilders in South
+              Sulawesi have shaped wooden vessels for generations with a deep
+              understanding of sea, balance, and endurance.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* MAIN EDITORIAL */}
+        {/* ===================================================== */}
+        <div className="grid grid-cols-1 gap-14 pt-16 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-18">
+          {/* IMAGE */}
+          <div className="overflow-hidden">
+            <div
+              ref={imageRef}
+              className="relative h-[430px] md:h-[560px]"
+            >
+              <img
+                src="https://res.cloudinary.com/dombq6plz/image/upload/v1777222647/ChatGPT_Image_Apr_26_2026_11_55_42_PM_2_oyj4jw.png"
+                alt="Teak deck and craftsmanship aboard Serenity"
+                className="h-full w-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-[#2D3C68]/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/8" />
+            </div>
+          </div>
+
+          {/* TEXT */}
+          <div
+            ref={textRef}
+            className="max-w-[520px]"
+          >
+            <h3 className="text-[34px] leading-[1.08] tracking-[-0.02em] text-[#2D3C68] md:text-[44px]">
+              Warm in detail.
+              <br />
+              Proven at sea.
+            </h3>
+
+            <p className="mt-6 text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+              Teak surfaces bring warmth to life onboard. Traditional hull
+              knowledge brings steadiness in changing waters. Modern systems add
+              the comfort expected of a private yacht today.
+            </p>
+
+            <div className="mt-10 h-px w-full max-w-[220px] bg-gradient-to-r from-[#B08D57]/38 to-transparent" />
+
+            <p className="mt-7 text-[14px] leading-[1.85] text-[#2D3C68]/62">
+              Heritage craftsmanship, adapted for contemporary private travel.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PrivateByDesign() {
+  const sectionRef = useRef(null);
+  const introRef = useRef(null);
+  const statRef = useRef(null);
+  const imageRef = useRef(null);
+  const pointsRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 82%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        introRef.current.children,
+        {
+          y: 18,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.08,
+          duration: 0.72,
+        }
+      )
+        .fromTo(
+          statRef.current.children,
+          {
+            y: 24,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.82,
+          },
+          "-=0.38"
+        )
+        .fromTo(
+          imageRef.current,
+          {
+            y: 28,
+            opacity: 0,
+            scale: 1.015,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.05,
+          },
+          "-=0.45"
+        )
+        .fromTo(
+          pointsRef.current.children,
+          {
+            y: 16,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.72,
+          },
+          "-=0.56"
+        );
+
+      gsap.to(imageRef.current, {
+        yPercent: 4,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const points = [
+    {
+      title: "Gather well",
+      body:
+        "Meals, conversations, and sunset moments feel open and relaxed rather than crowded.",
+    },
+    {
+      title: "Retreat easily",
+      body:
+        "Quiet corners, private cabins, and open deck areas make solitude natural when wanted.",
+    },
+    {
+      title: "Move at your pace",
+      body:
+        "With one private group onboard, each day follows your rhythm instead of competing priorities.",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(176,141,87,0.05),transparent_22%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_78%,rgba(45,60,104,0.03),transparent_24%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* INTRO */}
+        {/* ===================================================== */}
+        <div
+          ref={introRef}
+          className="max-w-[820px]"
+        >
+          <p className="mb-5 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+            Private by Design
+          </p>
+
+          <h2 className="font-[Gambarino] text-[42px] leading-[0.97] tracking-[-0.03em] text-[#2D3C68] sm:text-[56px] md:text-[74px]">
+            Designed around
+            <br />
+            one private group
+          </h2>
+
+          <p className="mt-7 max-w-[620px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+            Large enough to celebrate together. Small enough to still feel
+            personal.
+          </p>
+        </div>
+
+        {/* ===================================================== */}
+        {/* STAT + COPY */}
+        {/* ===================================================== */}
+        <div
+          ref={statRef}
+          className="grid grid-cols-1 gap-10 pt-14 lg:grid-cols-[0.72fr_1.28fr] lg:items-end"
+        >
+          <div>
+            <p className="font-[Gambarino] text-[110px] leading-none tracking-[-0.06em] text-[#2D3C68] md:text-[170px]">
+              12
+            </p>
+
+            <p className="mt-2 text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+              Up to 12 Guests
+            </p>
+          </div>
+
+          <div className="lg:pb-5">
+            <p className="max-w-[620px] text-[22px] leading-[1.35] tracking-[-0.02em] text-[#2D3C68] md:text-[32px]">
+              Serenity is intentionally limited to preserve atmosphere, privacy,
+              and the feeling that the yacht is truly yours.
+            </p>
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* IMAGE */}
+        {/* ===================================================== */}
+        <div className="mt-16 overflow-hidden">
+          <div
+            ref={imageRef}
+            className="relative h-[420px] md:h-[560px] lg:h-[640px]"
+          >
+            <img
+              src="https://res.cloudinary.com/dombq6plz/image/upload/v1777225111/ChatGPT_Image_Apr_27_2026_12_35_42_AM_1_pzm9cu.png"
+              alt="Guests enjoying the spacious private deck aboard Serenity"
+              className="h-full w-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-[#2D3C68]/12" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/24 via-transparent to-white/10" />
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* POINTS */}
+        {/* ===================================================== */}
+        <div
+          ref={pointsRef}
+          className="grid grid-cols-1 gap-x-14 gap-y-12 border-t border-[#2D3C68]/10 pt-14 md:grid-cols-3"
+        >
+          {points.map((item, index) => (
+            <div key={index}>
+              <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+                {item.title}
+              </p>
+
+              <p className="mt-5 text-[17px] leading-[1.85] text-[#2D3C68]/72">
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ClosingCTA() {
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  const actionsRef = useRef(null);
+  const footRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 84%",
+        },
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.fromTo(
+        contentRef.current?.children || [],
+        {
+          y: 22,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
+          duration: 0.8,
+        }
+      )
+        .fromTo(
+          actionsRef.current?.children || [],
+          {
+            y: 16,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.7,
+          },
+          "-=0.45"
+        )
+        .fromTo(
+          footRef.current?.children || [],
+          {
+            y: 10,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.05,
+            duration: 0.55,
+          },
+          "-=0.3"
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] py-28 md:py-36"
+    >
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(176,141,87,0.05),transparent_26%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_82%,rgba(45,60,104,0.03),transparent_24%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1120px] px-6 text-center md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* MAIN COPY */}
+        {/* ===================================================== */}
+        <div
+          ref={contentRef}
+          className="mx-auto max-w-[860px]"
+        >
+          <p className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-[#5C5C5C]">
+            Begin Properly
+          </p>
+
+          <h2 className="font-[Gambarino] text-[44px] leading-[0.98] tracking-[-0.03em] text-[#2D3C68] sm:text-[58px] md:text-[76px]">
+            If you’re going to do it,
+            <br />
+            do it properly.
+          </h2>
+
+          <p className="mx-auto mt-7 max-w-[620px] text-[15px] leading-[1.95] text-[#2D3C68]/72 md:text-[16px]">
+            Private journeys through Indonesia, shaped with space, warmth, and
+            quiet precision from the moment you step aboard.
+          </p>
+        </div>
+
+        {/* ===================================================== */}
+        {/* ACTIONS */}
+        {/* ===================================================== */}
+        <div
+          ref={actionsRef}
+          className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <button className="group inline-flex min-w-[220px] items-center justify-center gap-3 rounded-full bg-[#2D3C68] px-8 py-3.5 text-[14px] font-medium text-[#F4F5F2] transition-all duration-300 hover:bg-[#24345B]">
+            Explore Journeys
+
+            <svg
+              className="transition-transform duration-300 group-hover:translate-x-1"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <path d="M5 12h14" />
+              <path d="M13 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <button className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-[#2D3C68]/14 px-8 py-3.5 text-[14px] font-medium text-[#2D3C68] transition-all duration-300 hover:border-[#2D3C68]/28 hover:bg-white/70">
+            Check Availability
+          </button>
+        </div>
+
+        {/* ===================================================== */}
+        {/* TRUST FOOTNOTE */}
+        {/* ===================================================== */}
+        <div
+          ref={footRef}
+          className="mt-12 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/42"
+        >
+          <span>Private Charter</span>
+          <span>12 Guests</span>
+          <span>Indonesia</span>
+          <span>Tailored Journeys</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ThePeopleWhoShapeTheJourney() {
+  const sectionRef = useRef(null);
+  const imageRef = useRef(null);
+  const introRef = useRef(null);
+  const cardsRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 86%",
+        },
+        defaults: { ease: "power3.out" },
+      });
+
+      tl.fromTo(
+        imageRef.current,
+        {
+          scale: 1.03,
+          opacity: 0,
+          y: 24,
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 1.12,
+          ease: "power4.out",
+        }
+      )
+        .fromTo(
+          introRef.current.children,
+          {
+            y: 18,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.08,
+            duration: 0.72,
+          },
+          "-=0.42"
+        )
+        .fromTo(
+          cardsRef.current.children,
+          {
+            y: 22,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 0.76,
+          },
+          "-=0.30"
+        );
+
+      gsap.to(imageRef.current, {
+        yPercent: 2,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const people = [
+    {
+      role: "Captain",
+      name: "Arif",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777271186/ChatGPT_Image_Apr_27_2026_01_24_43_PM_xylsa1.png",
+      body:
+        "Steady, experienced, and quietly attentive. Arif guides each route with calm judgment as conditions shift through the day.",
+    },
+    {
+      role: "Chef",
+      name: "Rani",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777271186/ChatGPT_Image_Apr_27_2026_01_24_38_PM_iuf3mw.png",
+      body:
+        "Fresh meals shaped around your timing, preferences, and the natural rhythm of life onboard from morning to evening.",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2]"
+    >
+      {/* HERO IMAGE */}
+      <div className="relative h-[92svh] min-h-[760px] w-full overflow-hidden">
+        <img
+          ref={imageRef}
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1777227225/ChatGPT_Image_Apr_27_2026_01_12_43_AM_1_l0xnxm.png"
+          alt="The crew of Serenity together on deck"
+          className="h-full w-full object-cover"
+        />
+
+        <div className="absolute inset-0 bg-[#2D3C68]/14" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-transparent" />
+      </div>
+
+      {/* CONTENT */}
+      <div className="mx-auto max-w-[1320px] px-6 py-24 md:px-10 md:py-28 lg:px-16 lg:py-32">
+        {/* INTRO */}
+        <div
+          ref={introRef}
+          className="grid grid-cols-1 gap-10 border-b border-[#2D3C68]/10 pb-14 lg:grid-cols-[0.95fr_1.05fr]"
+        >
+          <div>
+            <p className="mb-5 text-[11px] uppercase tracking-[0.34em] text-[#5C5C5C]">
+              The People Who Shape The Journey
+            </p>
+
+            <h2 className="font-[Gambarino] text-[42px] leading-[0.97] tracking-[-0.03em] text-[#2D3C68] sm:text-[56px] md:text-[72px]">
+              Good hands
+              <br />
+              change everything
+            </h2>
+          </div>
+
+          <div className="lg:pt-6">
+            <p className="max-w-[540px] text-[15px] leading-[1.95] text-[#2D3C68]/70 md:text-[16px]">
+              A private yacht is remembered not only for where it goes, but for
+              the people who shape each day along the way.
+            </p>
+          </div>
+        </div>
+
+        {/* PEOPLE */}
+        <div
+          ref={cardsRef}
+          className="grid grid-cols-1 gap-14 pt-14 lg:grid-cols-2"
+        >
+          {people.map((person, index) => (
+            <div key={index}>
+              <div className="overflow-hidden">
+                <div className="relative aspect-[4/5] w-full">
+                  <img
+                    src={person.image}
+                    alt={person.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-8">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+                  {person.role}
+                </p>
+
+                <h3 className="mt-4 font-[Gambarino] text-[38px] leading-none tracking-[-0.02em] text-[#2D3C68] md:text-[48px]">
+                  {person.name}
+                </h3>
+
+                <p className="mt-6 max-w-[520px] text-[17px] leading-[1.85] text-[#2D3C68]/74">
+                  {person.body}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyGuestsReturn() {
+  /**
+   * HARD CONSTRAINTS FOLLOWED
+   * - No top header
+   * - No intro text
+   * - No re-adding removed opener
+   * - Keep user's structure
+   * - Only refine existing parts
+   * - Carousel + proof strip only
+   */
+
+  const testimonials = [
+    {
+      quote:
+        "We booked for Komodo, but what we still talk about is how the whole week felt.",
+      guest: "Returning Couple",
+      meta: "4 Nights",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777221118/ChatGPT_Image_Apr_26_2026_11_31_27_PM_1_fd8cat.png",
+    },
+    {
+      quote:
+        "The yacht was beautiful, but the calm onboard stayed with us longer than the photos.",
+      guest: "Family of Five",
+      meta: "5 Nights",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777222647/ChatGPT_Image_Apr_26_2026_11_55_42_PM_2_oyj4jw.png",
+    },
+    {
+      quote:
+        "We thought we'd remember the islands most. We remember the mornings at anchor.",
+      guest: "Private Group",
+      meta: "3 Nights",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777225111/ChatGPT_Image_Apr_27_2026_12_35_42_AM_1_pzm9cu.png",
+    },
+  ];
+
+  const proof = [
+    {
+      title: "Return",
+      body: "Families often come back later with friends or relatives.",
+    },
+    {
+      title: "Referred",
+      body: "Many first charters begin through past guests.",
+    },
+    {
+      title: "Remembered",
+      body: "Guests often mention the feeling as much as the route.",
+    },
+  ];
+
+  return (
+    <section className="relative overflow-hidden bg-[#F8F8F5] py-28 md:py-36">
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(176,141,87,0.05),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_78%,rgba(45,60,104,0.03),transparent_24%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[1380px] px-6 md:px-10 lg:px-16">
+        {/* ===================================================== */}
+        {/* CAROUSEL ONLY */}
+        {/* ===================================================== */}
+        <div className="overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex snap-x snap-mandatory gap-5 md:gap-6">
+            {testimonials.map((item, index) => (
+              <div
+                key={index}
+                className="min-w-[92%] snap-start md:min-w-[640px] lg:min-w-[760px]"
+              >
+                <div className="overflow-hidden rounded-[24px] border border-[#2D3C68]/8 bg-white/92 shadow-[0_20px_60px_rgba(20,20,20,0.05)]">
+                  {/* image */}
+                  <div className="relative h-[260px] md:h-[340px]">
+                    <img
+                      src={item.image}
+                      alt={item.guest}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+                  </div>
+
+                  {/* content */}
+                  <div className="p-7 md:p-10">
+                    <p className="font-[Gambarino] text-[28px] leading-[1.14] tracking-[-0.02em] text-[#2D3C68] md:text-[40px]">
+                      “{item.quote}”
+                    </p>
+
+                    <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] uppercase tracking-[0.28em] text-[#8B6A4F]">
+                      <span>{item.guest}</span>
+
+                      <span className="h-[3px] w-[3px] rounded-full bg-[#8B6A4F]/55" />
+
+                      <span>{item.meta}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ===================================================== */}
+        {/* LOWER PROOF STRIP */}
+        {/* ===================================================== */}
+        <div className="mt-14 grid grid-cols-1 gap-y-8 border-t border-[#2D3C68]/10 pt-10 md:grid-cols-3 md:gap-x-12">
+          {proof.map((item, index) => (
+            <div key={index}>
+              <p className="font-[Gambarino] text-[32px] leading-none text-[#2D3C68] md:text-[36px]">
+                {item.title}
+              </p>
+
+              <p className="mt-3 text-[15px] leading-[1.85] text-[#2D3C68]/68">
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PlanYourJourney() {
+  /**
+   * RESET PRINCIPLE
+   * Closing section should feel calm and decisive.
+   *
+   * One focal point.
+   * One primary CTA.
+   * One support line.
+   *
+   * No competing grids.
+   * No numbered steps.
+   * No dual CTA.
+   * No attention chaos.
+   */
+
+  return (
+    <section className="relative overflow-hidden bg-[#EEF0EB] py-32 md:py-40">
+      {/* atmosphere */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(176,141,87,0.06),transparent_26%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_76%,rgba(45,60,104,0.04),transparent_26%)]" />
+
+      <div className="relative z-10 mx-auto max-w-[980px] px-6 text-center md:px-10 lg:px-16">
+        {/* quiet label */}
+        <p className="text-[11px] uppercase tracking-[0.34em] text-[#8B6A4F]">
+          Begin When Ready
+        </p>
+
+        {/* single focal point */}
+        <h2 className="mt-8 font-[Gambarino] text-[44px] leading-[1] tracking-[-0.03em] text-[#2D3C68] sm:text-[58px] md:text-[82px]">
+          Your journey can
+          <br />
+          begin with a
+          <br />
+          simple message.
+        </h2>
+
+        {/* support */}
+        <p className="mx-auto mt-8 max-w-[620px] text-[15px] leading-[1.95] text-[#2D3C68]/68 md:text-[16px]">
+          Tell us your dates, your group, or simply where you are in the
+          planning process. We’ll guide the next step from there.
+        </p>
+
+        {/* one CTA */}
+        <div className="mt-10">
+          <a
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-full bg-[#2D3C68] px-8 py-4 text-[12px] font-medium uppercase tracking-[0.24em] text-white transition duration-300 hover:bg-[#223054]"
+          >
+            Enquire Availability
+          </a>
+        </div>
+
+        {/* quiet trust line */}
+        <p className="mt-8 text-[13px] leading-[1.8] text-[#2D3C68]/58">
+          Private charters only • Personal replies typically within 24 hours
+        </p>
+      </div>
+    </section>
+  );
+}
+
+
 
 function ThePeople() {
   return (
@@ -315,6 +1865,89 @@ function ThePeople() {
     </section>
   )
 }
+
+
+ 
+
+function PhinisiSection() {
+  return (
+    <section className="relative w-full bg-[#F4F5F2] py-[220px] px-6 overflow-hidden">
+
+      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-24 items-center">
+
+        {/* ================= LEFT (CONTENT) ================= */}
+        <div className="max-w-[520px]">
+
+          {/* MICRO */}
+          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+            Phinisi
+          </p>
+
+          {/* HEADLINE */}
+          <h2 className="mt-6 font-[Gambarino] text-[44px] md:text-[60px] leading-[1.05] text-[#2D3C68]">
+            Not built like a modern yacht
+          </h2>
+
+          {/* CORE */}
+          <p className="mt-8 text-[18px] text-[#1A1A1A] leading-[1.7]">
+            Wood, open space, and constant exposure to air, light, and movement.
+          </p>
+
+          {/* DATA */}
+          <div className="mt-10 space-y-6 text-[16px] text-[#2A2A2A]">
+
+            <p>
+              You’re not inside sealed rooms — most of the day happens out on deck, with nothing separating you from the surroundings.
+            </p>
+
+            <p>
+              The structure moves with the water, not against it, making the entire space feel alive rather than fixed.
+            </p>
+
+            <p>
+              Everything is arranged horizontally, so movement across the boat feels natural, without levels cutting the flow.
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* ================= RIGHT (VISUAL SYSTEM) ================= */}
+        <div className="relative w-full h-full">
+
+          {/* MAIN IMAGE */}
+          <div className="relative w-[85%] aspect-[4/5] overflow-hidden ml-auto">
+
+            <img
+              src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop"
+              alt="People relaxing on phinisi deck"
+              className="w-full h-full object-cover scale-[1.04]"
+            />
+
+            {/* DEPTH */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/25 to-transparent" />
+          </div>
+
+          {/* SECONDARY IMAGE (OFFSET) */}
+          <div className="absolute -left-6 bottom-[-40px] w-[45%] aspect-[3/4] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+
+            <img
+              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
+              alt="Phinisi wood detail"
+              className="w-full h-full object-cover"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  )
+}
+
+
  
 function ExperienceSummary() {
   return (

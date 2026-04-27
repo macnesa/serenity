@@ -14,7 +14,7 @@ export default function Page() {
        <Hero/> 
        <RateOverview/>
        <IncludedSection/>
-       <PricingDetails/>  
+       {/* <PricingDetails/>   */}
        <SampleJourney/>
        <FinalCTA/>
        {/* <CharterRates/> */}
@@ -28,231 +28,378 @@ export default function Page() {
 
 function Hero() {
   return (
-    <section className="relative w-full bg-[#2D3C68] overflow-hidden">
-
-      {/* SOFT DEPTH (NO DRAMA) */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68] via-[#2D3C68] to-[#1f2a4a] opacity-90" />
-
-      {/* CONTENT */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-[140px] pb-[120px]">
-
-        <div className="max-w-[640px]">
-
-          {/* MICRO */}
-          <div className="mb-6 text-[11px] tracking-[0.28em] text-[#F4F5F2]/60">
-            PRIVATE CHARTER
-          </div>
-
-          {/* HEADLINE */}
-          <h1 className="font-[Gambarino] text-[44px] md:text-[64px] leading-[1.08] tracking-[-0.03em] text-[#F4F5F2]">
-            Plan your
-            <br />
-            time on board
-          </h1>
-
-          {/* SUBCOPY */}
-          <p className="mt-6 text-[15px] text-[#F4F5F2]/75 max-w-[520px] mx-auto leading-[1.7]">
-            Each journey is shaped by where you go, how long you stay, and how you choose to spend your days.
-          </p>
-
-          {/* MICRO CONTEXT */}
-          <div className="mt-8 text-[12px] tracking-[0.25em] text-[#F4F5F2]/50">
-            UP TO 12 GUESTS · FULL CREW · FLEXIBLE ROUTE
-          </div>
-
-        </div>
-
+    <section className="relative w-full h-[82vh] min-h-[660px] overflow-hidden bg-[#2D3C68] text-white">
+      {/* ===================================================== */}
+      {/* BACKGROUND IMAGE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0">
+        <motion.img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1777217651/ChatGPT_Image_Apr_26_2026_10_30_34_PM_1_yc2ihk.png"
+          alt="Guests relaxing aboard Serenity"
+          className="w-full h-full object-cover scale-[1.06]"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1.06 }}
+          transition={{ duration: 6, ease: [0.22, 1, 0.36, 1] }}
+        />
       </div>
 
+      {/* ===================================================== */}
+      {/* OVERLAYS */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/84 via-[#2D3C68]/78 to-[#1F2A4A]/94" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#2D3C68]/48 via-transparent to-transparent" />
+      <div className="absolute bottom-0 left-0 h-[220px] w-full bg-gradient-to-b from-transparent via-[#2D3C68]/16 to-[#2D3C68]" />
+
+      {/* ===================================================== */}
+      {/* CONTENT */}
+      {/* ===================================================== */}
+      <div className="relative z-10 flex h-full items-center px-6">
+        <div className="mx-auto w-full max-w-[1240px]">
+          <div className="max-w-[700px] md:ml-[40px]">
+
+            {/* MICRO */}
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45 }}
+              className="mb-6 text-[11px] font-medium uppercase tracking-[0.34em] text-white/60"
+            >
+              Rates & Schedule
+            </motion.p>
+
+            {/* HEADLINE */}
+            <motion.h1
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.58, delay: 0.08 }}
+              className="font-[Gambarino] text-[56px] md:text-[82px] leading-[0.97] tracking-[-0.04em]"
+            >
+              Private charter,
+              <br />
+              planned around you.
+            </motion.h1>
+
+            {/* SUBCOPY */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.58, delay: 0.16 }}
+              className="mt-7 max-w-[560px] text-[15px] md:text-[16px] leading-[1.85] text-white/74"
+            >
+              For up to 12 guests. Explore rates, sample journeys, and
+              availability for dates that work for your group.
+            </motion.p>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.58, delay: 0.24 }}
+              className="mt-11 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6"
+            >
+              <button className="rounded-full bg-white px-8 py-3 text-[14px] font-medium text-[#2D3C68] transition hover:bg-[#F4F5F2]">
+                Check availability
+              </button>
+
+              <button className="text-[13px] text-white/62 transition hover:text-white">
+                Explore sample journeys
+              </button>
+            </motion.div>
+
+          </div>
+        </div>
+      </div>
     </section>
-  )
+  );
 }
 
 
 function RateOverview() {
   return (
-    <section className="relative w-full bg-[#F4F5F2] py-[160px] md:py-[180px] px-6 overflow-hidden">
+    <section className="relative w-full overflow-hidden bg-[#F4F5F2] py-[170px] md:py-[190px] px-6">
+      {/* ===================================================== */}
+      {/* TRANSITION FROM HERO */}
+      {/* ===================================================== */}
+      <div className="pointer-events-none absolute top-0 left-0 h-[140px] w-full bg-gradient-to-b from-[#2D3C68]/12 to-transparent" />
 
-      {/* TOP FADE */}
-      <div className="absolute top-0 left-0 w-full h-[140px] bg-gradient-to-b from-[#2D3C68]/10 to-transparent pointer-events-none" />
+      {/* ===================================================== */}
+      {/* ATMOSPHERE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(176,141,87,0.045),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_76%,rgba(45,60,104,0.028),transparent_22%)]" />
 
-      <div className="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-24 items-start">
+      <div className="relative mx-auto max-w-[1180px]">
 
-        {/* ================= LEFT ================= */}
-        <div className="max-w-[420px]">
-
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+        {/* ===================================================== */}
+        {/* TOP INTRO */}
+        {/* ===================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65 }}
+          viewport={{ once: true }}
+          className="max-w-[760px]"
+        >
+          <p className="text-[11px] uppercase tracking-[0.34em] text-[#6A6A6A]">
             Rates
           </p>
 
-          <h2 className="mt-6 font-[Gambarino] text-[52px] md:text-[64px] leading-[1.05] text-[#2D3C68]">
-            Simple, flexible pricing
+          <h2 className="mt-6 font-[Gambarino] text-[54px] md:text-[72px] leading-[1] tracking-[-0.035em] text-[#2D3C68]">
+            Private charter rates,
+            <br />
+            made clear
           </h2>
 
-          <p className="mt-6 text-[15px] text-[#5C5C5C] leading-relaxed">
-            You’re booking the entire yacht, not per person.
-            The final price depends on where you go and how long you stay.
+          <p className="mt-7 max-w-[520px] text-[15px] md:text-[16px] leading-[1.9] text-[#2D3C68]/72">
+            Reserve the entire yacht for your group. Pricing is per night and
+            shaped by season, route, and journey length.
           </p>
+        </motion.div>
 
+        {/* ===================================================== */}
+        {/* MONUMENT PRICING */}
+        {/* ===================================================== */}
+        <div className="mt-20 border-y border-[#2D3C68]/8 py-14 md:py-16">
+          <div className="grid items-end gap-16 md:grid-cols-2 md:gap-10">
+
+            {/* PEAK */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.72 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Peak Season
+              </p>
+
+              <div className="mt-5 flex items-start gap-3">
+                <span className="pt-4 text-[13px] uppercase tracking-[0.22em] text-[#6A6A6A]">
+                  USD
+                </span>
+
+                <span className="font-[Gambarino] text-[74px] md:text-[96px] leading-none tracking-[-0.04em] text-[#1A1A1A]">
+                  8,500
+                </span>
+              </div>
+
+              <p className="mt-4 text-[14px] text-[#5C5C5C]">
+                per night
+              </p>
+            </motion.div>
+
+            {/* LOW */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.72, delay: 0.08 }}
+              viewport={{ once: true }}
+              className="md:border-l md:border-[#2D3C68]/8 md:pl-10"
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Low Season
+              </p>
+
+              <div className="mt-5 flex items-start gap-3">
+                <span className="pt-3 text-[12px] uppercase tracking-[0.22em] text-[#6A6A6A]">
+                  USD
+                </span>
+
+                <span className="font-[Gambarino] text-[58px] md:text-[74px] leading-none tracking-[-0.04em] text-[#1A1A1A]">
+                  6,500
+                </span>
+              </div>
+
+              <p className="mt-4 text-[14px] text-[#5C5C5C]">
+                per night
+              </p>
+            </motion.div>
+
+          </div>
         </div>
 
-        {/* ================= RIGHT ================= */}
-        <div className="relative md:translate-y-[60px]">
+        {/* ===================================================== */}
+        {/* SUPPORTING NOTES */}
+        {/* ===================================================== */}
+        <div className="mt-14 grid items-start gap-10 md:grid-cols-[1fr_auto]">
 
-          {/* ================= PEAK ================= */}
-          <div className="mb-24">
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.12 }}
+            viewport={{ once: true }}
+            className="max-w-[560px] text-[15px] leading-[1.9] text-[#2D3C68]/72"
+          >
+            Includes crew, onboard meals, and water activities.
+            Final quotes are confirmed once route and dates are selected.
+          </motion.p>
 
-            <p className="text-[12px] tracking-[0.2em] text-[#2D3C68]/60 uppercase mb-4">
-              Peak Season
-            </p>
-
-            {/* PEAK MOMENT */}
-            <div className="font-[Gambarino] text-[64px] md:text-[72px] text-[#1A1A1A] leading-none relative inline-block">
-
-              USD 8,500
-
-              {/* subtle underline = visual anchor */}
-              <div className="absolute left-0 -bottom-3 w-12 h-[1px] bg-[#2D3C68]/20" />
-            </div>
-
-            <p className="mt-3 text-[14px] text-[#5C5C5C]">
-              per night · up to 12 guests
-            </p>
-
-          </div>
-
-          {/* ================= LOW ================= */}
-          <div className="relative md:top-[40px] md:ml-[60px]">
-
-            <p className="text-[12px] tracking-[0.2em] text-[#2D3C68]/60 uppercase mb-3">
-              Low Season
-            </p>
-
-            <div className="font-[Gambarino] text-[36px] md:text-[44px] text-[#1A1A1A] leading-none">
-              USD 6,500
-            </div>
-
-            <p className="mt-2 text-[14px] text-[#5C5C5C]">
-              per night · up to 12 guests
-            </p>
-
-          </div>
-
-          {/* ================= INCLUDED ================= */}
-          <div className="mt-28 max-w-[360px] relative">
-
-            {/* divider biar punya role */}
-            <div className="w-8 h-[1px] bg-[#2D3C68]/20 mb-5" />
-
-            <p className="text-[13px] text-[#5C5C5C]/80 leading-relaxed">
-              Includes a fully crewed yacht, all meals, and access to onboard and water activities.
-            </p>
-
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.18 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/42 md:justify-end"
+          >
+            <span>Up to 12 Guests</span>
+            <span>Private Charter</span>
+            <span>Tailored Quotes</span>
+          </motion.div>
 
         </div>
-
       </div>
-
     </section>
-  )
+  );
 }
 
 function IncludedSection() {
   return (
-    <section className="w-full bg-[#F4F5F2] py-[180px] px-6">
+    <section className="relative w-full overflow-hidden bg-[#F1F3EE] py-[170px] md:py-[190px] px-6">
+      {/* ===================================================== */}
+      {/* TRANSITION FROM PREVIOUS SECTION */}
+      {/* ===================================================== */}
+      <div className="pointer-events-none absolute top-0 left-0 h-[120px] w-full bg-gradient-to-b from-[#F4F5F2] to-transparent" />
 
-      <div className="max-w-[1100px] mx-auto grid md:grid-cols-2 gap-20 items-start">
+      {/* ===================================================== */}
+      {/* ATMOSPHERE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(176,141,87,0.04),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_78%,rgba(45,60,104,0.025),transparent_22%)]" />
 
-        {/* ================= LEFT (HEADER) ================= */}
-        <div className="max-w-[360px]">
+      <div className="relative mx-auto max-w-[1280px]">
 
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
-            Details
-          </p>
+        {/* ===================================================== */}
+        {/* TOP GRID */}
+        {/* ===================================================== */}
+        <div className="grid items-start gap-24 md:grid-cols-[0.95fr_1.05fr]">
 
-          <h2 className="mt-6 font-[Gambarino] text-[42px] leading-[1.1] text-[#2D3C68]">
-            What’s included
-          </h2>
+          {/* LEFT */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65 }}
+            viewport={{ once: true }}
+            className="max-w-[460px]"
+          >
+            <p className="text-[11px] uppercase tracking-[0.34em] text-[#6A6A6A]">
+              Included
+            </p>
 
-          <p className="mt-6 text-[14px] text-[#5C5C5C] leading-relaxed">
-            Clear breakdown of what’s covered and what isn’t.
-          </p>
+            <h2 className="mt-6 font-[Gambarino] text-[52px] md:text-[64px] leading-[1.02] tracking-[-0.03em] text-[#2D3C68]">
+              Everything
+              <br />
+              already handled
+            </h2>
 
-        </div>
+            <p className="mt-7 max-w-[420px] text-[15px] md:text-[16px] leading-[1.9] text-[#2D3C68]/72">
+              From meals to movement, the details are prepared before you arrive.
+              Once aboard, very little is asked of you.
+            </p>
 
-        {/* ================= RIGHT (DATA GRID) ================= */}
-        <div>
-
-          {/* INCLUDED GRID */}
-          <div className="grid sm:grid-cols-2 gap-x-16 gap-y-10">
-
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Yacht</p>
-              <p className="text-[16px] text-[#1A1A1A]">Private use (max 12 guests)</p>
+            <div className="mt-12 border-l border-[#2D3C68]/14 pl-6">
+              <p className="font-[Gambarino] text-[26px] leading-[1.18] text-[#2D3C68]">
+                Your time stays yours.
+              </p>
             </div>
+          </motion.div>
 
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Crew</p>
-              <p className="text-[16px] text-[#1A1A1A]">Captain, chef, full team</p>
-            </div>
+          {/* RIGHT */}
+          <div className="md:pt-8">
 
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Meals</p>
-              <p className="text-[16px] text-[#1A1A1A]">Breakfast, lunch, dinner, snacks</p>
-            </div>
+            {/* CLUSTER 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+              className="grid gap-8 border-b border-[#2D3C68]/10 pb-12 sm:grid-cols-[180px_1fr]"
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Yacht & Crew
+              </p>
 
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Drinks</p>
-              <p className="text-[16px] text-[#1A1A1A]">Water and basic beverages</p>
-            </div>
+              <p className="max-w-[520px] text-[17px] leading-[1.75] text-[#1A1A1A]">
+                Private yacht with captain, chef, and full onboard crew
+                dedicated to your group throughout the journey.
+              </p>
+            </motion.div>
 
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Activities</p>
-              <p className="text-[16px] text-[#1A1A1A]">Snorkeling gear, paddle boards</p>
-            </div>
+            {/* CLUSTER 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.08 }}
+              viewport={{ once: true }}
+              className="grid gap-8 border-b border-[#2D3C68]/10 py-12 sm:grid-cols-[180px_1fr]"
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Onboard Living
+              </p>
 
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Service</p>
-              <p className="text-[16px] text-[#1A1A1A]">Daily cleaning and onboard help</p>
-            </div>
+              <p className="max-w-[520px] text-[17px] leading-[1.75] text-[#1A1A1A]">
+                Breakfast, lunch, dinner, snacks, water, and the daily comfort
+                of a fully serviced yacht.
+              </p>
+            </motion.div>
+
+            {/* CLUSTER 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.14 }}
+              viewport={{ once: true }}
+              className="grid gap-8 border-b border-[#2D3C68]/10 py-12 sm:grid-cols-[180px_1fr]"
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Exploration
+              </p>
+
+              <p className="max-w-[520px] text-[17px] leading-[1.75] text-[#1A1A1A]">
+                Snorkeling equipment, paddle boards, and access to the water
+                whenever conditions are right.
+              </p>
+            </motion.div>
+
+            {/* CLUSTER 4 */}
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="grid gap-8 pt-12 sm:grid-cols-[180px_1fr]"
+            >
+              <p className="text-[12px] uppercase tracking-[0.26em] text-[#6A6A6A]">
+                Not Included
+              </p>
+
+              <p className="max-w-[520px] text-[16px] leading-[1.85] text-[#2D3C68]/72">
+                Flights, park fees, alcohol on request, and personal expenses.
+                Final trip planning is confirmed before departure.
+              </p>
+            </motion.div>
 
           </div>
-
-          {/* DIVIDER */}
-          <div className="my-16 h-[1px] bg-[#2D3C68]/10" />
-
-          {/* NOT INCLUDED */}
-          <div className="grid sm:grid-cols-2 gap-x-16 gap-y-6">
-
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Flights</p>
-              <p className="text-[15px] text-[#1A1A1A]">Not included</p>
-            </div>
-
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Park fees</p>
-              <p className="text-[15px] text-[#1A1A1A]">Not included</p>
-            </div>
-
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Alcohol</p>
-              <p className="text-[15px] text-[#1A1A1A]">Available on request</p>
-            </div>
-
-            <div>
-              <p className="text-[13px] text-[#6A6A6A] mb-2">Personal</p>
-              <p className="text-[15px] text-[#1A1A1A]">Own expenses</p>
-            </div>
-
-          </div>
-
         </div>
+
+        {/* ===================================================== */}
+        {/* FOOTNOTE */}
+        {/* ===================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.12 }}
+          viewport={{ once: true }}
+          className="mt-20 flex flex-wrap gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/42"
+        >
+          <span>Private Charter</span>
+          <span>Up to 12 Guests</span>
+          <span>Full Crew</span>
+          <span>Prepared Before Arrival</span>
+        </motion.div>
 
       </div>
-
     </section>
-  )
+  );
 }
 
 function PricingDetails() {
@@ -337,130 +484,222 @@ function PricingDetails() {
 
 function SampleJourney() {
   return (
-    <section className="w-full bg-[#F4F5F2] py-[200px] px-6 overflow-hidden">
+    <section className="relative w-full overflow-hidden bg-[#F4F5F2] py-[190px] md:py-[210px] px-6">
+      {/* ===================================================== */}
+      {/* ATMOSPHERE */}
+      {/* ===================================================== */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(176,141,87,0.05),transparent_24%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_78%,rgba(45,60,104,0.03),transparent_22%)]" />
 
-      <div className="max-w-[1200px] mx-auto">
-
-        {/* ================= HEADER ================= */}
-        <div className="max-w-[520px] mb-20">
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
-            Sample journeys
+      <div className="relative max-w-[1280px] mx-auto">
+        {/* ===================================================== */}
+        {/* HEADER */}
+        {/* ===================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65 }}
+          viewport={{ once: true }}
+          className="max-w-[700px]"
+        >
+          <p className="text-[11px] uppercase tracking-[0.34em] text-[#6A6A6A]">
+            Example Journeys
           </p>
 
-          <h2 className="mt-6 font-[Gambarino] text-[44px] md:text-[60px] leading-[1.08] text-[#2D3C68]">
-            What your trip could look like
+          <h2 className="mt-6 font-[Gambarino] text-[54px] md:text-[72px] leading-[1] tracking-[-0.035em] text-[#2D3C68]">
+            A few directions
+            <br />
+            the journey can take
           </h2>
+
+          <p className="mt-7 max-w-[520px] text-[15px] md:text-[16px] leading-[1.9] text-[#2D3C68]/72">
+            No route is fixed. These examples simply show different moods,
+            landscapes, and rhythms available by sea.
+          </p>
+        </motion.div>
+
+        {/* ===================================================== */}
+        {/* JOURNEY GRID */}
+        {/* ===================================================== */}
+        <div className="mt-20 grid md:grid-cols-[1fr_0.86fr] gap-20 items-start">
+          {/* ===================================================== */}
+          {/* KOMODO / FEATURED */}
+          {/* ===================================================== */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.72 }}
+            viewport={{ once: true }}
+          >
+            <div className="relative overflow-hidden  ">
+              <div className="aspect-[4/5]">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_34_PM_ot1mm8.png"
+                  alt="Komodo journey"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/34 via-black/6 to-transparent" />
+
+              <div className="absolute bottom-0 left-0 right-0 p-7 md:p-9">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-white/65">
+                  4 Nights
+                </p>
+
+                <h3 className="mt-3 font-[Gambarino] text-[42px] md:text-[56px] leading-[0.95] tracking-[-0.03em] text-white">
+                  Komodo
+                </h3>
+
+                <p className="mt-4 max-w-[420px] text-[15px] leading-[1.8] text-white/78">
+                  Dramatic islands, clear reefs, sunrise hikes, and one of
+                  Indonesia’s most iconic landscapes.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/44">
+              <span>Padar Sunrise</span>
+              <span>Pink Beach</span>
+              <span>Wildlife</span>
+              <span>Snorkeling</span>
+            </div>
+          </motion.div>
+
+          {/* ===================================================== */}
+          {/* RAJA AMPAT / SECONDARY */}
+          {/* ===================================================== */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.72, delay: 0.08 }}
+            viewport={{ once: true }}
+            className="md:pt-16"
+          >
+            <div className="relative overflow-hidden  ">
+              <div className="aspect-[4/5]">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png"
+                  alt="Raja Ampat journey"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/34 via-black/6 to-transparent" />
+
+              <div className="absolute bottom-0 left-0 right-0 p-7 md:p-9">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-white/65">
+                  5 Nights
+                </p>
+
+                <h3 className="mt-3 font-[Gambarino] text-[36px] md:text-[48px] leading-[0.96] tracking-[-0.03em] text-white">
+                  Raja Ampat
+                </h3>
+
+                <p className="mt-4 max-w-[380px] text-[15px] leading-[1.8] text-white/78">
+                  Hidden lagoons, rich marine life, and a slower rhythm across
+                  remote tropical waters.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-[11px] uppercase tracking-[0.24em] text-[#2D3C68]/44">
+              <span>Remote Reefs</span>
+              <span>Lagoon Stops</span>
+              <span>Diving</span>
+              <span>Quiet Cruising</span>
+            </div>
+          </motion.div>
         </div>
 
-        {/* ================= GRID ================= */}
-        <div className="grid md:grid-cols-2 gap-20 items-start">
-
-          {/* ================= KOMODO ================= */}
-          <div>
-
-            {/* IMAGE */}
-            <div className="relative w-full aspect-[4/5] overflow-hidden mb-8">
-              <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Padar_Island_Indonesia_sunrise_lwcb1h.png"
-                alt="Komodo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* TITLE */}
-            <h3 className="font-[Gambarino] text-[28px] text-[#1A1A1A]">
-              Komodo · 4 days
-            </h3>
-
-            {/* DATA */}
-            <div className="mt-4 space-y-2 text-[15px] text-[#5C5C5C]">
-              <p>Padar Island sunrise</p>
-              <p>Pink Beach snorkeling</p>
-              <p>Komodo National Park visit</p>
-              <p>Island hopping by boat</p>
-            </div>
-
-          </div>
-
-          {/* ================= RAJA AMPAT ================= */}
-          <div className="md:mt-[100px]">
-
-            {/* IMAGE */}
-            <div className="relative w-full aspect-[4/5] overflow-hidden mb-8">
-              <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Raja_Ampat_Wayag_islands_aerial_qkwj3o.png"
-                alt="Raja Ampat"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* TITLE */}
-            <h3 className="font-[Gambarino] text-[28px] text-[#1A1A1A]">
-              Raja Ampat · 5 days
-            </h3>
-
-            {/* DATA */}
-            <div className="mt-4 space-y-2 text-[15px] text-[#5C5C5C]">
-              <p>Wayag viewpoint</p>
-              <p>Hidden lagoons and reefs</p>
-              <p>Remote island stops</p>
-              <p>Snorkeling across multiple sites</p>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* ================= NOTE ================= */}
-        <div className="mt-24 max-w-[420px] text-[14px] text-[#5C5C5C]">
-          Routes are flexible. Each trip is adjusted based on your time,
-          preferences, and weather conditions.
-        </div>
-
+        {/* ===================================================== */}
+        {/* FOOTNOTE */}
+        {/* ===================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.14 }}
+          viewport={{ once: true }}
+          className="mt-24 max-w-[560px]"
+        >
+          <p className="text-[15px] leading-[1.9] text-[#2D3C68]/72">
+            Every trip is shaped around your dates, preferences, and sea
+            conditions. These routes are starting points, not fixed programs.
+          </p>
+        </motion.div>
       </div>
-
     </section>
-  )
+  );
 }
 
 function FinalCTA() {
   return (
-    <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-[80vh] min-h-[640px] flex items-center overflow-hidden text-white">
 
-      {/* BACKGROUND IMAGE */}
-      <img
-        src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176460/Phinisi_yacht_sunset_ocean_horizon_cinematic_lighting_x2k9sf.png"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* ================= BACKGROUND (HUMAN — CONTINUITY) ================= */}
+      <div className="absolute inset-0">
+        <motion.img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176462/people_relaxing_phinisi_sunset_softlight_h8k2dj.png"
+          alt=""
+          className="w-full h-full object-cover scale-[1.05]"
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 6 }}
+        />
+      </div>
 
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-[#2D3C68]/70" />
+      {/* ================= OVERLAY ================= */}
+      <div className="absolute inset-0 bg-[#2D3C68]/75" />
 
-      {/* CONTENT */}
-      <div className="relative z-10 text-center px-6 max-w-[520px]">
+      {/* ================= CONTENT ================= */}
+      <div className="relative z-10 w-full px-6">
 
-        {/* HEADLINE */}
-        <h2 className="font-[Gambarino] text-[44px] md:text-[60px] leading-[1.08] text-white">
-          Tell us what you have in mind
-        </h2>
+        <div className="max-w-[1200px] mx-auto">
 
-        {/* SUB */}
-        <p className="mt-6 text-[15px] text-white/80 leading-relaxed">
-          We’ll help you plan the route, timing, and everything else — based on what you want to do.
-        </p>
+          {/* slight offset (no perfect symmetry) */}
+          <div className="max-w-[520px] md:ml-[40px]">
 
-        {/* CTA */}
-        <div className="mt-10 flex justify-center">
-          <button className="px-8 py-3 rounded-full border border-white/70 text-[14px] text-white hover:bg-white hover:text-[#2D3C68] transition">
-            Start planning →
-          </button>
+            {/* HEADLINE */}
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="font-[Gambarino] text-[48px] md:text-[64px] leading-[1.05]"
+            >
+              Start with a few details
+            </motion.h2>
+
+            {/* SUBCOPY */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-6 text-[16px] text-white/80 leading-relaxed"
+            >
+              Tell us when you want to go and who you’re traveling with.
+              We’ll take care of the rest and shape the trip around you.
+            </motion.p>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-10 flex items-center gap-6"
+            >
+              <button className="px-8 py-3 rounded-full bg-white text-[#2D3C68] text-[14px] font-medium hover:bg-[#F4F5F2] transition">
+                Check availability
+              </button>
+
+              {/* MICRO TRUST */}
+              <span className="text-[13px] text-white/60">
+                No commitment
+              </span>
+            </motion.div>
+
+          </div>
+
         </div>
-
-        {/* MICRO TRUST */}
-        <p className="mt-6 text-[12px] text-white/60">
-          No commitment. We’ll get back to you within 24 hours.
-        </p>
 
       </div>
 
