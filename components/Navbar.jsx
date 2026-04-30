@@ -119,15 +119,20 @@ export default function Navbar() {
                 href="/"
                 className="relative block h-[34px] w-[150px] md:h-[40px] md:w-[180px]"
               >
-                <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776050011/SERENITY_LOGO-02_u1bcf2.png"
-                  alt="Serenity"
-                  fill
-                  priority
-                  className={`object-contain transition duration-500 ${
-                    scrolled ? "opacity-100" : "opacity-95"
-                  }`}
-                />
+<Image
+  src="https://res.cloudinary.com/dombq6plz/image/upload/v1777356413/SERENITY_LOGO-02_u1bcf2_1_zc65st.png"
+  alt="Serenity"
+  fill
+  priority
+  className={`
+    object-contain transition-all duration-500
+    ${
+      scrolled
+        ? "opacity-100 invert-0 brightness-0"
+        : "opacity-95 invert brightness-0"
+    }
+  `}
+/>
               </Link>
             </div>
 

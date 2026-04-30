@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
       <Hero /> 
-      <About/>
+      {/* <About/> */}
       <Experience/>
       {/* <Identity/> */}
       {/* <Spaces/> */}
@@ -29,53 +29,86 @@ export default function Page() {
 
 
 function Hero() {
-  return (
-    <section className="relative w-full bg-[#2D3C68] overflow-hidden">
+  const [scale, setScale] = useState(1.05);
 
-      {/* ================= BACKGROUND IMAGE ================= */}
-      <div className="absolute inset-0">
-        <img
-          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776870966/ChatGPT_Image_Apr_22_2026_10_15_17_PM_1_clrjp0.png"
-          alt="Serenity yacht"
-          className="w-full h-full object-cover scale-[1.05]"
-        />
+  useEffect(() => {
+    const t = setTimeout(() => setScale(1.0), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <section className="relative w-full bg-[#F4F5F2] overflow-hidden">
+
+      {/* ================= HERO (UPPER LAYER) ================= */}
+      <div className="relative min-h-[92vh] w-full overflow-hidden bg-[#2D3C68]">
+
+        {/* BG */}
+        <div className="absolute inset-0">
+          <img
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776870966/ChatGPT_Image_Apr_22_2026_10_15_17_PM_1_clrjp0.png"
+            alt="Serenity yacht"
+            className="w-full h-full object-cover transition-transform duration-[4000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: `scale(${scale})` }}
+          />
+        </div>
+
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/40 via-[#2D3C68]/55 to-[#2D3C68]/85" />
+
+        {/* CONTENT (TRUE CENTER) */}
+        <div className="relative z-10 flex items-center justify-center min-h-[92vh] text-center px-6">
+          <div className="max-w-[720px]">
+
+            <div className="mb-6 text-[11px] tracking-[0.32em] text-[#F4F5F2]/60">
+              THE YACHT
+            </div>
+
+            <h1 className="font-[Gambarino] text-[46px] md:text-[68px] leading-[1.06] tracking-[-0.03em] text-[#F4F5F2]">
+              Traditional Phinisi
+              <br />
+              Elegance
+            </h1>
+
+            <p className="mt-6 text-[15px] text-[#F4F5F2]/75 max-w-[520px] mx-auto leading-[1.7]">
+              Not designed as a vessel alone, but as a space where movement,
+              rest, and shared time naturally find their place.
+            </p>
+
+          </div>
+        </div>
       </div>
 
-      {/* ================= OVERLAY ================= */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/40 via-[#2D3C68]/60 to-[#2D3C68]/85" />
+      {/* ================= ABOUT (OVERLAP LAYER) ================= */}
+      <div className="relative z-20 -mt-[120px] px-6">
 
-      {/* ================= CONTENT ================= */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-[140px] pb-[120px]">
+        <div className="max-w-[1000px] mx-auto bg-[#F4F5F2] p-[48px] md:p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)]">
 
-        <div className="max-w-[720px]">
-
-          {/* MICRO CONTEXT */}
-          <div className="mb-6 text-[11px] tracking-[0.28em] text-[#F4F5F2]/70">
-            THE YACHT
-          </div>
-
-          {/* HEADLINE */}
-          <h1 className="font-[Gambarino] text-[44px] md:text-[64px] leading-[1.08] tracking-[-0.03em] text-[#F4F5F2]">
-            Built Around
-            <br />
-            How You Live
-          </h1>
-
-          {/* SUBCOPY */}
-          <p className="mt-6 text-[15px] text-[#F4F5F2]/80 max-w-[520px] mx-auto leading-[1.7]">
-            Not designed as a vessel alone, but as a space where movement,
-            rest, and shared time naturally find their place.
+          {/* LABEL */}
+          <p className="text-[11px] tracking-[0.35em] text-[#2D3C68]/40 uppercase mb-6">
+            About
           </p>
 
-          {/* CTA */}
-          <div className="mt-10 flex justify-center">
-            <button className="px-8 py-3 rounded-full border border-[#F4F5F2]/70 text-[13px] text-[#F4F5F2] hover:bg-[#F4F5F2] hover:text-[#2D3C68] transition">
-              Explore Deck Plan →
-            </button>
+          {/* GRID */}
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+
+            <h2 className="font-[Gambarino] text-[34px] md:text-[42px] leading-[1.2] text-[#2D3C68]">
+              40.75 meters
+              <br />
+              12 guests
+              <br />
+              10 crew
+            </h2>
+
+            <p className="text-[15px] leading-[1.7] text-[#2D3C68]/70">
+              Serenity is a 40.75 meter phinisi yacht accommodating up to 12 guests,
+              supported by a full crew on board. The layout is shaped to balance shared
+              moments and private space across multiple decks, allowing each journey to
+              unfold naturally over time.
+            </p>
+
           </div>
 
         </div>
-
       </div>
 
     </section>

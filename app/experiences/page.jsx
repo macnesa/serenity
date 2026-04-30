@@ -20,7 +20,7 @@ export default function Page() {
       <SplitHorizon/>
       <SampleJourney/>
       {/* <JourneyLens  /> */}
-      {/* <ExperienceFlow/> */}
+      {/* <ExperienceFlow2/> */}
       {/* <WhatsIncluded/> */}
       {/* <RatesBridge/> */}
       <FinalClosing/>

@@ -16,19 +16,22 @@ export default function Home() {
       <Hero />
       <Introduction/>
       <QuickContext/>
-      <LifeOnBoard/>
+      <Experiences/>
       {/* <Activities/> */}
       <Destinations/>
       <Yacht/>
+      {/* <ExperienceDay/> */}
+      {/* <LifeOnBoard/> */}
+      {/* <Yacht2/> */}
       {/* <Included/> */}
       {/* <OnBoard/> */}
-      <About/>
+      {/* <About/> */}
       {/* <JourneyFlowSection/> */}
       {/* <YachtSection/> */}
       {/* <GalleryStrip/> */}
       {/* <Testimonials/> */}
-      <Social/>
       <Closing/>
+      <Social/>
       {/* <Statement/> */}
       {/* <Yacht/>   */}
       {/* <Expedition/> */}
@@ -580,7 +583,7 @@ function QuickContext() {
 }
  
 
-function LifeOnBoard() {
+function Experiences() {
   const sectionRef = useRef(null);
   const leftRef = useRef(null);
   const rightRef = useRef(null);
@@ -914,160 +917,1007 @@ function ParallaxImage({ src, alt }) {
 
 
 function Yacht() {
+  const sectionRef = useRef(null);
+  const yachtRef = useRef(null);
+  const cardARef = useRef(null);
+  const cardBRef = useRef(null);
+  const cardCRef = useRef(null);
+  const microRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const nodes = [
+        yachtRef.current,
+        cardARef.current,
+        cardBRef.current,
+        cardCRef.current,
+        microRef.current,
+        ctaRef.current,
+      ].filter(Boolean);
+
+      if (!nodes.length) return;
+
+      if (
+        DISABLE_ANIMATION ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        gsap.set(nodes, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotate: 0,
+          filter: "blur(0px)",
+          clearProps: "transform",
+        });
+        return;
+      }
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom-=120",
+          once: true,
+        },
+      });
+
+      tl.fromTo(
+        [cardARef.current, microRef.current, cardBRef.current, cardCRef.current],
+        {
+          opacity: 0,
+          y: 32,
+          filter: "blur(8px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.95,
+          stagger: 0.12,
+        }
+      ).fromTo(
+        ctaRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.75 },
+        "-=0.35"
+      );
+
+      gsap.to(yachtRef.current, {
+        y: -28,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative w-full bg-[#F4F5F2] pt-[160px] pb-[160px] px-6 overflow-hidden">
-
-      <div className="max-w-[1400px] mx-auto relative">
-
-        {/* ===== HEADER ===== */}
-        <div className="text-center max-w-[600px] mx-auto mb-16">
-          <p className="text-[11px] tracking-[0.35em] text-[#6A6A6A] uppercase">
+    <section
+      ref={sectionRef}
+      className="relative w-full overflow-hidden bg-[#F4F5F2] px-5 pt-[70px] pb-[110px] md:px-6"
+    >
+      <div className="mx-auto max-w-[1440px]">
+        {/* HEADER */}
+        <div className="mx-auto mb-14 max-w-[620px] text-center md:mb-16">
+          <p className="text-[11px] uppercase tracking-[0.34em] text-[#2D3C68]/56">
             The Yacht
           </p>
 
-          <h2 className="mt-6 font-[Gambarino] text-[56px] leading-[1.1] text-[#2D3C68]">
-            Built for how you actually live
+          <h2 className="mt-6 font-[Gambarino] text-[42px] leading-[0.98] text-[#2D3C68] md:text-[66px]">
+            Built around life at sea
           </h2>
 
-          <p className="mt-6 text-[15px] text-[#5C5C5C] leading-relaxed max-w-[480px] mx-auto">
-            Not designed around luxury alone, but around how people move,
-            gather, and share time at sea.
+          <p className="mx-auto mt-5 max-w-[470px] text-[15px] leading-relaxed text-[#2D3C68]/68">
+            Every space serves how people gather, rest, move, and live together
+            on board.
           </p>
         </div>
 
-        {/* ===== CANVAS ===== */}
-        <div className="relative h-[1400px]">
+        {/* ================= MOBILE ================= */}
+        <div className="space-y-7 md:hidden">
+          {/* BIG IMAGE */}
+          <div ref={cardARef} className="ml-auto w-[86%]">
+            <CardBlock
+              image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+              title="Open Deck Living"
+              desc="Designed for twelve, never crowded."
+              large
+            />
+          </div>
 
-          {/* ===== CENTER YACHT ===== */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-[-140px] bottom-0 flex items-center pointer-events-none z-20">
-            <div className="relative w-[270px] h-[1150px]">
-              <Image
-                src="https://res.cloudinary.com/dombq6plz/image/upload/f_auto,q_auto,w_800/v1776164146/f69b0e9a-54d3-40b4-96dd-460d6b8dff97_1_jicqyu.png"
-                alt="Top-down layout of Serenity phinisi yacht"
-                fill
-                sizes="(max-width: 768px) 100vw, 270px"
-                className="object-contain"
-                priority
-              />
+          {/* STAT */}
+          <div ref={microRef} className="mr-auto w-[44%]">
+            <div className="border border-[#2D3C68]/10 bg-white px-4 py-4 shadow-[0_14px_34px_rgba(25,35,60,0.06)]">
+              <p className="text-[9px] uppercase tracking-[0.24em] text-[#2D3C68]/42">
+                Vessel
+              </p>
+
+              <p className="mt-2 font-[Gambarino] text-[30px] leading-none text-[#2D3C68]">
+                32m
+              </p>
+
+              <p className="mt-2 text-[11px] leading-relaxed text-[#2D3C68]/70">
+                Handcrafted private charter phinisi.
+              </p>
             </div>
           </div>
 
-          {/* ===== LEFT TOP ===== */}
-          <motion.div
-            className="absolute left-[160px] top-[200px] w-[300px] group"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="aspect-[4/5] relative overflow-hidden bg-[#EDEBE7]">
-              <Image
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
-                alt="Shared dining space"
-                fill
-                sizes="300px"
-                className="object-cover transition duration-[1200ms] group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 p-5">
-                <p className="text-[11px] uppercase text-white/70 mb-2">Living</p>
-                <p className="text-[14px] text-white">5 cabins designed for shared living.</p>
-              </div>
-            </div>
-          </motion.div>
+          {/* MID IMAGE */}
+          <div ref={cardBRef} className="ml-auto w-[68%]">
+            <CardBlock
+              image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
+              title="Cabins"
+              desc="Five private rooms with calm comfort."
+            />
+          </div>
 
-          {/* ===== RIGHT TOP ===== */}
-          <motion.div className="absolute right-[120px] top-[320px] w-[280px] group">
-            <div className="aspect-[4/5] relative overflow-hidden bg-[#EDEBE7]">
-              <Image
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
-                alt="Open deck"
-                fill
-                sizes="280px"
-                className="object-cover transition duration-[1200ms] group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 p-5 text-right">
-                <p className="text-[11px] uppercase text-white/70 mb-2">Social</p>
-                <p className="text-[14px] text-white">Up to 12 guests.</p>
-              </div>
-            </div>
-          </motion.div>
+          {/* THIRD IMAGE */}
+          <div ref={cardCRef} className="mr-auto w-[76%]">
+            <CardBlock
+              image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/07_iujxr6.webp"
+              title="Service"
+              desc="A ten-person crew present only when needed."
+            />
+          </div>
 
-          {/* ===== LEFT BOTTOM ===== */}
-          <motion.div className="absolute left-[100px] top-[820px] w-[320px] group">
-            <div className="aspect-[4/5] relative overflow-hidden bg-[#EDEBE7]">
-              <Image
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/07_iujxr6.webp"
-                alt="Crew"
-                fill
-                sizes="320px"
-                className="object-cover transition duration-[1200ms] group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 p-5">
-                <p className="text-[11px] uppercase text-white/70 mb-2">Crew</p>
-                <p className="text-[14px] text-white">Quietly present.</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ===== RIGHT BOTTOM ===== */}
-          <motion.div className="absolute right-[180px] top-[1080px] w-[300px] group">
-            <div className="aspect-[4/5] relative overflow-hidden bg-[#EDEBE7]">
-              <Image
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
-                alt="Phinisi yacht"
-                fill
-                sizes="300px"
-                className="object-cover transition duration-[1200ms] group-hover:scale-[1.04]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 p-5 text-right">
-                <p className="text-[11px] uppercase text-white/70 mb-2">Vessel</p>
-                <p className="text-[14px] text-white">32-meter phinisi.</p>
-              </div>
-            </div>
-          </motion.div>
-
+          {/* CTA */}
+          <div ref={ctaRef} className="pt-3 flex justify-center">
+            <a
+              href="/yacht"
+              className="inline-flex items-center gap-3 rounded-full border border-[#2D3C68]/16 px-7 py-3 text-[12px] uppercase tracking-[0.22em] text-[#2D3C68]"
+            >
+              Explore The Yacht
+              <span>→</span>
+            </a>
+          </div>
         </div>
 
-{/* ===== ACTION GROUP (OUTSIDE CANVAS = CORRECT) ===== */}
-<div className="mt-[70px] flex justify-center">
+        {/* ================= DESKTOP ================= */}
+        <div className="hidden md:block">
+          <div className="relative h-[clamp(1180px,92vw,1320px)]">
+            {/* CENTER YACHT */}
+            <div
+              ref={yachtRef}
+              className="pointer-events-none absolute left-1/2 top-[-6%] z-20 -translate-x-1/2"
+            >
+              <div className="relative h-[clamp(980px,78vw,1120px)] w-[clamp(238px,18.8vw,270px)]">
+                <Image
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1777394633/e75ce606-c6fd-4eae-8739-12516236bfec_1_ohoghl.png"
+                  alt="Top down Serenity yacht"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
 
-  <div className="flex flex-col items-center gap-5">
+            <div
+              ref={cardARef}
+              className="absolute left-[6.25%] top-[12.9%] z-30 w-[clamp(300px,25vw,360px)]"
+            >
+              <CardBlock
+                image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+                title="Open Deck Living"
+                desc="Designed for twelve, never crowded."
+                large
+              />
+            </div>
 
-    {/* PRIMARY — DECK PLAN */}
-    <button className="group text-[14px] tracking-[0.18em] uppercase text-[#2D3C68] font-medium border-b border-[#2D3C68] pb-2 transition">
-      View Deck Plan
-      <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
-        →
-      </span>
-    </button>
+            <div
+              ref={cardBRef}
+              className="absolute right-[8.33%] top-[25%] z-30 w-[clamp(248px,20.1vw,290px)]"
+            >
+              <CardBlock
+                image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
+                title="Cabins"
+                desc="Five private rooms with calm, practical comfort."
+              />
+            </div>
 
-    {/* SECONDARY — BROCHURE */}
-    <button className="group text-[13px] tracking-[0.18em] uppercase text-[#2D3C68]/70 hover:text-[#2D3C68] transition">
-      Download Brochure
-      <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
-        →
-      </span>
-    </button>
+            <div
+              ref={cardCRef}
+              className="absolute left-[8.33%] top-[62.9%] z-30 w-[clamp(265px,21.5vw,310px)]"
+            >
+              <CardBlock
+                image="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/07_iujxr6.webp"
+                title="Service"
+                desc="A ten-person crew that feels present only when needed."
+              />
+            </div>
 
-    {/* TERTIARY — SPECS */}
-    <button className="group text-[12px] tracking-[0.18em] uppercase text-[#2D3C68]/40 hover:text-[#2D3C68]/60 transition">
-      View Specifications
-      <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
-        →
-      </span>
-    </button>
+            <div
+              ref={microRef}
+              className="absolute right-[10.42%] top-[70.5%] z-30 w-[clamp(220px,17.3vw,250px)]"
+            >
+              <div className="border border-[#2D3C68]/10 bg-white px-7 py-7">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-[#2D3C68]/42">
+                  Vessel
+                </p>
 
-  </div>
+                <p className="mt-3 font-[Gambarino] text-[44px] leading-none text-[#2D3C68]">
+                  32m
+                </p>
 
-</div>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#2D3C68]/70">
+                  Handcrafted Indonesian phinisi built for private charter.
+                </p>
+              </div>
+            </div>
+          </div>
 
+          <div ref={ctaRef} className="mt-2 flex justify-center">
+            <a
+              href="/yacht"
+              className="inline-flex items-center gap-3 rounded-full border border-[#2D3C68]/16 px-7 py-3 text-[12px] uppercase tracking-[0.22em] text-[#2D3C68] transition duration-300 hover:border-[#2D3C68] hover:bg-[#2D3C68] hover:text-white"
+            >
+              Explore The Yacht
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CardBlock({ image, title, desc, large = false }) {
+  return (
+    <div className="group overflow-hidden bg-white shadow-[0_24px_70px_rgba(25,35,60,0.07)]">
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/48 to-transparent" />
       </div>
 
+      <div className={large ? "px-6 py-6" : "px-5 py-5"}>
+        <p className="text-[10px] uppercase tracking-[0.24em] text-[#2D3C68]/42">
+          {title}
+        </p>
+
+        <p
+          className={`mt-3 leading-relaxed text-[#2D3C68] ${
+            large ? "text-[15px]" : "text-[14px]"
+          }`}
+        >
+          {desc}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function LifeOnBoard() {
+  const sectionRef = useRef(null);
+  const introRef = useRef(null);
+  const itemARef = useRef(null);
+  const itemBRef = useRef(null);
+  const itemCRef = useRef(null);
+  const itemDRef = useRef(null);
+  const ctaRef = useRef(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!sectionRef.current) return;
+
+    const nodes = [
+      introRef.current,
+      itemARef.current,
+      itemBRef.current,
+      itemCRef.current,
+      itemDRef.current,
+      ctaRef.current,
+    ].filter(Boolean);
+
+    const ctx = gsap.context(() => {
+      if (
+        DISABLE_ANIMATION ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        gsap.set(nodes, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          clearProps: "transform",
+        });
+        return;
+      }
+
+      nodes.forEach((node) => {
+        gsap.fromTo(
+          node,
+          {
+            opacity: 0,
+            y: 36,
+            filter: "blur(8px)",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1.05,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: node,
+              start: "top 88%",
+              once: true,
+            },
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#F4F5F2] px-5 py-[90px] md:px-6 md:py-[130px]"
+    >
+      {/* subtle texture */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_20%_20%,#2D3C68_0%,transparent_34%),radial-gradient(circle_at_82%_72%,#2D3C68_0%,transparent_30%)]" />
+
+      <div className="relative mx-auto max-w-[1320px]">
+        {/* ================= HEADER ================= */}
+        <div ref={introRef} className="mx-auto max-w-[760px] text-center">
+          <p className="text-[11px] uppercase tracking-[0.34em] text-[#2D3C68]/56">
+            Life On Board
+          </p>
+
+          <h2 className="mt-5 font-[Gambarino] text-[42px] leading-[0.98] text-[#2D3C68] md:text-[66px]">
+            A day moves
+            <br />
+            differently here
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-[540px] text-[15px] leading-relaxed text-[#2D3C68]/70 md:text-[16px]">
+            There is no schedule to follow. Only a rhythm shaped naturally by
+            water, shade, meals, movement, and quiet hours in between.
+          </p>
+        </div>
+
+        {/* ================= MOBILE ================= */}
+        <div className="mt-14 space-y-7 md:hidden">
+          {/* MORNING */}
+          <div ref={itemARef} className="mr-auto w-[90%]">
+            <div className="group overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+              <div className="relative aspect-[5/4] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/43_fcprng.webp"
+                  alt="Morning on deck"
+                  fill
+                  className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                  06:20
+                </div>
+              </div>
+
+              <div className="px-5 py-5">
+                <h3 className="font-[Gambarino] text-[30px] text-[#2D3C68]">
+                  Morning
+                </h3>
+
+                <p className="mt-3 text-[14px] leading-relaxed text-[#2D3C68]/72">
+                  Coffee on deck. Quiet water. Nobody needs to rush.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* MIDDAY */}
+          <div ref={itemBRef} className="ml-auto w-[84%]">
+            <div className="group overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+              <div className="relative aspect-[5/4] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+                  alt="Midday swim"
+                  fill
+                  className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                  12:40
+                </div>
+              </div>
+
+              <div className="px-5 py-5">
+                <h3 className="font-[Gambarino] text-[30px] text-[#2D3C68]">
+                  Midday
+                </h3>
+
+                <p className="mt-3 text-[14px] leading-relaxed text-[#2D3C68]/72">
+                  Swim, lunch, shade — then nowhere urgent to be.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* EVENING */}
+          <div ref={itemCRef} className="mr-auto w-[88%]">
+            <div className="group overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+              <div className="relative aspect-[5/4] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068892/01_oomiyy.webp"
+                  alt="Evening light"
+                  fill
+                  className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                  18:15
+                </div>
+              </div>
+
+              <div className="px-5 py-5">
+                <h3 className="font-[Gambarino] text-[30px] text-[#2D3C68]">
+                  Evening
+                </h3>
+
+                <p className="mt-3 text-[14px] leading-relaxed text-[#2D3C68]/72">
+                  Light softens. Conversations stay longer.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* NIGHT */}
+          <div ref={itemDRef} className="ml-auto w-[82%]">
+            <div className="group overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+              <div className="relative aspect-[5/4] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
+                  alt="Night cabin"
+                  fill
+                  className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                  22:30
+                </div>
+              </div>
+
+              <div className="px-5 py-5">
+                <h3 className="font-[Gambarino] text-[30px] text-[#2D3C68]">
+                  Night
+                </h3>
+
+                <p className="mt-3 text-[14px] leading-relaxed text-[#2D3C68]/72">
+                  Cabins settle. The sea keeps moving.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ================= DESKTOP ================= */}
+        <div className="relative mt-20 hidden md:block">
+          {/* timeline */}
+          <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-[#2D3C68]/10" />
+
+          {/* ROW 1 */}
+          <div
+            ref={itemARef}
+            className="relative mb-10 grid grid-cols-2 items-center gap-14"
+          >
+            <div className="pr-10">
+              <div className="ml-auto max-w-[520px] overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+                <div className="group relative aspect-[5/4] overflow-hidden">
+                  <Image
+                    src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/43_fcprng.webp"
+                    alt="Morning"
+                    fill
+                    className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                    06:20
+                  </div>
+                </div>
+
+                <div className="px-6 py-6">
+                  <h3 className="font-[Gambarino] text-[36px] text-[#2D3C68]">
+                    Morning
+                  </h3>
+
+                  <p className="mt-4 text-[15px] leading-relaxed text-[#2D3C68]/72">
+                    Coffee on deck. Quiet water. Nobody needs to rush.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div />
+
+            <div className="absolute left-1/2 top-[54px] h-[10px] w-[10px] -translate-x-1/2 rounded-full bg-[#2D3C68]" />
+          </div>
+
+          {/* ROW 2 */}
+          <div
+            ref={itemBRef}
+            className="relative mb-10 grid grid-cols-2 items-center gap-14"
+          >
+            <div />
+
+            <div className="pl-10">
+              <div className="max-w-[520px] overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+                <div className="group relative aspect-[5/4] overflow-hidden">
+                  <Image
+                    src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
+                    alt="Midday"
+                    fill
+                    className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                    12:40
+                  </div>
+                </div>
+
+                <div className="px-6 py-6">
+                  <h3 className="font-[Gambarino] text-[36px] text-[#2D3C68]">
+                    Midday
+                  </h3>
+
+                  <p className="mt-4 text-[15px] leading-relaxed text-[#2D3C68]/72">
+                    Swim, lunch, shade — then nowhere urgent to be.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute left-1/2 top-[54px] h-[10px] w-[10px] -translate-x-1/2 rounded-full bg-[#2D3C68]" />
+          </div>
+
+          {/* ROW 3 */}
+          <div
+            ref={itemCRef}
+            className="relative mb-10 grid grid-cols-2 items-center gap-14"
+          >
+            <div className="pr-10">
+              <div className="ml-auto max-w-[520px] overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+                <div className="group relative aspect-[5/4] overflow-hidden">
+                  <Image
+                    src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068892/01_oomiyy.webp"
+                    alt="Evening"
+                    fill
+                    className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                    18:15
+                  </div>
+                </div>
+
+                <div className="px-6 py-6">
+                  <h3 className="font-[Gambarino] text-[36px] text-[#2D3C68]">
+                    Evening
+                  </h3>
+
+                  <p className="mt-4 text-[15px] leading-relaxed text-[#2D3C68]/72">
+                    Light softens. Conversations stay longer.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div />
+
+            <div className="absolute left-1/2 top-[54px] h-[10px] w-[10px] -translate-x-1/2 rounded-full bg-[#2D3C68]" />
+          </div>
+
+          {/* ROW 4 */}
+          <div
+            ref={itemDRef}
+            className="relative grid grid-cols-2 items-center gap-14"
+          >
+            <div />
+
+            <div className="pl-10">
+              <div className="max-w-[520px] overflow-hidden bg-white shadow-[0_22px_60px_rgba(25,35,60,0.06)]">
+                <div className="group relative aspect-[5/4] overflow-hidden">
+                  <Image
+                    src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
+                    alt="Night"
+                    fill
+                    className="object-cover transition duration-[1400ms] group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-[10px] tracking-[0.18em] text-[#2D3C68]">
+                    22:30
+                  </div>
+                </div>
+
+                <div className="px-6 py-6">
+                  <h3 className="font-[Gambarino] text-[36px] text-[#2D3C68]">
+                    Night
+                  </h3>
+
+                  <p className="mt-4 text-[15px] leading-relaxed text-[#2D3C68]/72">
+                    Cabins settle. The sea keeps moving.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute left-1/2 top-[54px] h-[10px] w-[10px] -translate-x-1/2 rounded-full bg-[#2D3C68]" />
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div
+          ref={ctaRef}
+          className="mt-14 flex justify-center md:mt-20"
+        >
+          <a
+            href="/experiences"
+            className="inline-flex items-center gap-3 rounded-full border border-[#2D3C68]/14 px-7 py-3 text-[12px] uppercase tracking-[0.22em] text-[#2D3C68] transition duration-300 hover:border-[#2D3C68] hover:bg-[#2D3C68] hover:text-white"
+          >
+            Explore The Experience
+            <span>→</span>
+          </a>
+        </div>
+      </div>
     </section>
-  )
+  );
+}
+
+function ExperienceDay() {
+  const sectionRef = useRef(null);
+  const navLineRef = useRef(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      const states = gsap.utils.toArray(".serenity-state");
+
+      if (reduce || DISABLE_ANIMATION) {
+        gsap.set(states[0], { autoAlpha: 1, scale: 1 });
+        gsap.set(states.slice(1), { autoAlpha: 0 });
+        return;
+      }
+
+      gsap.set(states, { autoAlpha: 0, scale: 1.03 });
+      gsap.set(states[0], { autoAlpha: 1, scale: 1 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=5000",
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      const switchState = (from, to, x) => {
+        tl.to(states[from], {
+          autoAlpha: 0,
+          scale: 1.05,
+          duration: 0.9,
+          ease: "power2.out",
+        });
+
+        tl.fromTo(
+          states[to],
+          {
+            autoAlpha: 0,
+            scale: 1.08,
+          },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "<"
+        );
+
+        tl.to(
+          navLineRef.current,
+          {
+            x,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "<"
+        );
+      };
+
+      switchState(0, 1, "100%");
+      switchState(1, 2, "200%");
+      switchState(2, 3, "300%");
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const data = [
+    {
+      step: "01",
+      label: "Morning Quiet",
+      title: "Wake to open water",
+      desc: "Coffee on deck while the islands are still silent.",
+      sub: "No alarms. No agenda. Just morning at sea.",
+      bg:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp",
+      gallery: [
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068892/01_oomiyy.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/43_fcprng.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp",
+      ],
+    },
+    {
+      step: "02",
+      label: "Midday Open Sea",
+      title: "Swim until hunger returns",
+      desc: "Salt skin, clear water, sun overhead.",
+      sub: "Lunch is already being prepared upstairs.",
+      bg:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776152590/Phinisi_yacht_and_vibrant_coral_reef_1_i59pqn.png",
+      gallery: [
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_43_23_PM_hynjkg.png",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/04_fqtqkn.webp",
+      ],
+    },
+    {
+      step: "03",
+      label: "Sunset Table",
+      title: "Dinner as the sky turns gold",
+      desc: "Stories stretch longer than the meal.",
+      sub: "Nobody checks the time anymore.",
+      bg:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/43_fcprng.webp",
+      gallery: [
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068892/01_oomiyy.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/07_iujxr6.webp",
+      ],
+    },
+    {
+      step: "04",
+      label: "Night Drift",
+      title: "Sleep with the sea outside",
+      desc: "Cabin lights dim. Timber breathes softly.",
+      sub: "The water keeps moving through the dark.",
+      bg:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/07_iujxr6.webp",
+      gallery: [
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/04_fqtqkn.webp",
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/43_fcprng.webp",
+      ],
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative h-screen w-full overflow-hidden bg-black"
+    >
+      {data.map((item, i) => (
+        <div
+          key={i}
+          className="serenity-state absolute inset-0"
+        >
+          {/* BG */}
+          <img
+            src={item.bg}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          {/* overlays */}
+          <div className="absolute inset-0 bg-black/38" />
+
+          <div
+            className="absolute inset-0 hidden md:block"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.52) 34%, rgba(0,0,0,.12) 68%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+
+          <div
+            className="absolute inset-0 md:hidden"
+            style={{
+              background:
+                "linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.42) 42%, rgba(0,0,0,.06) 100%)",
+            }}
+          />
+
+          {/* DESKTOP */}
+          <div className="relative z-10 hidden h-full md:grid grid-cols-[1.08fr_0.92fr]">
+            {/* LEFT COPY */}
+            <div className="flex items-center px-14">
+              <div className="max-w-[520px] text-white pb-10">
+                <p className="text-[11px] uppercase tracking-[0.34em] text-white/52">
+                  {item.step} · {item.label}
+                </p>
+
+                <h2 className="mt-5 font-[Gambarino] text-[68px] leading-[0.94]">
+                  {item.title}
+                </h2>
+
+                <p className="mt-6 max-w-[460px] text-[18px] leading-[1.7] text-white/84">
+                  {item.desc}
+                </p>
+
+                <p className="mt-4 max-w-[430px] text-[14px] leading-[1.8] text-white/58">
+                  {item.sub}
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT GALLERY */}
+            <div className="flex items-center justify-center px-12">
+              <div className="grid w-full max-w-[430px] grid-cols-2 gap-4">
+                <div className="col-span-2 overflow-hidden rounded-[8px] border border-white/10">
+                  <img
+                    src={item.gallery[0]}
+                    className="h-[250px] w-full object-cover"
+                  />
+                </div>
+
+                <div className="overflow-hidden rounded-[8px] border border-white/10">
+                  <img
+                    src={item.gallery[1]}
+                    className="h-[145px] w-full object-cover"
+                  />
+                </div>
+
+                <div className="overflow-hidden rounded-[8px] border border-white/10">
+                  <img
+                    src={item.gallery[2]}
+                    className="h-[145px] w-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* MOBILE */}
+          <div className="relative z-10 flex h-full flex-col justify-end px-5 pb-28 md:hidden">
+            <div className="mb-5 grid grid-cols-3 gap-2">
+              {item.gallery.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="overflow-hidden rounded-[4px] border border-white/10"
+                >
+                  <img
+                    src={img}
+                    className="h-[82px] w-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[10px] uppercase tracking-[0.32em] text-white/52">
+              {item.step} · {item.label}
+            </p>
+
+            <h2 className="mt-4 font-[Gambarino] text-[40px] leading-[0.98] text-white">
+              {item.title}
+            </h2>
+
+            <p className="mt-4 text-[15px] leading-[1.7] text-white/82">
+              {item.desc}
+            </p>
+
+            <p className="mt-3 text-[13px] leading-[1.7] text-white/58">
+              {item.sub}
+            </p>
+          </div>
+        </div>
+      ))}
+
+      {/* NAV */}
+      <div className="absolute bottom-0 left-0 z-30 w-full border-t border-white/10 bg-black/30 backdrop-blur-md">
+        <div className="relative grid grid-cols-4 px-4 md:px-10">
+          {data.map((item, i) => (
+            <div
+              key={i}
+              className="py-5 md:py-6"
+            >
+              <p className="text-[10px] uppercase tracking-[0.28em] text-white/34">
+                {item.step}
+              </p>
+
+              <p className="mt-3 text-[11px] md:text-[16px] text-white/92">
+                {item.label}
+              </p>
+            </div>
+          ))}
+
+          <div
+            ref={navLineRef}
+            className="absolute bottom-0 left-0 h-[2px] w-[25%] bg-white"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Yacht2() {
+  return (
+    <section className="relative w-full overflow-hidden bg-[#F4F5F2]">
+      {/* IMAGE */}
+      <div className="relative w-full">
+        <img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1777389953/ChatGPT_Image_Apr_28_2026_09_00_39_PM_swvmte.png"
+          alt="Phinisi yacht sailing across eastern Indonesia"
+          className="block w-full h-auto"
+        />
+
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-black/6 to-white/8" />
+
+        {/* CONTENT */}
+        <div className="absolute inset-0 z-10 flex flex-col justify-between px-6 py-8 md:px-10 md:py-10">
+          {/* TOP */}
+          <div className="flex justify-center">
+            <p className="text-center text-[10px] uppercase tracking-[0.32em] text-white/72 md:text-[11px]">
+              The Yacht
+            </p>
+          </div>
+
+          {/* BOTTOM */}
+          <div className="mx-auto w-full max-w-[1240px]">
+            <div className="max-w-[620px] pb-2 md:pb-4">
+              <h2 className="font-[Gambarino] text-[44px] leading-[0.94] text-white md:text-[76px]">
+                Small in frame.
+                <br />
+                Vast in feeling.
+              </h2>
+
+              <p className="mt-5 max-w-[430px] text-[14px] leading-relaxed text-white/78 md:text-[15px]">
+                A private phinisi built to move quietly through waters most
+                people never reach.
+              </p>
+
+              <div className="mt-7">
+                <a
+                  href="/yacht"
+                  className="inline-flex items-center gap-3 rounded-full border border-white/22 bg-white/10 px-6 py-3 text-[11px] uppercase tracking-[0.24em] text-white backdrop-blur-md transition duration-300 hover:bg-white hover:text-[#152541]"
+                >
+                  Explore The Yacht
+                  <span>→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function Activities() {
@@ -1548,24 +2398,23 @@ function Closing() {
       const rect = sectionRef.current.getBoundingClientRect();
       const windowH = window.innerHeight;
 
-      // progress: -1 → 1 (atas → bawah)
       const progress = rect.top / windowH;
+      const translateY = progress * -36;
 
-      // subtle banget
-      const translateY = progress * -50;
-
-      imageRef.current.style.transform = `translateY(${translateY}px) scale(1.06)`;
+      imageRef.current.style.transform = `translateY(${translateY}px) scale(1.05)`;
     };
 
     const onScroll = () => {
       if (rafId) return;
+
       rafId = requestAnimationFrame(() => {
         handleScroll();
         rafId = null;
       });
     };
 
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -1576,60 +2425,61 @@ function Closing() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[88vh] w-full overflow-hidden"
+      className="relative min-h-[72vh] w-full overflow-hidden md:min-h-[76vh]"
     >
-      {/* ================= BACKGROUND (INNER PARALLAX) ================= */}
+      {/* BACKGROUND */}
       <div className="absolute inset-0 overflow-hidden">
         <img
           ref={imageRef}
           src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
-          alt="Serenity closing"
-          className="w-full h-full object-cover will-change-transform"
+          alt="Serenity Yacht in Indonesian waters"
+          className="h-full w-full object-cover will-change-transform"
           style={{
-            transform: "scale(1.06)",
+            transform: "scale(1.05)",
           }}
         />
+
+        {/* layered overlay */}
+        <div className="absolute inset-0 bg-[#0E1525]/26" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/18 via-black/24 to-black/52" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#2D3C68]/10 via-transparent to-transparent" />
       </div>
 
-      {/* ================= NATURAL OVERLAY ================= */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/45" />
-
-      {/* LIGHT LIFT */}
-      <div className="absolute inset-0 bg-black/10" />
-
-      {/* ================= CONTENT ================= */}
-      <div className="relative z-10 h-full flex items-center justify-center px-6">
-        <div className="text-center max-w-[760px] -mt-6">
-
+      {/* CONTENT */}
+      <div className="relative z-10 flex min-h-[72vh] items-center justify-center px-6 py-20 md:min-h-[76vh] md:px-10">
+        <div className="mx-auto max-w-[760px] text-center">
           {/* LABEL */}
-          <p className="text-[11px] tracking-[0.4em] text-white/60 uppercase">
+          <p className="text-[10px] uppercase tracking-[0.34em] text-white/58 md:text-[11px]">
             Reservations
           </p>
 
           {/* HEADLINE */}
-          <h2 className="mt-6 text-[44px] md:text-[64px] leading-[1.12] text-white font-[Gambarino]">
-            <span className="block font-light">
-              Find the <span className="italic">Sanctuary</span>
-            </span>
-
-            <span className="block mt-2">
-              You’ve Been Searching For
-            </span>
+          <h2 className="mt-6 font-[Gambarino] text-[40px] leading-[1.08] text-white md:text-[58px] lg:text-[64px]">
+            <span className="block">When you’re ready,</span>
+            <span className="block mt-1">the sea is here.</span>
           </h2>
 
-          {/* CTA GROUP */}
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-4">
+          {/* SUPPORT COPY */}
+          <p className="mx-auto mt-6 max-w-[560px] text-[15px] leading-relaxed text-white/78 md:text-[16px]">
+            Private journeys through Komodo and Raja Ampat aboard a handcrafted
+            phinisi designed for only twelve guests.
+          </p>
 
-            {/* PRIMARY */}
-            <button className="px-8 py-3 bg-white text-[#1A1A1A] text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:bg-white/90">
-              Reserve
-            </button>
+          {/* CTA */}
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 md:flex-row">
+            <a
+              href="/rates-and-schedule"
+              className="inline-flex min-w-[220px] items-center justify-center rounded-full bg-white px-8 py-3 text-[12px] uppercase tracking-[0.18em] text-[#1A1A1A] transition-all duration-500 hover:bg-white/92"
+            >
+              Request Availability
+            </a>
 
-            {/* SECONDARY */}
-            <button className="px-8 py-3 border border-white/40 text-white text-[13px] tracking-[0.15em] uppercase rounded-full transition-all duration-700 hover:border-white">
-              View availability
-            </button>
-
+            <a
+              href="/destinations"
+              className="inline-flex min-w-[220px] items-center justify-center rounded-full border border-white/34 px-8 py-3 text-[12px] uppercase tracking-[0.18em] text-white transition-all duration-500 hover:border-white hover:bg-white/8"
+            >
+              Explore Journeys
+            </a>
           </div>
         </div>
       </div>
@@ -2263,259 +3113,224 @@ function Expedition() {
 
 
 function Destinations() {
-  const [index, setIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(0);
+  const sectionRef = useRef(null);
+  const seamRef = useRef(null);
+  const leftRef = useRef(null);
+  const rightRef = useRef(null);
+  const contentRef = useRef(null);
+  const ctaRef = useRef(null);
 
-  const frameRef = useRef(null);
-  const currentImgRef = useRef(null);
-  const prevImgRef = useRef(null);
-
-  const data = [
-    {
-      place: "Raja Ampat",
-      activity: "You slip in",
-      desc: `Cold at first. It reaches your chest before your breath settles.
-You come back up, look around, take it in for a second.
-Then you go again, like you’re starting to understand it.`,
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776152590/Phinisi_yacht_and_vibrant_coral_reef_1_i59pqn.png",
-    },
-    {
-      place: "Komodo Island",
-      activity: "You walk slow",
-      desc: `The ground feels dry, the air barely moves.
-You don’t think much, you just keep walking.
-There’s no pressure to get anywhere, so you let the place set the pace.`,
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_43_23_PM_hynjkg.png",
-    },
-    {
-      place: "Banda Neira",
-      activity: "You stay a while",
-      desc: `You sit longer than you meant to.
-Nothing interrupts, nothing pushes you forward.
-Time stretches just enough for you to forget you were tracking it.`,
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_59_16_PM_mp6lli.png",
-    },
-  ];
-
-  // AUTO SLIDE
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPrevIndex(index);
-      setIndex((prev) => (prev + 1) % data.length);
-    }, 7000);
+    gsap.registerPlugin(ScrollTrigger);
 
-    return () => clearInterval(interval);
-  }, [index]);
+    if (!sectionRef.current) return;
 
-  // PARALLAX (IMAGE INSIDE)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!frameRef.current) return;
+    const ctx = gsap.context(() => {
+      if (DISABLE_ANIMATION) {
+        gsap.set(
+          [
+            leftRef.current,
+            rightRef.current,
+            seamRef.current,
+            ctaRef.current,
+            ...sectionRef.current.querySelectorAll(".dest-fade"),
+          ],
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+          }
+        );
 
-      const rect = frameRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const progress = rect.top / windowHeight;
-
-      const translate = progress * -40; // subtle
-
-      if (currentImgRef.current) {
-        currentImgRef.current.style.transform = `translateY(${translate}px) scale(1.05)`;
+        return;
       }
 
-      if (prevImgRef.current) {
-        prevImgRef.current.style.transform = `translateY(${translate}px) scale(1.08)`;
-      }
-    };
+      const reduce =
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+      if (!reduce) {
+        // SPLIT SCROLL
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.15,
+          },
+        })
+          .to(
+            seamRef.current,
+            {
+              xPercent: 8,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            leftRef.current,
+            {
+              scale: 1.045,
+              xPercent: -2,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            rightRef.current,
+            {
+              scale: 1.045,
+              xPercent: 2,
+              ease: "none",
+            },
+            0
+          );
+
+        // CONTENT REVEAL
+        gsap.fromTo(
+          ".dest-fade",
+          {
+            opacity: 0,
+            y: 24,
+            filter: "blur(8px)",
+          },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: contentRef.current,
+              start: "top 76%",
+            },
+          }
+        );
+
+        // CTA REVEAL
+        gsap.fromTo(
+          ctaRef.current,
+          {
+            opacity: 0,
+            y: 18,
+            scale: 0.96,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ctaRef.current,
+              start: "top 92%",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  const current = data[index];
-  const prev = data[prevIndex];
-
   return (
-    <section className="relative w-full bg-[#F4F5F2]">
-
-      {/* TOP CONTEXT */}
-      <div className="max-w-[640px] mx-auto px-6 text-center pt-5 pb-6">
-        <p className="text-[11px] md:text-[12px] leading-relaxed text-[#2D3C68]/60">
-          Each journey moves across different parts of the Indonesian archipelago, from reef systems and small islands to open stretches of water. There is no fixed route — the direction follows sea conditions, local knowledge, and the pace of the group on board.
-        </p>
-      </div>
-
-      {/* FRAME */}
-      <div
-        ref={frameRef}
-        className="relative w-full h-[88vh] overflow-hidden"
-      >
-
-        {/* PREVIOUS */}
+    <section
+      ref={sectionRef}
+      className="relative w-full overflow-hidden bg-[#F4F5F2]"
+    >
+      <div className="relative h-[84vh] min-h-[680px] overflow-hidden md:h-[92vh]">
+        {/* LEFT WORLD */}
         <div
-          key={`prev-${prevIndex}`}
-          className="absolute inset-0 will-change-transform"
+          ref={leftRef}
+          className="absolute inset-0"
           style={{
-            animation: "exit 2600ms cubic-bezier(0.22,1,0.36,1) forwards",
+            clipPath: "polygon(0 0, 64% 0, 47% 100%, 0 100%)",
           }}
         >
           <img
-            ref={prevImgRef}
-            src={prev.image}
-            className="w-full h-full object-cover"
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_18_PM_ylbg4q.png"
+            alt="Raja Ampat"
+            className="h-full w-full object-cover"
           />
+          <div className="absolute inset-0 bg-[#21345A]/28 mix-blend-multiply" />
         </div>
 
-        {/* CURRENT */}
+        {/* RIGHT WORLD */}
         <div
-          key={`current-${index}`}
-          className="absolute inset-0 will-change-transform"
+          ref={rightRef}
+          className="absolute inset-0"
           style={{
-            animation:
-              "enter 2600ms cubic-bezier(0.22,1,0.36,1) forwards",
+            clipPath: "polygon(64% 0, 100% 0, 100% 100%, 47% 100%)",
           }}
         >
           <img
-            ref={currentImgRef}
-            src={current.image}
-            className="w-full h-full object-cover"
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1777295006/ChatGPT_Image_Apr_27_2026_07_43_23_PM_hynjkg.png"
+            alt="Labuan Bajo"
+            className="h-full w-full object-cover"
           />
+          <div className="absolute inset-0 bg-[#16233A]/22 mix-blend-multiply" />
         </div>
 
-        {/* GRADIENT */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              backdropFilter: "blur(1px)",
-              WebkitBackdropFilter: "blur(1px)",
-              maskImage:
-                "linear-gradient(to left, black 0%, black 30%, transparent 65%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `
-                linear-gradient(
-                  to left,
-                  rgba(244,245,242,0.85) 0%,
-                  rgba(244,245,242,0.4) 40%,
-                  rgba(244,245,242,0) 75%
-                )
-              `,
-            }}
-          />
-        </div>
+        {/* SEAM */}
+        <div
+          ref={seamRef}
+          className="absolute inset-y-0 left-[56%] z-20 w-[1px] bg-white/26 blur-[0.4px]"
+          style={{
+            transform: "skewX(-10deg)",
+          }}
+        />
 
-        {/* ECHO */}
-        <div className="absolute bottom-[8%] right-[-8%] pointer-events-none">
-          <h2
-            key={current.place}
-            className="font-[Gambarino] text-[#2D3C68]/5 text-[14vw]"
-            style={{
-              animation: "floatSlow 12s ease-in-out infinite alternate",
-            }}
-          >
-            {current.place}
-          </h2>
-        </div>
+        {/* SHADE */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-black/8" />
 
         {/* CONTENT */}
-        <div className="relative z-10 h-full flex items-center px-6 md:px-16">
-          <div
-            key={index}
-            className="ml-auto max-w-[520px] text-right"
-            style={{
-              animation: "textReveal 1200ms ease forwards",
-            }}
-          >
-            <p className="text-[12px] tracking-[0.08em] text-[#2D3C68]/65">
-              {current.activity}
-            </p>
+        <div
+          ref={contentRef}
+          className="absolute inset-0 z-30 flex items-end"
+        >
+          <div className="w-full px-6 pb-10 md:px-10 md:pb-12">
+            <div className="flex items-end justify-between gap-8">
+              {/* LEFT */}
+              <div className="dest-fade max-w-[280px]">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/54">
+                  Reef Sanctuary
+                </p>
 
-            <h2 className="mt-2 font-[Gambarino] text-[42px] md:text-[58px] text-[#2D3C68]">
-              {current.place}
-            </h2>
+                <h3 className="mt-2 font-[Gambarino] text-[40px] leading-[0.92] text-white md:text-[68px]">
+                  Raja Ampat
+                </h3>
+              </div>
 
-            <p className="mt-3 max-w-[420px] ml-auto text-[14px] text-[#2D3C68]/80 leading-[1.7]">
-              {current.desc}
-            </p>
+              {/* RIGHT */}
+              <div className="dest-fade max-w-[280px] text-right">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/54">
+                  Island Gateway
+                </p>
+
+                <h3 className="mt-2 font-[Gambarino] text-[40px] leading-[0.92] text-white md:text-[68px]">
+                  Labuan Bajo
+                </h3>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* NAV */}
-        <button
-          onClick={() => {
-            setPrevIndex(index);
-            setIndex((prev) => (prev - 1 + data.length) % data.length);
-          }}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50"
-        >
-          ←
-        </button>
-
-        <button
-          onClick={() => {
-            setPrevIndex(index);
-            setIndex((prev) => (prev + 1) % data.length);
-          }}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 text-[#2D3C68]/25 hover:text-[#2D3C68]/50"
-        >
-          →
-        </button>
-
-        <style jsx>{`
-          @keyframes enter {
-            from {
-              opacity: 0;
-              transform: scale(1.08);
-              filter: blur(4px);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1.02);
-              filter: blur(0px);
-            }
-          }
-
-          @keyframes exit {
-            from {
-              opacity: 1;
-              transform: scale(1.02);
-              filter: blur(0px);
-            }
-            to {
-              opacity: 0;
-              transform: scale(1.12);
-              filter: blur(6px);
-            }
-          }
-
-          @keyframes textReveal {
-            from {
-              opacity: 0;
-              filter: blur(6px);
-            }
-            to {
-              opacity: 1;
-              filter: blur(0px);
-            }
-          }
-
-          @keyframes floatSlow {
-            from {
-              transform: translateY(0px);
-            }
-            to {
-              transform: translateY(-20px);
-            }
-          }
-        `}</style>
+        {/* CTA */}
+        <div className="absolute bottom-8 left-1/2 z-40 -translate-x-1/2 md:bottom-10">
+          <a
+            ref={ctaRef}
+            href="/destinations"
+            className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-[11px] uppercase tracking-[0.24em] text-white backdrop-blur-md transition duration-300 hover:bg-white hover:text-[#152541]"
+          >
+            View All Journeys
+            <span>→</span>
+          </a>
+        </div>
       </div>
+
+      <div className="h-20 md:h-24" />
     </section>
   );
 }
