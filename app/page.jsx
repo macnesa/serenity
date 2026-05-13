@@ -62,7 +62,7 @@ function Hero() {
       https://res.cloudinary.com/dombq6plz/image/upload/v1777307172/ChatGPT_Image_Apr_27_2026_10_24_29_PM_1_ou4x2n.png
     */
 
-    src: "https://www.pexels.com/id-id/download/video/32272237/",
+    src: "https://www.pexels.com/download/video/29525835/",
   };
 
   const ease = [0.22, 1, 0.36, 1];

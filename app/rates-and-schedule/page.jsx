@@ -2763,100 +2763,144 @@ function SampleJourney() {
 }
 
 function FinalCTA() {
- 
+
   const sectionRef   = useRef(null)
   const eyebrowRef   = useRef(null)
   const headlineRef  = useRef(null)
   const ruleRef      = useRef(null)
   const actionRef    = useRef(null)
- 
+
   useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
- 
+
+    const reduce =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     if (reduce) {
       gsap.set(
-        [eyebrowRef.current, headlineRef.current, actionRef.current],
-        { opacity: 1, y: 0, filter: 'blur(0px)' }
+        [
+          eyebrowRef.current,
+          headlineRef.current,
+          actionRef.current,
+        ],
+        {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+        }
       )
-      gsap.set(ruleRef.current, { scaleX: 1 })
+
+      gsap.set(ruleRef.current, {
+        scaleX: 1,
+        opacity: 1,
+      })
+
       return
     }
- 
+
     const ctx = gsap.context(() => {
- 
-      gsap.set(eyebrowRef.current, { opacity: 0, y: 16 })
-      gsap.set(headlineRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' })
-      gsap.set(ruleRef.current, { scaleX: 0, transformOrigin: 'left center' })
-      gsap.set(actionRef.current, { opacity: 0, y: 20 })
- 
+
+      gsap.set(eyebrowRef.current, {
+        opacity: 0,
+        y: 12,
+      })
+
+      gsap.set(headlineRef.current, {
+        opacity: 0,
+        y: 34,
+        filter: 'blur(8px)',
+      })
+
+      gsap.set(ruleRef.current, {
+        opacity: 0,
+        scaleX: 0,
+        transformOrigin: 'left center',
+      })
+
+      gsap.set(actionRef.current, {
+        opacity: 0,
+        y: 18,
+      })
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 72%',
+          start: 'top 74%',
         },
       })
- 
+
       tl
+
         .to(eyebrowRef.current, {
-          opacity: 1, y: 0,
-          duration: 0.8,
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
           ease: [0.22, 1, 0.36, 1],
         })
+
         .to(headlineRef.current, {
-          opacity: 1, y: 0, filter: 'blur(0px)',
-          duration: 1.4,
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 1.55,
           ease: [0.22, 1, 0.36, 1],
-        }, '-=0.4')
+        }, '-=0.28')
+
         .to(ruleRef.current, {
+          opacity: 1,
           scaleX: 1,
-          duration: 1.0,
+          duration: 1.2,
           ease: 'power2.out',
-        }, '-=0.5')
+        }, '-=0.95')
+
         .to(actionRef.current, {
-          opacity: 1, y: 0,
-          duration: 0.9,
+          opacity: 1,
+          y: 0,
+          duration: 1.05,
           ease: [0.22, 1, 0.36, 1],
-        }, '-=0.5')
- 
+        }, '-=0.12')
+
     }, sectionRef)
- 
+
     return () => ctx.revert()
+
   }, [])
- 
+
   return (
     <section
       ref={sectionRef}
       className="relative overflow-hidden"
-      style={{ backgroundColor: '#2D3C68' }}
+      style={{
+        backgroundColor: '#2D3C68',
+      }}
     >
- 
-      {/* ── Atmospheric bridge from sail-white ── */}
+
+      {/* ── Atmospheric bridge ── */}
       <div
         className="absolute top-0 left-0 right-0 pointer-events-none"
         style={{
-          height: '100px',
+          height: '120px',
           background:
             'linear-gradient(to bottom, rgba(244,245,242,0.06) 0%, transparent 100%)',
         }}
       />
- 
+
       {/* ── Atmospheric layer ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle at 25% 55%, rgba(255,255,255,0.03), transparent 55%)',
+            'radial-gradient(circle at 25% 55%, rgba(255,255,255,0.03), transparent 58%)',
         }}
       />
- 
+
       <div
         className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-10"
         style={{
-          paddingTop: 'clamp(96px, 12vh, 140px)',
-          paddingBottom: 'clamp(96px, 12vh, 140px)',
+          paddingTop: 'clamp(104px, 13vh, 152px)',
+          paddingBottom: 'clamp(104px, 13vh, 152px)',
         }}
       >
- 
+
         {/* Eyebrow */}
         <p
           ref={eyebrowRef}
@@ -2866,61 +2910,70 @@ function FinalCTA() {
             fontWeight: 300,
             fontSize: '10px',
             letterSpacing: '0.34em',
-            color: 'rgba(244,245,242,0.36)',
-            marginBottom: '32px',
+            color: 'rgba(244,245,242,0.32)',
+            marginBottom: '28px',
           }}
         >
-          Make a Reservation
+          Contact Serenity
         </p>
- 
-        {/* Headline — full width, large */}
+
+        {/* Headline */}
         <h2
           ref={headlineRef}
           style={{
             fontFamily: 'Gambarino, serif',
-            fontSize: 'clamp(52px, 7.5vw, 96px)',
-            lineHeight: 0.96,
-            letterSpacing: '-0.04em',
+            fontSize: 'clamp(52px, 7.2vw, 94px)',
+            lineHeight: 0.92,
+            letterSpacing: '-0.045em',
             color: '#F4F5F2',
-            marginBottom: 'clamp(40px, 6vh, 64px)',
-            maxWidth: '900px',
+            marginBottom: 'clamp(42px, 6vh, 68px)',
+            maxWidth: '760px',
           }}
         >
           Your voyage begins<br />
-          with a conversation.
+          with a conversation
         </h2>
- 
+
         {/* Brass rule */}
         <div
           ref={ruleRef}
           style={{
             height: '1px',
-            background:
-              'linear-gradient(to right, rgba(176,141,87,0.6), rgba(176,141,87,0.15))',
             width: '100%',
-            marginBottom: 'clamp(32px, 5vh, 48px)',
+            marginBottom: 'clamp(34px, 5vh, 52px)',
+            background:
+              'linear-gradient(to right, rgba(176,141,87,0.38), rgba(176,141,87,0.04))',
           }}
         />
- 
-        {/* Action row — contact left, CTA right */}
+
+        {/* Action row */}
         <div
           ref={actionRef}
           className="flex flex-col md:flex-row md:items-center md:justify-between"
-          style={{ gap: '32px' }}
+          style={{
+            gap: '32px',
+          }}
         >
- 
+
           {/* Contact */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+            }}
+          >
             <p
               style={{
                 fontFamily: 'Switzer, sans-serif',
-                fontWeight: 400,
+                fontWeight: 300,
                 fontSize: '14px',
-                color: 'rgba(244,245,242,0.80)',
+                color: 'rgba(244,245,242,0.68)',
               }}
             >
               Alexandra Wira
             </p>
+
             <p
               className="uppercase"
               style={{
@@ -2928,38 +2981,45 @@ function FinalCTA() {
                 fontWeight: 300,
                 fontSize: '10px',
                 letterSpacing: '0.22em',
-                color: 'rgba(244,245,242,0.36)',
-                marginBottom: '8px',
+                color: 'rgba(244,245,242,0.32)',
+                marginBottom: '10px',
               }}
             >
               Guest Experience
             </p>
+
             <a
               href="mailto:hello@serenityphinisi.com"
               style={{
+                width: 'fit-content',
                 fontFamily: 'Switzer, sans-serif',
                 fontWeight: 300,
                 fontSize: '14px',
-                color: 'rgba(244,245,242,0.55)',
+                color: 'rgba(244,245,242,0.58)',
                 textDecoration: 'none',
-                transition: 'color 300ms ease',
+                opacity: 0.72,
+                transition: 'opacity 400ms ease',
               }}
-              onMouseEnter={e =>
-                e.currentTarget.style.color = 'rgba(244,245,242,0.90)'
-              }
-              onMouseLeave={e =>
-                e.currentTarget.style.color = 'rgba(244,245,242,0.55)'
-              }
+              onMouseEnter={e => {
+                e.currentTarget.style.opacity = '1'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.opacity = '0.72'
+              }}
             >
               hello@serenityphinisi.com
             </a>
           </div>
- 
+
           {/* CTA */}
           <div
             className="flex flex-col items-start md:items-end"
-            style={{ gap: '10px', flexShrink: 0 }}
+            style={{
+              gap: '12px',
+              flexShrink: 0,
+            }}
           >
+
             <a
               href="/contact"
               style={{
@@ -2971,45 +3031,53 @@ function FinalCTA() {
                 fontFamily: 'Switzer, sans-serif',
                 fontWeight: 400,
                 fontSize: '13px',
-                letterSpacing: '0.04em',
-                padding: '14px 40px',
-                borderRadius: '9999px',
+                letterSpacing: '0.05em',
+                padding: '13px 32px',
+                borderRadius: '999px',
                 textDecoration: 'none',
                 whiteSpace: 'nowrap',
-                transition: 'background 500ms ease, transform 500ms ease',
+                transition:
+                  'background 500ms ease, box-shadow 500ms ease, opacity 500ms ease',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = '#E8E9E6'
-                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.background = '#ECEDE9'
+                e.currentTarget.style.boxShadow =
+                  '0 0 40px rgba(255,255,255,0.06)'
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = '#F4F5F2'
-                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             >
               Begin Your Voyage
             </a>
- 
+
             <span
               style={{
                 fontFamily: 'Switzer, sans-serif',
                 fontWeight: 300,
                 fontSize: '12px',
-                color: 'rgba(244,245,242,0.26)',
+                color: 'rgba(244,245,242,0.24)',
               }}
             >
               Response within 24 hours
             </span>
+
           </div>
- 
+
         </div>
- 
+
       </div>
- 
+
       {/* ── Sumba Ikat ── */}
       <div
-        className="absolute bottom-0 right-0 pointer-events-none overflow-hidden"
-        style={{ width: '240px', height: '240px' }}
+        className="absolute pointer-events-none overflow-hidden"
+        style={{
+          width: '320px',
+          height: '320px',
+          right: '-90px',
+          bottom: '-90px',
+        }}
       >
         <img
           src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png"
@@ -3018,19 +3086,19 @@ function FinalCTA() {
             width: '100%',
             height: '100%',
             objectFit: 'contain',
-            opacity: 0.05,
+            opacity: 0.035,
             animation: 'ikatSpin 120s linear infinite',
           }}
         />
       </div>
- 
+
       <style>{`
         @keyframes ikatSpin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
         }
       `}</style>
- 
+
     </section>
   )
 }
