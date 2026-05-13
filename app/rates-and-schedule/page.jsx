@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "../../lib/gsap"
 import Image from "next/image";
-import { motion, AnimatePresence,useInView } from "framer-motion";
+import { motion, AnimatePresence,useInView, useReducedMotion } from "framer-motion";
+import Link from "next/link";
+
 
 import Footer from '../../components/Footer'
 
@@ -14,16 +16,16 @@ export default function Page() {
        <Hero/> 
        <WhatsIncluded/>
        <Rate/>
-       <SailingCalendar/>
+       {/* <SailingCalendar/> */}
        <HowItWorks/>
        {/* <RateOverview/> */}
        {/* <IncludedSection/> */}
        {/* <PricingDetails/>   */}
        {/* <SampleJourney/> */}
-       {/* <FinalCTA/> */}
        {/* <CharterRates/> */}
        {/* <Schedule/> */}
        {/* <InclusionsExclusions/> */}
+       <FinalCTA/>
       <Footer/> 
     </main>
   )
@@ -31,830 +33,1167 @@ export default function Page() {
 
 
 function Hero() {
-  const pathRefD = useRef(null);
-  const pathRefM = useRef(null);
-
+  const pathRefD    = useRef(null)
+  const pathRefM    = useRef(null)
+  const labelRef    = useRef(null)
+  const headlineRef = useRef(null)
+  const subcopyRef  = useRef(null)
+  const ctaRef      = useRef(null)
+  const rightRef    = useRef(null)
+  const scrollRef   = useRef(null)
+ 
   useEffect(() => {
-    function setup(path, speed = 0.0016) {
-      if (!path) return;
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = length;
-      path.style.strokeDashoffset = length;
-      let progress = 0;
-
-      function animate() {
-        progress += speed;
-        path.style.strokeDashoffset = length * (1 - progress);
-
-        if (progress < 1) requestAnimationFrame(animate);
+ 
+    // --- Route line draw — RAF ---
+    function setupLine(path, speed) {
+      if (!path) return
+      const length = path.getTotalLength()
+      path.style.strokeDasharray = length
+      path.style.strokeDashoffset = length
+      let progress = 0
+      function tick() {
+        progress += speed
+        path.style.strokeDashoffset = length * (1 - progress)
+        if (progress < 1) requestAnimationFrame(tick)
       }
-
-      animate();
+      tick()
     }
-
-    setup(pathRefD.current, 0.0016);
-    setup(pathRefM.current, 0.003);
-  }, []);
-
+ 
+    setupLine(pathRefD.current, 0.0016)
+    setupLine(pathRefM.current, 0.003)
+ 
+    // --- Entrance ---
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+ 
+    if (reduce) {
+      gsap.set(
+        [labelRef.current, headlineRef.current, subcopyRef.current,
+         ctaRef.current, rightRef.current, scrollRef.current],
+        { opacity: 1, y: 0, filter: 'blur(0px)' }
+      )
+      return
+    }
+ 
+    gsap.set(
+      [labelRef.current, headlineRef.current, subcopyRef.current,
+       ctaRef.current, rightRef.current, scrollRef.current],
+      { opacity: 0, y: 20 }
+    )
+    gsap.set(headlineRef.current, { filter: 'blur(8px)', y: 48 })
+ 
+    gsap.to(labelRef.current, {
+      opacity: 1, y: 0,
+      duration: 0.9, delay: 0.1,
+      ease: [0.22, 1, 0.36, 1],
+    })
+    gsap.to(headlineRef.current, {
+      opacity: 1, y: 0, filter: 'blur(0px)',
+      duration: 1.4, delay: 0.2,
+      ease: [0.22, 1, 0.36, 1],
+    })
+    gsap.to(subcopyRef.current, {
+      opacity: 1, y: 0,
+      duration: 1.1, delay: 0.38,
+      ease: [0.22, 1, 0.36, 1],
+    })
+    gsap.to(ctaRef.current, {
+      opacity: 1, y: 0,
+      duration: 1.0, delay: 0.52,
+      ease: [0.22, 1, 0.36, 1],
+    })
+    gsap.to(rightRef.current, {
+      opacity: 1, y: 0,
+      duration: 1.1, delay: 0.48,
+      ease: [0.22, 1, 0.36, 1],
+    })
+    gsap.to(scrollRef.current, {
+      opacity: 1, y: 0,
+      duration: 1.0, delay: 1.4,
+      ease: [0.22, 1, 0.36, 1],
+    })
+ 
+  }, [])
+ 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#2D3C68] text-[#F4F5F2]">
-
-      {/* ================= BACKGROUND ATMOSPHERE ================= */}
+ 
+      {/* ── Atmospheric — radials + grain only, no grid ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* radial light — top left */}
-        <div className="absolute left-[-10%] top-[-10%] h-[500px] w-[500px] md:h-[700px] md:w-[700px] rounded-full bg-[#F4F5F2]/[0.04] blur-3xl" />
-
-        {/* radial light — bottom right */}
-        <div className="absolute bottom-[-20%] right-[-10%] h-[400px] w-[400px] md:h-[600px] md:w-[600px] rounded-full bg-[#B08D57]/[0.08] blur-3xl" />
-
-        {/* subtle grid — hidden on mobile for perf */}
+ 
         <div
-          className="absolute inset-0 opacity-[0.045] hidden md:block"
+          className="absolute rounded-full blur-3xl"
           style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(244,245,242,0.08) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(244,245,242,0.08) 1px, transparent 1px)
-            `,
-            backgroundSize: "90px 90px",
+            left: '-10%', top: '-10%',
+            width: 'clamp(400px, 45vw, 700px)',
+            height: 'clamp(400px, 45vw, 700px)',
+            background: 'rgba(244,245,242,0.04)',
           }}
         />
-
-        {/* grain */}
-        <div className="absolute inset-0 opacity-[0.025] mix-blend-soft-light bg-[radial-gradient(circle_at_center,black_1px,transparent_1px)] bg-[size:14px_14px]" />
+ 
+        <div
+          className="absolute rounded-full blur-3xl"
+          style={{
+            right: '-10%', bottom: '-20%',
+            width: 'clamp(320px, 38vw, 600px)',
+            height: 'clamp(320px, 38vw, 600px)',
+            background: 'rgba(176,141,87,0.08)',
+          }}
+        />
+ 
+        {/* Grain */}
+        <div
+          className="absolute inset-0 mix-blend-soft-light"
+          style={{
+            opacity: 0.025,
+            backgroundImage: 'radial-gradient(circle at center, black 1px, transparent 1px)',
+            backgroundSize: '14px 14px',
+          }}
+        />
+ 
       </div>
-
-      {/* ================= ROUTE LINE — DESKTOP ================= */}
+ 
+      {/* ── Route line — desktop ── */}
       <svg
         viewBox="0 0 1600 900"
         className="absolute inset-0 h-full w-full pointer-events-none hidden md:block"
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-          <linearGradient id="routeGradientD" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#B08D57" stopOpacity="0" />
-            <stop offset="20%" stopColor="#B08D57" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="#B08D57" stopOpacity="0.9" />
-            <stop offset="80%" stopColor="#B08D57" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#B08D57" stopOpacity="0" />
+          <linearGradient id="routeGradD" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stopColor="#B08D57" stopOpacity="0"   />
+            <stop offset="20%"  stopColor="#B08D57" stopOpacity="0.2" />
+            <stop offset="50%"  stopColor="#B08D57" stopOpacity="0.9" />
+            <stop offset="80%"  stopColor="#B08D57" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#B08D57" stopOpacity="0"   />
           </linearGradient>
-
           <filter id="glowD">
             <feGaussianBlur stdDeviation="1.8" result="blur" />
-
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-
         <path
           ref={pathRefD}
           d="M-120 520 C260 380, 520 620, 920 500 S1380 360, 1740 480"
           fill="none"
-          stroke="url(#routeGradientD)"
+          stroke="url(#routeGradD)"
           strokeWidth="1.4"
           strokeLinecap="round"
           filter="url(#glowD)"
         />
       </svg>
-
-      {/* ================= ROUTE LINE — MOBILE ================= */}
+ 
+      {/* ── Route line — mobile ── */}
       <svg
         viewBox="0 0 390 844"
         className="absolute inset-0 h-full w-full pointer-events-none block md:hidden"
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-          <linearGradient id="routeGradientM" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#B08D57" stopOpacity="0" />
-            <stop offset="35%" stopColor="#B08D57" stopOpacity="0.8" />
-            <stop offset="65%" stopColor="#B08D57" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#B08D57" stopOpacity="0" />
+          <linearGradient id="routeGradM" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stopColor="#B08D57" stopOpacity="0"   />
+            <stop offset="35%"  stopColor="#B08D57" stopOpacity="0.8" />
+            <stop offset="65%"  stopColor="#B08D57" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#B08D57" stopOpacity="0"   />
           </linearGradient>
-
           <filter id="glowM">
             <feGaussianBlur stdDeviation="1.4" result="blur" />
-
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-
         <path
           ref={pathRefM}
           d="M-20 560 C80 480, 160 620, 260 540 S360 420, 420 480"
           fill="none"
-          stroke="url(#routeGradientM)"
+          stroke="url(#routeGradM)"
           strokeWidth="1.8"
           strokeLinecap="round"
           filter="url(#glowM)"
         />
       </svg>
-
-      {/* ================= MAIN LAYOUT ================= */}
+ 
+      {/* ── Main layout ── */}
       <div className="relative z-10 flex min-h-screen items-center">
-        <div className="mx-auto w-full max-w-[1200px] px-6 md:px-10 pt-[160px] pb-[120px] md:pt-[200px] md:pb-[140px]">
-
-          <div className="grid grid-cols-1 gap-y-14 md:grid-cols-12 md:gap-8 items-end">
-
-            {/* ================= LEFT ================= */}
+        <div
+          className="mx-auto w-full max-w-[1200px] px-6 md:px-10"
+          style={{
+            paddingTop: 'clamp(140px, 18vh, 200px)',
+            paddingBottom: 'clamp(100px, 14vh, 140px)',
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-12 md:gap-8 items-end gap-y-14">
+ 
+            {/* ── LEFT ── */}
             <div className="md:col-span-7">
-
-              {/* MICRO LABEL */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                className="mb-8 text-[10px] tracking-[0.38em] text-[#F4F5F2]/44 uppercase"
+ 
+              <p
+                ref={labelRef}
+                className="uppercase mb-8"
+                style={{
+                  fontFamily: 'Switzer, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '10px',
+                  letterSpacing: '0.38em',
+                  color: 'rgba(244,245,242,0.44)',
+                }}
               >
                 Rates & Sailing Schedule
-              </motion.div>
-
-              {/* HEADLINE */}
-              <div className="overflow-hidden">
-                <motion.h1
-                  initial={{ opacity: 0, y: 60, filter: "blur(10px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-[Gambarino] text-[52px] md:text-[72px] lg:text-[84px] leading-[1.0] tracking-[-0.03em] text-[#F4F5F2]"
+              </p>
+ 
+              <h1
+                ref={headlineRef}
+                style={{
+                  fontFamily: 'Gambarino, serif',
+                  fontSize: 'clamp(52px, 7vw, 84px)',
+                  lineHeight: 1.0,
+                  letterSpacing: '-0.03em',
+                  color: '#F4F5F2',
+                }}
+              >
+                Journeys<br />by Season
+              </h1>
+ 
+              <p
+                ref={subcopyRef}
+                style={{
+                  fontFamily: 'Switzer, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '15px',
+                  lineHeight: 1.78,
+                  color: 'rgba(244,245,242,0.68)',
+                  maxWidth: '420px',
+                  marginTop: '40px',
+                }}
+              >
+                Seasonal routes across Komodo and Raja Ampat,
+                shaped around sea conditions and the rhythm
+                of life on board.
+              </p>
+ 
+              {/* Single navigational CTA — not transactional */}
+              <div ref={ctaRef} style={{ marginTop: '40px' }}>
+                <a
+                  href="#charter"
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '13px',
+                    letterSpacing: '0.06em',
+                    color: 'rgba(244,245,242,0.44)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    textDecoration: 'none',
+                    transition: 'color 300ms ease',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'rgba(244,245,242,0.86)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(244,245,242,0.44)'}
                 >
-                  Journeys
-                  <br />
-                  by Season
-                </motion.h1>
+                  View charter rates
+                  <span style={{ color: '#B08D57' }}>↓</span>
+                </a>
               </div>
-
-              {/* SUBTEXT */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.1, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-10 max-w-[480px] text-[15px] md:text-[16px] leading-[1.75] text-[#F4F5F2]/68"
-              >
-                Seasonal routes across Komodo and Raja Ampat shaped around sea
-                conditions, weather rhythms, and the pace of life on board.
-              </motion.p>
-
-              {/* CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6"
-              >
-                <a
-                  href="#rates"
-                  className="inline-flex items-center justify-center rounded-full bg-[#F4F5F2] px-8 py-3.5 text-[13px] tracking-[0.02em] text-[#2D3C68] transition-all duration-500 hover:bg-[#E8E9E6] hover:-translate-y-[2px] active:scale-[0.97]"
-                >
-                  View Rates
-                </a>
-
-                <a
-                  href="#schedule"
-                  className="text-[13px] tracking-[0.01em] text-[#F4F5F2]/50 transition-colors duration-300 hover:text-[#F4F5F2] text-center sm:text-left"
-                >
-                  Sailing Calendar →
-                </a>
-              </motion.div>
+ 
             </div>
-
-            {/* ================= RIGHT ================= */}
-            <div className="md:col-span-4 md:col-start-9 mt-14 md:mt-0">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-8 md:space-y-12"
-              >
-
-                {/* KOMODO */}
-                <div className="border-t border-[#F4F5F2]/10 pt-5">
-                  <div className="mb-2 text-[10px] tracking-[0.28em] text-[#F4F5F2]/38 uppercase">
-                    Komodo Season
-                  </div>
-
-                  <div className="font-[Gambarino] text-[22px] md:text-[24px] leading-none text-[#F4F5F2]">
+ 
+            {/* ── RIGHT — months only, no descriptions, no On Board ── */}
+            <div
+              ref={rightRef}
+              className="md:col-span-4 md:col-start-9"
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+ 
+                {/* Komodo */}
+                <div
+                  style={{
+                    borderTop: '1px solid rgba(244,245,242,0.12)',
+                    paddingTop: '20px',
+                    paddingBottom: '28px',
+                  }}
+                >
+                  <p
+                    className="uppercase"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '10px',
+                      letterSpacing: '0.28em',
+                      color: 'rgba(244,245,242,0.36)',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    Komodo
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'Gambarino, serif',
+                      fontSize: '26px',
+                      lineHeight: 1.0,
+                      letterSpacing: '-0.01em',
+                      color: '#F4F5F2',
+                    }}
+                  >
                     May — September
-                  </div>
-
-                  <p className="mt-3 text-[13px] md:text-[14px] leading-[1.7] text-[#F4F5F2]/58 max-w-[300px] md:max-w-[280px]">
-                    Dry season sailing with calmer waters, island trekking, and
-                    clear visibility for diving.
                   </p>
                 </div>
-
-                {/* RAJA AMPAT */}
-                <div className="border-t border-[#F4F5F2]/10 pt-5">
-                  <div className="mb-2 text-[10px] tracking-[0.28em] text-[#F4F5F2]/38 uppercase">
-                    Raja Ampat Season
-                  </div>
-
-                  <div className="font-[Gambarino] text-[22px] md:text-[24px] leading-none text-[#F4F5F2]">
+ 
+                {/* Raja Ampat */}
+                <div
+                  style={{
+                    borderTop: '1px solid rgba(244,245,242,0.12)',
+                    paddingTop: '20px',
+                    paddingBottom: '20px',
+                  }}
+                >
+                  <p
+                    className="uppercase"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '10px',
+                      letterSpacing: '0.28em',
+                      color: 'rgba(244,245,242,0.36)',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    Raja Ampat
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'Gambarino, serif',
+                      fontSize: '26px',
+                      lineHeight: 1.0,
+                      letterSpacing: '-0.01em',
+                      color: '#F4F5F2',
+                    }}
+                  >
                     November — April
-                  </div>
-
-                  <p className="mt-3 text-[13px] md:text-[14px] leading-[1.7] text-[#F4F5F2]/58 max-w-[300px] md:max-w-[280px]">
-                    Remote island routes through rich coral ecosystems and
-                    slower expedition rhythms.
                   </p>
                 </div>
-
-                {/* ON BOARD */}
-                <div className="border-t border-[#F4F5F2]/10 pt-5">
-                  <div className="mb-2 text-[10px] tracking-[0.28em] text-[#F4F5F2]/38 uppercase">
-                    On Board
-                  </div>
-
-                  <div className="flex items-end gap-3">
-                    <div className="font-[Gambarino] text-[38px] md:text-[42px] leading-none text-[#F4F5F2]">
-                      12
-                    </div>
-
-                    <div className="pb-[6px] text-[12px] md:text-[13px] tracking-[0.06em] text-[#F4F5F2]/50">
-                      guests · 10 crew · 4 cabins
-                    </div>
-                  </div>
-                </div>
-
-              </motion.div>
+ 
+              </div>
             </div>
-
+ 
           </div>
         </div>
       </div>
-
-      {/* ================= SCROLL INDICATOR ================= */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
+ 
+      {/* ── Scroll indicator ── */}
+      <div
+        ref={scrollRef}
         className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
       >
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-[10px] tracking-[0.28em] text-[#F4F5F2]/32">
-            SCROLL
-          </span>
-
-          <div className="relative h-8 w-[1px] overflow-hidden bg-[#F4F5F2]/10">
-            <motion.div
-              animate={{ y: ["-100%", "120%"] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute left-0 top-0 h-4 w-full bg-[#B08D57]/70"
-            />
-          </div>
+        <span
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontSize: '10px',
+            letterSpacing: '0.28em',
+            color: 'rgba(244,245,242,0.28)',
+            textTransform: 'uppercase',
+          }}
+        >
+          Scroll
+        </span>
+        <div
+          style={{
+            width: '1px',
+            height: '32px',
+            background: 'rgba(244,245,242,0.1)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            top: 0, left: 0,
+            width: '100%',
+            height: '40%',
+            background: 'rgba(176,141,87,0.7)',
+            animation: 'scrollDrop 1.8s ease-in-out infinite',
+          }} />
         </div>
-      </motion.div>
-
+        <style>{`
+          @keyframes scrollDrop {
+            0%   { transform: translateY(-100%); }
+            100% { transform: translateY(280%); }
+          }
+        `}</style>
+      </div>
+ 
+      {/* ── Exit bridge ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '80px',
+          background: 'linear-gradient(to bottom, transparent, rgba(45,60,104,0.5))',
+        }}
+      />
+ 
     </section>
-  );
+  )
 }
 
 function WhatsIncluded() {
+ 
   const included = [
     {
-      label: "Full Crew",
-      desc: "Captain, chef, dive master, and 7 supporting crew — on board throughout.",
+      label: 'Full Crew',
+      desc: 'Captain, chef, dive master, and 7 supporting crew — on board throughout.',
     },
     {
-      label: "All Meals & Non-Alcoholic Beverages",
-      desc: "Three meals daily plus snacks, prepared fresh by the onboard chef.",
+      label: 'All Meals & Non-Alcoholic Beverages',
+      desc: 'Three meals daily plus snacks, prepared fresh by the onboard chef.',
     },
     {
-      label: "Watersports Equipment",
-      desc: "Wakeboard, paddle boards, snorkel sets, and dive equipment included.",
+      label: 'Watersports Equipment',
+      desc: 'Wakeboard, paddle boards, snorkel sets, and dive equipment included.',
     },
     {
-      label: "Fuel & Standard Cruising",
-      desc: "All fuel for the agreed route. No surcharges for standard navigation.",
+      label: 'Fuel & Standard Cruising',
+      desc: 'All fuel for the agreed route. No surcharges for standard navigation.',
     },
     {
-      label: "Park Fees & Permits",
-      desc: "Komodo National Park and Raja Ampat entry fees covered in full.",
+      label: 'Park Fees & Permits',
+      desc: 'Komodo National Park and Raja Ampat entry fees covered in full.',
     },
-  ];
-
+  ]
+ 
   const notIncluded = [
-    "Flights and transfers to departure port",
-    "Alcoholic beverages",
-    "Tips for crew (customary, not mandatory)",
-    "Personal dive equipment rental",
-  ];
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 32 },
-    show: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.9,
-        delay: i * 0.08,
+    'Flights and transfers to departure port',
+    'Alcoholic beverages',
+    'Tips for crew (customary, not mandatory)',
+    'Personal dive equipment rental',
+  ]
+ 
+  const sectionRef  = useRef(null)
+  const headlineRef = useRef(null)
+  const rightRef    = useRef(null)
+  const listRef     = useRef(null)
+  const notIncRef   = useRef(null)
+  const itemsRef    = useRef([])
+ 
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+ 
+    if (reduce) {
+      gsap.set(
+        [headlineRef.current, rightRef.current,
+         notIncRef.current, ...itemsRef.current.filter(Boolean)],
+        { opacity: 1, y: 0 }
+      )
+      return
+    }
+ 
+    const ctx = gsap.context(() => {
+ 
+      // Eyebrow + headline
+      gsap.set(headlineRef.current, { opacity: 0, y: 28 })
+      gsap.to(headlineRef.current, {
+        opacity: 1, y: 0,
+        duration: 1.0,
         ease: [0.22, 1, 0.36, 1],
-      },
-    }),
-  };
-
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+        },
+      })
+ 
+      // Right column
+      gsap.set(rightRef.current, { opacity: 0, y: 32 })
+      gsap.to(rightRef.current, {
+        opacity: 1, y: 0,
+        duration: 1.1,
+        delay: 0.12,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+        },
+      })
+ 
+      // List items stagger
+      const items = itemsRef.current.filter(Boolean)
+      gsap.set(items, { opacity: 0, y: 16 })
+      gsap.to(items, {
+        opacity: 1, y: 0,
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        stagger: 0.07,
+        scrollTrigger: {
+          trigger: listRef.current,
+          start: 'top 85%',
+        },
+      })
+ 
+      // Not included
+      gsap.set(notIncRef.current, { opacity: 0, y: 16 })
+      gsap.to(notIncRef.current, {
+        opacity: 1, y: 0,
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: notIncRef.current,
+          start: 'top 88%',
+        },
+      })
+ 
+    }, sectionRef)
+ 
+    return () => ctx.revert()
+  }, [])
+ 
   return (
-    <section className="relative bg-[#F4F5F2] overflow-hidden">
-
-      {/* TOP BORDER — visual connector dari hero */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#2D3C68]/10 to-transparent" />
-
-      <div className="max-w-[1200px] mx-auto px-6 md:px-10 py-[120px] md:py-[140px]">
-
-        {/* ================= HEADER ================= */}
-        <div className="md:grid md:grid-cols-12 md:gap-8 mb-16 md:mb-20">
-
-          <div className="md:col-span-5">
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-5 text-[10px] md:text-[11px] tracking-[0.34em] text-[#2D3C68]/40 uppercase"
+    <section
+      ref={sectionRef}
+      className="relative"
+      style={{ backgroundColor: '#F4F5F2' }}
+    >
+ 
+      {/* ── Atmospheric bridge ── */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '100px',
+          background: 'linear-gradient(to bottom, rgba(45,60,104,0.07) 0%, transparent 100%)',
+        }}
+      />
+ 
+      <div
+        className="relative max-w-[1200px] mx-auto px-6 md:px-10"
+        style={{
+          paddingTop: 'clamp(88px, 11vh, 128px)',
+          paddingBottom: 'clamp(80px, 10vh, 112px)',
+        }}
+      >
+ 
+        {/* ── Main grid ── */}
+        <div className="md:grid md:grid-cols-12 md:gap-8 md:items-start">
+ 
+          {/* LEFT — eyebrow + headline + list */}
+          <div className="md:col-span-6">
+ 
+            <div ref={headlineRef}>
+              <p
+                className="uppercase mb-5"
+                style={{
+                  fontFamily: 'Switzer, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '10px',
+                  letterSpacing: '0.34em',
+                  color: 'rgba(45,60,104,0.40)',
+                }}
+              >
+                What's Included
+              </p>
+ 
+              <h2
+                style={{
+                  fontFamily: 'Gambarino, serif',
+                  fontSize: 'clamp(40px, 5vw, 64px)',
+                  lineHeight: 1.0,
+                  letterSpacing: '-0.03em',
+                  color: '#2D3C68',
+                  marginBottom: 'clamp(16px, 2.5vh, 24px)',
+                }}
+              >
+                One price.<br />Everything<br />arranged.
+              </h2>
+            </div>
+ 
+            {/* Included list */}
+            <div
+              ref={listRef}
+              style={{ borderTop: '1px solid rgba(45,60,104,0.08)' }}
             >
-              What's Included
-            </motion.div>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 36, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className="font-[Gambarino] text-[42px] md:text-[56px] lg:text-[64px] leading-[1.0] tracking-[-0.03em] text-[#2D3C68]"
-            >
-              One price.
-              <br />
-              Everything
-              <br />
-              arranged.
-            </motion.h2>
-
+              {included.map((item, i) => (
+                <div
+                  key={item.label}
+                  ref={el => itemsRef.current[i] = el}
+                  className="flex gap-5 items-start"
+                  style={{
+                    padding: '24px 0',
+                    borderBottom: '1px solid rgba(45,60,104,0.08)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontSize: '11px',
+                      letterSpacing: '0.14em',
+                      color: 'rgba(176,141,87,0.70)',
+                      marginTop: '3px',
+                      flexShrink: 0,
+                      width: '20px',
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+ 
+                  <div>
+                    <p
+                      style={{
+                        fontFamily: 'Switzer, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '14px',
+                        letterSpacing: '-0.01em',
+                        color: '#2D3C68',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      {item.label}
+                    </p>
+                    <p
+                      style={{
+                        fontFamily: 'Switzer, sans-serif',
+                        fontWeight: 300,
+                        fontSize: '13px',
+                        lineHeight: 1.7,
+                        color: 'rgba(45,60,104,0.55)',
+                      }}
+                    >
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+ 
           </div>
-
-          <div className="md:col-span-5 md:col-start-8 flex items-end mt-8 md:mt-0">
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 1.1,
-                delay: 0.18,
-                ease: [0.22, 1, 0.36, 1],
+ 
+          {/* RIGHT — paragraph + image */}
+          <div
+            ref={rightRef}
+            className="md:col-span-5 md:col-start-8 mt-14 md:mt-0"
+          >
+            <p
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '15px',
+                lineHeight: 1.85,
+                color: 'rgba(45,60,104,0.62)',
+                maxWidth: '380px',
+                marginBottom: 'clamp(32px, 4vh, 48px)',
               }}
-              className="text-[14px] md:text-[15px] leading-[1.85] text-[#2D3C68]/62 max-w-[400px]"
             >
               The charter rate covers everything on board. No itemised bills,
               no surprises at the end of the week. Arrive and let the crew
               handle the rest.
-            </motion.p>
-
-          </div>
-
-        </div>
-
-        {/* ================= MAIN GRID ================= */}
-        <div className="md:grid md:grid-cols-12 md:gap-8 md:items-start">
-
-          {/* LEFT — INCLUDED LIST */}
-          <div className="md:col-span-6">
-
-            <div className="divide-y divide-[#2D3C68]/8">
-
-              {included.map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  custom={i}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
-                  className="py-6 md:py-7 flex gap-5 items-start"
-                >
-
-                  {/* INDEX */}
-                  <span className="text-[11px] tracking-[0.14em] text-[#B08D57]/70 mt-[3px] shrink-0 w-5">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
-                  <div>
-
-                    <div className="text-[14px] md:text-[15px] font-medium tracking-[-0.01em] text-[#2D3C68] mb-1">
-                      {item.label}
-                    </div>
-
-                    <div className="text-[13px] md:text-[14px] leading-[1.7] text-[#2D3C68]/55">
-                      {item.desc}
-                    </div>
-
-                  </div>
-
-                </motion.div>
-              ))}
-
-            </div>
-
-            {/* NOT INCLUDED */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.9,
-                delay: 0.3,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="mt-10 pt-8 border-t border-[#2D3C68]/8"
-            >
-
-              <div className="mb-4 text-[10px] tracking-[0.28em] text-[#2D3C68]/35 uppercase">
-                Not Included
-              </div>
-
-              <ul className="space-y-2">
-
-                {notIncluded.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-3 text-[13px] leading-[1.6] text-[#2D3C68]/42"
-                  >
-                    <span className="mt-[6px] h-[3px] w-[3px] rounded-full bg-[#2D3C68]/25 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-
-              </ul>
-
-            </motion.div>
-
-          </div>
-
-          {/* RIGHT — IMAGE (offset, asymmetric) */}
-          <div className="md:col-span-5 md:col-start-8 mt-14 md:mt-0 md:-translate-y-[40px]">
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 1.2,
-                delay: 0.2,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="relative"
-            >
-
-              {/* IMAGE */}
-              <div className="relative w-full aspect-[4/5] overflow-hidden">
-
+            </p>
+ 
+            <div className="relative">
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ aspectRatio: '4 / 5' }}
+              >
                 <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1777307172/ChatGPT_Image_Apr_27_2026_10_24_29_PM_1_ou4x2n.png"
-                  alt="Guests dining together on Serenity's deck"
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1778534687/ChatGPT_Image_May_12_2026_04_07_19_AM_lu1htz.png"
+                  alt="Guests on Serenity's deck"
                   fill
                   className="object-cover"
                 />
-
-                {/* subtle overlay */}
-                <div className="absolute inset-0 bg-[#2D3C68]/8" />
-
+                <div
+                  className="absolute inset-0"
+                  style={{ background: 'rgba(45,60,104,0.06)' }}
+                />
               </div>
-
-              {/* CAPTION CHIP — offset bottom left */}
-              <motion.div
-                initial={{ opacity: 0, x: 16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.9,
-                  delay: 0.5,
-                  ease: [0.22, 1, 0.36, 1],
+ 
+              {/* Caption chip */}
+              <div
+                className="absolute"
+                style={{
+                  bottom: '-20px',
+                  left: '-20px',
+                  background: '#2D3C68',
+                  padding: '12px 20px',
                 }}
-                className="absolute -bottom-5 -left-5 md:-left-8 bg-[#2D3C68] px-5 py-3"
               >
-
-                <div className="text-[10px] tracking-[0.22em] text-[#F4F5F2]/50 uppercase mb-[2px]">
+                <p
+                  className="uppercase"
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '10px',
+                    letterSpacing: '0.22em',
+                    color: 'rgba(244,245,242,0.50)',
+                    marginBottom: '2px',
+                  }}
+                >
                   On Board
-                </div>
-
-                <div className="text-[13px] tracking-[0.04em] text-[#F4F5F2]">
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontSize: '13px',
+                    letterSpacing: '0.04em',
+                    color: '#F4F5F2',
+                  }}
+                >
                   Chef · Crew · Everything
-                </div>
-
-              </motion.div>
-
-            </motion.div>
-
+                </p>
+              </div>
+            </div>
           </div>
-
+ 
         </div>
-
+ 
+        {/* ── Not Included — full-width row below grid ── */}
+        <div
+          ref={notIncRef}
+          style={{
+            marginTop: 'clamp(64px, 8vh, 96px)',
+            paddingTop: '32px',
+            borderTop: '1px solid rgba(45,60,104,0.08)',
+          }}
+        >
+          <div className="md:grid md:grid-cols-12 md:gap-8 md:items-start">
+ 
+            {/* Label */}
+            <div className="md:col-span-2">
+              <p
+                className="uppercase mb-6 md:mb-0"
+                style={{
+                  fontFamily: 'Switzer, sans-serif',
+                  fontWeight: 300,
+                  fontSize: '10px',
+                  letterSpacing: '0.28em',
+                  color: 'rgba(45,60,104,0.35)',
+                  paddingTop: '2px',
+                }}
+              >
+                Not Included
+              </p>
+            </div>
+ 
+            {/* Items — horizontal on desktop */}
+            <div
+              className="md:col-span-9 md:col-start-4"
+            >
+              <ul className="flex flex-col md:flex-row md:flex-wrap md:gap-x-12 gap-y-3">
+                {notIncluded.map(item => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-3"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '13px',
+                      lineHeight: 1.6,
+                      color: 'rgba(45,60,104,0.42)',
+                    }}
+                  >
+                    <span
+                      style={{
+                        marginTop: '8px',
+                        width: '3px',
+                        height: '3px',
+                        borderRadius: '50%',
+                        background: 'rgba(45,60,104,0.25)',
+                        flexShrink: 0,
+                      }}
+                    />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+ 
+          </div>
+        </div>
+ 
       </div>
-
-      {/* BOTTOM BORDER */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#2D3C68]/10 to-transparent" />
-
+ 
+      {/* ── Exit bridge ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '80px',
+          background: 'linear-gradient(to bottom, transparent, rgba(45,60,104,0.04))',
+        }}
+      />
+ 
     </section>
-  );
+  )
 }
 
 function Rate() {
-  const sectionRef = useRef(null);
-
-  const inView = useInView(sectionRef, {
-    once: true,
-    margin: "-20%",
-  });
-
-  const [prices, setPrices] = useState([0, 0, 0]);
-
-  const tiers = [
+ 
+  const rates = [
     {
-      season: "Low Season",
-      months: "Jan – Apr",
-      price: 18000,
-      note: "per week · full charter",
-      context:
-        "Shoulder season sailing. Quieter waters, fewer vessels. Best for Raja Ampat before peak crowds.",
-      highlight: false,
+      destination: 'Labuan Bajo',
+      season: 'May — September',
+      price: '$9,500',
     },
     {
-      season: "High Season",
-      months: "May – Sep",
-      price: 24000,
-      note: "per week · full charter",
-      context:
-        "Prime Komodo season. Dry winds, clear visibility, optimal conditions for diving and trekking.",
-      highlight: true,
+      destination: 'Raja Ampat',
+      season: 'November — April',
+      price: '$10,500',
     },
-    {
-      season: "Peak Season",
-      months: "Oct – Dec",
-      price: 28000,
-      note: "per week · full charter",
-      context:
-        "Transition period. Raja Ampat opens up. Strong demand — availability fills quickly.",
-      highlight: false,
-    },
-  ];
-
+  ]
+ 
+  const notes = [
+    'Minimum 5 nights',
+    'Rates quoted in USD',
+    'Custom durations available on inquiry',
+  ]
+ 
+  const sectionRef  = useRef(null)
+  const headerRef   = useRef(null)
+  const rulesRef    = useRef([])
+  const rowsRef     = useRef([])
+  const ctaRef      = useRef(null)
+ 
   useEffect(() => {
-    if (!inView) return;
-
-    const duration = 1400;
-    let startTime = null;
-
-    const step = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setPrices(
-        tiers.map((tier) =>
-          progress < 1
-            ? Math.floor(eased * tier.price)
-            : tier.price
-        )
-      );
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      }
-    };
-
-    requestAnimationFrame(step);
-  }, [inView]);
-
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+ 
+    if (reduce) {
+      gsap.set(
+        [headerRef.current, ctaRef.current, ...rowsRef.current.filter(Boolean)],
+        { opacity: 1, y: 0 }
+      )
+      gsap.set(rulesRef.current.filter(Boolean), { scaleX: 1 })
+      return
+    }
+ 
+    const ctx = gsap.context(() => {
+ 
+      // Header
+      gsap.set(headerRef.current, { opacity: 0, y: 24 })
+      gsap.to(headerRef.current, {
+        opacity: 1, y: 0,
+        duration: 1.0,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 72%',
+        },
+      })
+ 
+      // Rules + rows — sequential reveal
+      const rules = rulesRef.current.filter(Boolean)
+      const rows  = rowsRef.current.filter(Boolean)
+ 
+      gsap.set(rules, { scaleX: 0, transformOrigin: 'left center' })
+      gsap.set(rows,  { opacity: 0, y: 14 })
+ 
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 65%',
+        },
+      })
+ 
+      tl
+        .to(rules[0], { scaleX: 1, duration: 0.7, ease: 'power2.out' })
+        .to(rows[0],  { opacity: 1, y: 0, duration: 0.75, ease: [0.22, 1, 0.36, 1] }, '-=0.25')
+        .to(rules[1], { scaleX: 1, duration: 0.7, ease: 'power2.out' }, '-=0.15')
+        .to(rows[1],  { opacity: 1, y: 0, duration: 0.75, ease: [0.22, 1, 0.36, 1] }, '-=0.25')
+        .to(rules[2], { scaleX: 1, duration: 0.7, ease: 'power2.out' }, '-=0.15')
+ 
+      // CTA
+      gsap.set(ctaRef.current, { opacity: 0, y: 20 })
+      gsap.to(ctaRef.current, {
+        opacity: 1, y: 0,
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: ctaRef.current,
+          start: 'top 88%',
+        },
+      })
+ 
+    }, sectionRef)
+ 
+    return () => ctx.revert()
+  }, [])
+ 
   return (
     <section
-      id="rates"
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#F4F5F2]"
+      className="relative overflow-hidden"
+      style={{ backgroundColor: '#2D3C68' }}
     >
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#2D3C68]/10 to-transparent" />
-
-      <div className="mx-auto max-w-[1200px] px-6 py-[100px] md:px-10 md:py-[120px]">
-
-        {/* HEADER */}
-        <div className="mb-16 md:mb-20 md:grid md:grid-cols-12 md:items-end md:gap-8">
-
-          <div className="md:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="mb-5 text-[10px] uppercase tracking-[0.34em] text-[#2D3C68]/40 md:text-[11px]"
-            >
-              Charter Rates
-            </motion.div>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 36, filter: "blur(8px)" }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-              }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 1.2,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="font-[Gambarino] text-[42px] leading-[1] tracking-[-0.03em] text-[#2D3C68] md:text-[56px]"
-            >
-              Full charter,
-              <br />
-              three seasons.
-            </motion.h2>
-          </div>
-
-          <div className="mt-6 md:col-span-5 md:col-start-8 md:mt-0">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 1.1,
-                delay: 0.18,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="max-w-[400px] text-[14px] leading-[1.85] text-[#2D3C68]/60 md:text-[15px]"
-            >
-              Serenity charters as a whole vessel — one group, one crew, one
-              route. Rates vary by season and sea conditions across the
-              Indonesian archipelago.
-            </motion.p>
-          </div>
-        </div>
-
-        {/* RATE GRID */}
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:items-start md:gap-6">
-
-          {tiers.map((tier, index) => {
-            const isHighlight = tier.highlight;
-
-            return (
-              <motion.div
-                key={tier.season}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 1.1,
-                  delay: index * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className={
-                  isHighlight
-                    ? "relative bg-[#2D3C68] px-8 py-10 md:-translate-y-6 md:px-10 md:py-12 md:shadow-[0_32px_80px_rgba(45,60,104,0.18)]"
-                    : "border-t border-[#2D3C68]/10 px-0 pt-8 md:px-2"
-                }
-              >
-
-                {isHighlight && (
-                  <div className="absolute -top-3 left-8 bg-[#B08D57] px-4 py-1 md:left-10">
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-[#F4F5F2]">
-                      Most Requested
-                    </span>
-                  </div>
-                )}
-
-                <div
-                  className={
-                    isHighlight
-                      ? "mb-3 text-[10px] uppercase tracking-[0.28em] text-[#F4F5F2]/44"
-                      : "mb-3 text-[10px] uppercase tracking-[0.28em] text-[#2D3C68]/38"
-                  }
-                >
-                  {tier.season}
-                </div>
-
-                <div
-                  className={
-                    isHighlight
-                      ? "mb-1 text-[11px] tracking-[0.14em] text-[#B08D57]/80"
-                      : "mb-1 text-[11px] tracking-[0.14em] text-[#B08D57]/70"
-                  }
-                >
-                  {tier.months}
-                </div>
-
-                <div
-                  className={
-                    isHighlight
-                      ? "mt-6 mb-1 font-[Gambarino] text-[48px] leading-none tracking-[-0.02em] text-[#F4F5F2] md:text-[52px]"
-                      : "mt-6 mb-1 font-[Gambarino] text-[42px] leading-none tracking-[-0.02em] text-[#2D3C68] md:text-[46px]"
-                  }
-                >
-                  USD {prices[index].toLocaleString()}
-                </div>
-
-                <div
-                  className={
-                    isHighlight
-                      ? "mb-8 text-[12px] text-[#F4F5F2]/44"
-                      : "mb-8 text-[12px] text-[#2D3C68]/40"
-                  }
-                >
-                  {tier.note}
-                </div>
-
-                <div
-                  className={
-                    isHighlight
-                      ? "mb-8 h-[1px] bg-[#F4F5F2]/10"
-                      : "mb-8 h-[1px] bg-[#2D3C68]/8"
-                  }
-                />
-
-                <p
-                  className={
-                    isHighlight
-                      ? "text-[13px] leading-[1.75] text-[#F4F5F2]/65 md:text-[14px]"
-                      : "text-[13px] leading-[1.75] text-[#2D3C68]/55 md:text-[14px]"
-                  }
-                >
-                  {tier.context}
-                </p>
-              </motion.div>
-            );
-          })}
-
-        </div>
-
-        {/* FOOTER */}
-        <div className="mt-16 md:mt-20 md:grid md:grid-cols-12 md:items-end md:gap-8">
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
+ 
+      {/* ── Atmospheric bridge — sail-white memory dissolving in ── */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '90px',
+          background: 'linear-gradient(to bottom, rgba(244,245,242,0.05) 0%, transparent 100%)',
+        }}
+      />
+ 
+      {/* ── Atmospheric layer ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 35% 45%, rgba(255,255,255,0.03), transparent 55%)',
+        }}
+      />
+ 
+      <div
+        className="relative max-w-[1200px] mx-auto px-6 md:px-10"
+        style={{
+          paddingTop: 'clamp(88px, 11vh, 120px)',
+          paddingBottom: 'clamp(88px, 11vh, 120px)',
+        }}
+      >
+ 
+        {/* ── Header ── */}
+        <div
+          ref={headerRef}
+          style={{ marginBottom: 'clamp(48px, 7vh, 72px)' }}
+        >
+          <p
+            className="uppercase mb-5"
+            style={{
+              fontFamily: 'Switzer, sans-serif',
+              fontWeight: 300,
+              fontSize: '10px',
+              letterSpacing: '0.34em',
+              color: 'rgba(244,245,242,0.38)',
             }}
-            className="mb-10 space-y-2 md:col-span-7 md:mb-0"
           >
-            <div className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#2D3C68]/32">
-              Notes
-            </div>
-
-            {[
-              "Minimum charter: 7 nights",
-              "Rates quoted in USD. Subject to availability.",
-              "Custom itineraries and extended charters available on request.",
-              "A 30% deposit confirms your booking. Balance due 60 days prior.",
-            ].map((note) => (
+            Charter Rates
+          </p>
+ 
+          <p
+            style={{
+              fontFamily: 'Switzer, sans-serif',
+              fontWeight: 300,
+              fontSize: '15px',
+              lineHeight: 1.8,
+              color: 'rgba(244,245,242,0.58)',
+              maxWidth: '400px',
+            }}
+          >
+            Exclusive full vessel charter. Rates vary
+            by destination and season.
+          </p>
+        </div>
+ 
+        {/* ── Rate rows ── */}
+        <div>
+          {rates.map((rate, i) => (
+            <div key={rate.destination}>
+ 
+              {/* Rule */}
               <div
-                key={note}
-                className="flex items-start gap-3"
+                ref={el => rulesRef.current[i] = el}
+                style={{
+                  height: '1px',
+                  background: 'rgba(244,245,242,0.14)',
+                  width: '100%',
+                }}
+              />
+ 
+              {/* Row */}
+              <div
+                ref={el => rowsRef.current[i] = el}
+                className="flex items-center justify-between"
+                style={{ padding: 'clamp(22px, 3.2vh, 34px) 0' }}
               >
-                <span className="mt-[7px] h-[3px] w-[3px] shrink-0 rounded-full bg-[#2D3C68]/22" />
-
-                <span className="text-[13px] leading-[1.6] text-[#2D3C68]/42">
+ 
+                {/* Left — destination + season */}
+                <div>
+                  <p
+                    style={{
+                      fontFamily: 'Gambarino, serif',
+                      fontSize: 'clamp(34px, 4vw, 52px)',
+                      lineHeight: 0.95,
+                      letterSpacing: '-0.02em',
+                      color: '#F4F5F2',
+                      marginBottom: '9px',
+                    }}
+                  >
+                    {rate.destination}
+                  </p>
+                  <p
+                    className="uppercase"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '11px',
+                      letterSpacing: '0.24em',
+                      color: 'rgba(244,245,242,0.38)',
+                    }}
+                  >
+                    {rate.season}
+                  </p>
+                </div>
+ 
+                {/* Right — price */}
+                <div style={{ textAlign: 'right' }}>
+                  <p
+                    style={{
+                      fontFamily: 'Gambarino, serif',
+                      fontSize: 'clamp(34px, 4vw, 52px)',
+                      lineHeight: 0.95,
+                      letterSpacing: '-0.02em',
+                      color: '#F4F5F2',
+                      marginBottom: '9px',
+                    }}
+                  >
+                    {rate.price}
+                  </p>
+                  <p
+                    className="uppercase"
+                    style={{
+                      fontFamily: 'Switzer, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '11px',
+                      letterSpacing: '0.24em',
+                      color: 'rgba(244,245,242,0.38)',
+                    }}
+                  >
+                    per night · USD
+                  </p>
+                </div>
+ 
+              </div>
+            </div>
+          ))}
+ 
+          {/* Bottom rule */}
+          <div
+            ref={el => rulesRef.current[2] = el}
+            style={{
+              height: '1px',
+              background: 'rgba(244,245,242,0.14)',
+              width: '100%',
+            }}
+          />
+        </div>
+ 
+        {/* ── CTA + Notes ── */}
+        <div
+          ref={ctaRef}
+          className="flex flex-col md:flex-row md:items-center md:justify-between"
+          style={{
+            marginTop: 'clamp(44px, 6vh, 64px)',
+            gap: '32px',
+          }}
+        >
+ 
+          {/* Notes */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {notes.map(note => (
+              <div key={note} className="flex items-center gap-3">
+                <span
+                  style={{
+                    width: '3px',
+                    height: '3px',
+                    borderRadius: '50%',
+                    background: 'rgba(244,245,242,0.22)',
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '13px',
+                    color: 'rgba(244,245,242,0.36)',
+                  }}
+                >
                   {note}
                 </span>
               </div>
             ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.9,
-              delay: 0.16,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex flex-col items-start gap-3 md:col-span-4 md:col-start-9 md:items-end"
+          </div>
+ 
+          {/* CTA */}
+          <div
+            className="flex flex-col items-start md:items-end"
+            style={{ gap: '10px', flexShrink: 0 }}
           >
             <a
-              href="#inquiry"
-              className="inline-flex w-full items-center justify-center rounded-full bg-[#2D3C68] px-10 py-4 text-[13px] tracking-[0.04em] text-[#F4F5F2] transition-all duration-500 hover:-translate-y-[2px] hover:bg-[#24345D] active:scale-[0.97] md:w-auto"
+              href="/contact"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#F4F5F2',
+                color: '#2D3C68',
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 400,
+                fontSize: '13px',
+                letterSpacing: '0.04em',
+                padding: '14px 36px',
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                transition: 'background 500ms ease, transform 500ms ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = '#E8E9E6'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = '#F4F5F2'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
             >
-              Inquire Now
+              Begin Your Voyage
             </a>
-
-            <span className="text-center text-[12px] text-[#2D3C68]/36 md:text-right">
+            <span
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '12px',
+                color: 'rgba(244,245,242,0.30)',
+              }}
+            >
               Response within 24 hours
             </span>
-          </motion.div>
-
+          </div>
+ 
         </div>
+ 
       </div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#2D3C68]/10 to-transparent" />
+ 
+      {/* ── Sumba Ikat — titik di halaman ini ── */}
+      <div
+        className="absolute bottom-0 right-0 pointer-events-none overflow-hidden"
+        style={{ width: '220px', height: '220px' }}
+      >
+        <img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png"
+          alt=""
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: 0.05,
+            animation: 'ikatRotate 120s linear infinite',
+          }}
+        />
+      </div>
+ 
+      <style>{`
+        @keyframes ikatRotate {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+      `}</style>
+ 
+      {/* ── Exit bridge — carries darkness into Destinations ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '80px',
+          background: 'linear-gradient(to bottom, transparent, rgba(45,60,104,0.5))',
+        }}
+      />
+ 
     </section>
-  );
+  )
 }
 
 
@@ -1381,274 +1720,517 @@ function SailingCalendar() {
   );
 }
  
-  function HowItWorks() {
+function HowItWorks() {
+ 
   const steps = [
     {
-      id: "01",
-      title: "Send an Inquiry",
-      duration: "Response within 24 hours",
-      desc: "Tell us your preferred dates, group size, and any specific requests. No commitment required — just a conversation.",
+      id: '01',
+      title: 'Send an Inquiry',
+      duration: 'Response within 24 hours',
+      desc: 'Tell us your preferred dates, group size, and any specific requests. No commitment required — just a conversation.',
       primary: true,
     },
     {
-      id: "02",
-      title: "We Plan Together",
-      duration: "2–5 days",
-      desc: "We send a tailored proposal — route, itinerary, and any customisations based on your group and the season.",
+      id: '02',
+      title: 'We Plan Together',
+      duration: '2–5 days',
+      desc: 'We send a tailored proposal — route, itinerary, and any customisations based on your group and the season.',
       primary: false,
     },
     {
-      id: "03",
-      title: "Confirm with Deposit",
-      duration: "30% of charter rate",
-      desc: "A deposit secures your window. Balance is due 60 days before departure. Full refund if we cancel on our end.",
+      id: '03',
+      title: 'Confirm with Deposit',
+      duration: '30% of charter rate',
+      desc: 'A deposit secures your window. Balance is due 60 days before departure. Full refund if we cancel on our end.',
       primary: false,
     },
     {
-      id: "04",
-      title: "Board Serenity",
-      duration: "From Labuan Bajo or Sorong",
-      desc: "Arrive at the departure port. The crew handles everything from there — provisions, route, and the pace of each day.",
+      id: '04',
+      title: 'Board Serenity',
+      duration: 'From Labuan Bajo or Sorong',
+      desc: 'Arrive at the departure port. The crew handles everything from there — provisions, route, and the pace of each day.',
       primary: false,
     },
-  ];
-
+  ]
+ 
+  const sectionRef  = useRef(null)
+  const headerRef   = useRef(null)
+  const rightRef    = useRef(null)
+  const stepRefsD   = useRef([])
+  const stepRefsM   = useRef([])
+ 
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+ 
+    if (reduce) {
+      gsap.set(
+        [headerRef.current, rightRef.current,
+         ...stepRefsD.current.filter(Boolean),
+         ...stepRefsM.current.filter(Boolean)],
+        { opacity: 1, y: 0 }
+      )
+      return
+    }
+ 
+    const ctx = gsap.context(() => {
+ 
+      // Header
+      gsap.set(headerRef.current, { opacity: 0, y: 24 })
+      gsap.to(headerRef.current, {
+        opacity: 1, y: 0,
+        duration: 1.0,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 72%',
+        },
+      })
+ 
+      // Right column — image
+      gsap.set(rightRef.current, { opacity: 0, y: 40 })
+      gsap.to(rightRef.current, {
+        opacity: 1, y: 0,
+        duration: 1.2,
+        delay: 0.25,
+        ease: [0.22, 1, 0.36, 1],
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 72%',
+        },
+      })
+ 
+      // Desktop step cards
+      const dCards = stepRefsD.current.filter(Boolean)
+      if (dCards.length) {
+        gsap.set(dCards, { opacity: 0, y: 28 })
+        gsap.to(dCards, {
+          opacity: 1, y: 0,
+          duration: 0.95,
+          ease: [0.22, 1, 0.36, 1],
+          stagger: 0.09,
+          scrollTrigger: {
+            trigger: dCards[0],
+            start: 'top 80%',
+          },
+        })
+      }
+ 
+      // Mobile step cards
+      const mCards = stepRefsM.current.filter(Boolean)
+      if (mCards.length) {
+        gsap.set(mCards, { opacity: 0, y: 24 })
+        gsap.to(mCards, {
+          opacity: 1, y: 0,
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1],
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: mCards[0],
+            start: 'top 85%',
+          },
+        })
+      }
+ 
+    }, sectionRef)
+ 
+    return () => ctx.revert()
+  }, [])
+ 
   return (
-    <section className="relative bg-[#2D3C68] overflow-hidden">
-
-      {/* ================= ATMOSPHERE ================= */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute left-[-12%] top-[-8%] h-[600px] w-[600px] md:h-[800px] md:w-[800px] rounded-full bg-[#F4F5F2]/[0.025] blur-3xl" />
-        <div className="absolute bottom-[-18%] right-[-8%] h-[500px] w-[500px] md:h-[700px] md:w-[700px] rounded-full bg-[#B08D57]/[0.07] blur-3xl" />
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden"
+      style={{ backgroundColor: '#F4F5F2' }}
+    >
+ 
+      {/* ── Atmospheric bridge — dark maritime from Rates ── */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '100px',
+          background:
+            'linear-gradient(to bottom, rgba(45,60,104,0.07) 0%, transparent 100%)',
+        }}
+      />
+ 
+      {/* ── Subtle warm radial — no grid ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle at 68% 22%, rgba(176,141,87,0.05), transparent 50%)',
+        }}
+      />
+ 
+      <div
+        className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-10"
+        style={{
+          paddingTop: 'clamp(88px, 11vh, 128px)',
+          paddingBottom: 'clamp(96px, 12vh, 144px)',
+        }}
+      >
+ 
+        {/* ── Header ── */}
         <div
-          className="absolute inset-0 hidden md:block opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(244,245,242,0.06) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(244,245,242,0.06) 1px, transparent 1px)
-            `,
-            backgroundSize: "110px 110px",
-          }}
-        />
-        <div className="absolute inset-0 opacity-[0.02] mix-blend-soft-light bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:14px_14px]" />
-      </div>
-
-      {/* ================= TOP BORDER ================= */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#F4F5F2]/10 to-transparent" />
-
-      <div className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-10 py-[100px] md:py-[120px]">
-
-        {/* ================= HEADER ================= */}
-        <div className="mb-16 md:mb-20 md:grid md:grid-cols-12 md:gap-8 md:items-end">
+          ref={headerRef}
+          className="mb-16 md:mb-20 md:grid md:grid-cols-12 md:gap-8 md:items-end"
+        >
           <div className="md:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-5 text-[10px] md:text-[11px] tracking-[0.34em] text-[#F4F5F2]/36 uppercase"
+            <p
+              className="uppercase mb-5"
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '10px',
+                letterSpacing: '0.34em',
+                color: 'rgba(45,60,104,0.40)',
+              }}
             >
               How It Works
-            </motion.div>
-
-            <motion.h2
-              initial={{ opacity: 0, y: 36, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className="font-[Gambarino] text-[42px] md:text-[56px] lg:text-[64px] leading-[1.0] tracking-[-0.03em] text-[#F4F5F2]"
+            </p>
+ 
+            <h2
+              style={{
+                fontFamily: 'Gambarino, serif',
+                fontSize: 'clamp(40px, 5vw, 64px)',
+                lineHeight: 1.0,
+                letterSpacing: '-0.03em',
+                color: '#2D3C68',
+              }}
             >
-              Four steps
-              <br />
-              from here
-              <br />
-              to the sea.
-            </motion.h2>
+              Four steps<br />from here<br />to the sea.
+            </h2>
           </div>
-
+ 
           <div className="md:col-span-5 md:col-start-8 mt-8 md:mt-0">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.1, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[14px] md:text-[15px] leading-[1.85] text-[#F4F5F2]/52 max-w-[380px]"
+            <p
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '15px',
+                lineHeight: 1.85,
+                color: 'rgba(45,60,104,0.58)',
+                maxWidth: '380px',
+              }}
             >
               The booking process is straightforward. One conversation is
               enough to get started — the crew handles the rest once you
               step on board.
-            </motion.p>
+            </p>
           </div>
         </div>
-
-        {/* ================= STEPS + IMAGE ================= */}
+ 
+        {/* ── Steps + Image ── */}
         <div className="md:grid md:grid-cols-12 md:gap-8 md:items-start">
-
-          {/* STEPS — left 7 cols */}
+ 
+          {/* Steps — left 7 cols */}
           <div className="md:col-span-7">
-
-            {/* MOBILE: vertical stack with left border */}
-            {/* DESKTOP: 2x2 grid */}
-            <div className="relative">
-
-              {/* DESKTOP GRID */}
-              <div className="hidden md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-0">
-                {steps.map((step, i) => (
-                  <StepCard key={step.id} step={step} index={i} />
-                ))}
-              </div>
-
-              {/* MOBILE STACK */}
-              <div className="md:hidden flex flex-col">
-                {steps.map((step, i) => (
-                  <StepCardMobile key={step.id} step={step} index={i} last={i === steps.length - 1} />
-                ))}
-              </div>
-
+ 
+            {/* Desktop: 2x2 grid */}
+            <div className="hidden md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-0">
+              {steps.map((step, i) => (
+                <StepCard
+                  key={step.id}
+                  stepRef={el => stepRefsD.current[i] = el}
+                  step={step}
+                  index={i}
+                />
+              ))}
             </div>
+ 
+            {/* Mobile: vertical timeline */}
+            <div className="md:hidden flex flex-col">
+              {steps.map((step, i) => (
+                <StepCardMobile
+                  key={step.id}
+                  stepRef={el => stepRefsM.current[i] = el}
+                  step={step}
+                  index={i}
+                  last={i === steps.length - 1}
+                />
+              ))}
+            </div>
+ 
           </div>
-
-          {/* IMAGE — right 4 cols, offset up */}
-          <div className="md:col-span-4 md:col-start-9 mt-14 md:mt-0 md:-translate-y-[48px]">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative"
-            >
-              <div className="relative w-full aspect-[4/5] overflow-hidden">
+ 
+          {/* Image — right 4 cols, offset up desktop only */}
+          <div
+            ref={rightRef}
+            className="md:col-span-4 md:col-start-9 mt-14 md:mt-0 md:-translate-y-[48px]"
+          >
+            <div className="relative">
+ 
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ aspectRatio: '4 / 5' }}
+              >
                 <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776870966/ChatGPT_Image_Apr_22_2026_10_15_17_PM_1_clrjp0.png"
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png"
                   alt="Serenity crew preparing the deck before departure"
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-[#2D3C68]/20" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/60 via-transparent to-transparent" />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: 'rgba(45,60,104,0.12)' }}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      'linear-gradient(to top, rgba(45,60,104,0.45) 0%, transparent 50%)',
+                  }}
+                />
               </div>
-
-              {/* CAPTION CHIP */}
-              <motion.div
-                initial={{ opacity: 0, x: -16 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute -bottom-5 -right-4 md:-right-6 bg-[#F4F5F2] px-5 py-3"
+ 
+              {/* Caption chip — dark bg on light section */}
+              <div
+                className="absolute"
+                style={{
+                  bottom: '-20px',
+                  right: '-20px',
+                  background: '#2D3C68',
+                  padding: '12px 20px',
+                }}
               >
-                <div className="text-[10px] tracking-[0.22em] text-[#2D3C68]/40 uppercase mb-[2px]">
+                <p
+                  className="uppercase"
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '10px',
+                    letterSpacing: '0.22em',
+                    color: 'rgba(244,245,242,0.50)',
+                    marginBottom: '2px',
+                  }}
+                >
                   Crew
-                </div>
-                <div className="text-[13px] tracking-[0.04em] text-[#2D3C68]">
+                </p>
+                <p
+                  style={{
+                    fontFamily: 'Switzer, sans-serif',
+                    fontSize: '13px',
+                    letterSpacing: '0.04em',
+                    color: '#F4F5F2',
+                  }}
+                >
                   Ready when you are
-                </div>
-              </motion.div>
-            </motion.div>
+                </p>
+              </div>
+ 
+            </div>
           </div>
-
+ 
         </div>
-
+ 
       </div>
-
-      {/* ================= BOTTOM BORDER ================= */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#F4F5F2]/10 to-transparent" />
-
+ 
+      {/* ── Exit bridge ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '60px',
+          background:
+            'linear-gradient(to bottom, transparent, rgba(45,60,104,0.03))',
+        }}
+      />
+ 
     </section>
-  );
+  )
 }
 
-function StepCard({ step, index }) {
-  const isEvenRow = Math.floor(index / 2) % 2 === 0;
 
+function StepCard({ stepRef, step, index }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.95,
-        delay: index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
+    <div
+      ref={stepRef}
+      className={index % 2 === 0 ? 'pr-8' : 'pl-8'}
+      style={{
+        position: 'relative',
+        paddingTop: '28px',
+        paddingBottom: '40px',
+        borderTop: '1px solid rgba(45,60,104,0.10)',
+        borderRight: index % 2 === 0
+          ? '1px solid rgba(45,60,104,0.06)'
+          : 'none',
       }}
-      className={`
-        relative border-t border-[#F4F5F2]/10 pt-7 pb-10
-        ${index % 2 === 0 ? "pr-8 border-r border-r-[#F4F5F2]/6" : "pl-8"}
-      `}
     >
-      {/* BACKDROP NUMBER */}
-      <div className="absolute right-3 top-2 font-[Gambarino] text-[100px] leading-none tracking-[-0.06em] text-[#F4F5F2]/[0.04] pointer-events-none select-none">
+      {/* Ghost number */}
+      <div
+        className="pointer-events-none select-none absolute right-3 top-2"
+        style={{
+          fontFamily: 'Gambarino, serif',
+          fontSize: '100px',
+          lineHeight: 1,
+          letterSpacing: '-0.06em',
+          color: 'rgba(45,60,104,0.04)',
+        }}
+      >
         {step.id}
       </div>
-
+ 
       {/* ID */}
-      <div className="mb-4 text-[10px] tracking-[0.28em] text-[#B08D57]/60 uppercase">
+      <p
+        className="uppercase"
+        style={{
+          fontFamily: 'Switzer, sans-serif',
+          fontWeight: 300,
+          fontSize: '10px',
+          letterSpacing: '0.28em',
+          color: 'rgba(176,141,87,0.75)',
+          marginBottom: '14px',
+        }}
+      >
         {step.id}
-      </div>
-
-      {/* TITLE */}
-      <div className={`font-[Gambarino] leading-[1.1] tracking-[-0.02em] text-[#F4F5F2] mb-3 ${step.primary ? "text-[24px] md:text-[26px]" : "text-[20px] md:text-[22px]"}`}>
+      </p>
+ 
+      {/* Title */}
+      <p
+        style={{
+          fontFamily: 'Gambarino, serif',
+          fontSize: step.primary ? '26px' : '22px',
+          lineHeight: 1.1,
+          letterSpacing: '-0.02em',
+          color: '#2D3C68',
+          marginBottom: '10px',
+        }}
+      >
         {step.title}
-      </div>
-
-      {/* DURATION */}
-      <div className="text-[11px] tracking-[0.16em] text-[#B08D57]/65 mb-4 uppercase">
+      </p>
+ 
+      {/* Duration */}
+      <p
+        className="uppercase"
+        style={{
+          fontFamily: 'Switzer, sans-serif',
+          fontWeight: 300,
+          fontSize: '11px',
+          letterSpacing: '0.16em',
+          color: 'rgba(176,141,87,0.75)',
+          marginBottom: '14px',
+        }}
+      >
         {step.duration}
-      </div>
-
-      {/* DESC */}
-      <p className="text-[13px] md:text-[14px] leading-[1.75] text-[#F4F5F2]/50">
+      </p>
+ 
+      {/* Description */}
+      <p
+        style={{
+          fontFamily: 'Switzer, sans-serif',
+          fontWeight: 300,
+          fontSize: '13px',
+          lineHeight: 1.75,
+          color: 'rgba(45,60,104,0.55)',
+        }}
+      >
         {step.desc}
       </p>
-    </motion.div>
-  );
+    </div>
+  )
 }
-
-function StepCardMobile({ step, index, last }) {
+ 
+function StepCardMobile({ stepRef, step, index, last }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.9,
-        delay: index * 0.08,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="relative flex gap-5"
-    >
-      {/* LEFT — connector line */}
+    <div ref={stepRef} className="relative flex gap-5">
+ 
+      {/* Connector line + dot */}
       <div className="flex flex-col items-center shrink-0 w-8">
-        <div className="w-[1px] h-5 bg-transparent" />
-        <div className="h-[6px] w-[6px] rounded-full bg-[#B08D57]/60 shrink-0 mt-[14px]" />
+        <div style={{ width: '1px', height: '20px', background: 'transparent' }} />
+        <div
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: 'rgba(176,141,87,0.70)',
+            flexShrink: 0,
+            marginTop: '14px',
+          }}
+        />
         {!last && (
-          <div className="flex-1 w-[1px] bg-[#F4F5F2]/10 mt-2" />
+          <div
+            style={{
+              flex: 1,
+              width: '1px',
+              background: 'rgba(45,60,104,0.10)',
+              marginTop: '8px',
+            }}
+          />
         )}
       </div>
-
-      {/* RIGHT — content */}
-      <div className="relative pb-10 flex-1 min-w-0">
-        <div className="absolute right-0 top-0 font-[Gambarino] text-[80px] leading-none tracking-[-0.06em] text-[#F4F5F2]/[0.04] pointer-events-none select-none">
+ 
+      {/* Content */}
+      <div className="relative flex-1 min-w-0" style={{ paddingBottom: '40px' }}>
+ 
+        {/* Ghost number */}
+        <div
+          className="pointer-events-none select-none absolute right-0 top-0"
+          style={{
+            fontFamily: 'Gambarino, serif',
+            fontSize: '80px',
+            lineHeight: 1,
+            letterSpacing: '-0.06em',
+            color: 'rgba(45,60,104,0.04)',
+          }}
+        >
           {step.id}
         </div>
-
-        <div className="mb-3 text-[10px] tracking-[0.28em] text-[#B08D57]/60 uppercase pt-[10px]">
+ 
+        <p
+          className="uppercase"
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontWeight: 300,
+            fontSize: '10px',
+            letterSpacing: '0.28em',
+            color: 'rgba(176,141,87,0.70)',
+            paddingTop: '10px',
+            marginBottom: '10px',
+          }}
+        >
           {step.id}
-        </div>
-
-        <div className={`font-[Gambarino] leading-[1.1] tracking-[-0.02em] text-[#F4F5F2] mb-2 ${step.primary ? "text-[22px]" : "text-[19px]"}`}>
+        </p>
+ 
+        <p
+          style={{
+            fontFamily: 'Gambarino, serif',
+            fontSize: step.primary ? '22px' : '19px',
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+            color: '#2D3C68',
+            marginBottom: '8px',
+          }}
+        >
           {step.title}
-        </div>
-
-        <div className="text-[11px] tracking-[0.14em] text-[#B08D57]/65 mb-3 uppercase">
+        </p>
+ 
+        <p
+          className="uppercase"
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontWeight: 300,
+            fontSize: '11px',
+            letterSpacing: '0.14em',
+            color: 'rgba(176,141,87,0.75)',
+            marginBottom: '10px',
+          }}
+        >
           {step.duration}
-        </div>
-
-        <p className="text-[13px] leading-[1.75] text-[#F4F5F2]/50">
+        </p>
+ 
+        <p
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontWeight: 300,
+            fontSize: '13px',
+            lineHeight: 1.75,
+            color: 'rgba(45,60,104,0.55)',
+          }}
+        >
           {step.desc}
         </p>
       </div>
-    </motion.div>
-  );
+    </div>
+  )
 }
 
 
@@ -2181,76 +2763,274 @@ function SampleJourney() {
 }
 
 function FinalCTA() {
+ 
+  const sectionRef   = useRef(null)
+  const eyebrowRef   = useRef(null)
+  const headlineRef  = useRef(null)
+  const ruleRef      = useRef(null)
+  const actionRef    = useRef(null)
+ 
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+ 
+    if (reduce) {
+      gsap.set(
+        [eyebrowRef.current, headlineRef.current, actionRef.current],
+        { opacity: 1, y: 0, filter: 'blur(0px)' }
+      )
+      gsap.set(ruleRef.current, { scaleX: 1 })
+      return
+    }
+ 
+    const ctx = gsap.context(() => {
+ 
+      gsap.set(eyebrowRef.current, { opacity: 0, y: 16 })
+      gsap.set(headlineRef.current, { opacity: 0, y: 40, filter: 'blur(8px)' })
+      gsap.set(ruleRef.current, { scaleX: 0, transformOrigin: 'left center' })
+      gsap.set(actionRef.current, { opacity: 0, y: 20 })
+ 
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 72%',
+        },
+      })
+ 
+      tl
+        .to(eyebrowRef.current, {
+          opacity: 1, y: 0,
+          duration: 0.8,
+          ease: [0.22, 1, 0.36, 1],
+        })
+        .to(headlineRef.current, {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 1.4,
+          ease: [0.22, 1, 0.36, 1],
+        }, '-=0.4')
+        .to(ruleRef.current, {
+          scaleX: 1,
+          duration: 1.0,
+          ease: 'power2.out',
+        }, '-=0.5')
+        .to(actionRef.current, {
+          opacity: 1, y: 0,
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1],
+        }, '-=0.5')
+ 
+    }, sectionRef)
+ 
+    return () => ctx.revert()
+  }, [])
+ 
   return (
-    <section className="relative w-full h-[80vh] min-h-[640px] flex items-center overflow-hidden text-white">
-
-      {/* ================= BACKGROUND (HUMAN — CONTINUITY) ================= */}
-      <div className="absolute inset-0">
-        <motion.img
-          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776176462/people_relaxing_phinisi_sunset_softlight_h8k2dj.png"
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden"
+      style={{ backgroundColor: '#2D3C68' }}
+    >
+ 
+      {/* ── Atmospheric bridge from sail-white ── */}
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: '100px',
+          background:
+            'linear-gradient(to bottom, rgba(244,245,242,0.06) 0%, transparent 100%)',
+        }}
+      />
+ 
+      {/* ── Atmospheric layer ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle at 25% 55%, rgba(255,255,255,0.03), transparent 55%)',
+        }}
+      />
+ 
+      <div
+        className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-10"
+        style={{
+          paddingTop: 'clamp(96px, 12vh, 140px)',
+          paddingBottom: 'clamp(96px, 12vh, 140px)',
+        }}
+      >
+ 
+        {/* Eyebrow */}
+        <p
+          ref={eyebrowRef}
+          className="uppercase"
+          style={{
+            fontFamily: 'Switzer, sans-serif',
+            fontWeight: 300,
+            fontSize: '10px',
+            letterSpacing: '0.34em',
+            color: 'rgba(244,245,242,0.36)',
+            marginBottom: '32px',
+          }}
+        >
+          Make a Reservation
+        </p>
+ 
+        {/* Headline — full width, large */}
+        <h2
+          ref={headlineRef}
+          style={{
+            fontFamily: 'Gambarino, serif',
+            fontSize: 'clamp(52px, 7.5vw, 96px)',
+            lineHeight: 0.96,
+            letterSpacing: '-0.04em',
+            color: '#F4F5F2',
+            marginBottom: 'clamp(40px, 6vh, 64px)',
+            maxWidth: '900px',
+          }}
+        >
+          Your voyage begins<br />
+          with a conversation.
+        </h2>
+ 
+        {/* Brass rule */}
+        <div
+          ref={ruleRef}
+          style={{
+            height: '1px',
+            background:
+              'linear-gradient(to right, rgba(176,141,87,0.6), rgba(176,141,87,0.15))',
+            width: '100%',
+            marginBottom: 'clamp(32px, 5vh, 48px)',
+          }}
+        />
+ 
+        {/* Action row — contact left, CTA right */}
+        <div
+          ref={actionRef}
+          className="flex flex-col md:flex-row md:items-center md:justify-between"
+          style={{ gap: '32px' }}
+        >
+ 
+          {/* Contact */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <p
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 400,
+                fontSize: '14px',
+                color: 'rgba(244,245,242,0.80)',
+              }}
+            >
+              Alexandra Wira
+            </p>
+            <p
+              className="uppercase"
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '10px',
+                letterSpacing: '0.22em',
+                color: 'rgba(244,245,242,0.36)',
+                marginBottom: '8px',
+              }}
+            >
+              Guest Experience
+            </p>
+            <a
+              href="mailto:hello@serenityphinisi.com"
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '14px',
+                color: 'rgba(244,245,242,0.55)',
+                textDecoration: 'none',
+                transition: 'color 300ms ease',
+              }}
+              onMouseEnter={e =>
+                e.currentTarget.style.color = 'rgba(244,245,242,0.90)'
+              }
+              onMouseLeave={e =>
+                e.currentTarget.style.color = 'rgba(244,245,242,0.55)'
+              }
+            >
+              hello@serenityphinisi.com
+            </a>
+          </div>
+ 
+          {/* CTA */}
+          <div
+            className="flex flex-col items-start md:items-end"
+            style={{ gap: '10px', flexShrink: 0 }}
+          >
+            <a
+              href="/contact"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#F4F5F2',
+                color: '#2D3C68',
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 400,
+                fontSize: '13px',
+                letterSpacing: '0.04em',
+                padding: '14px 40px',
+                borderRadius: '9999px',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                transition: 'background 500ms ease, transform 500ms ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = '#E8E9E6'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = '#F4F5F2'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
+              Begin Your Voyage
+            </a>
+ 
+            <span
+              style={{
+                fontFamily: 'Switzer, sans-serif',
+                fontWeight: 300,
+                fontSize: '12px',
+                color: 'rgba(244,245,242,0.26)',
+              }}
+            >
+              Response within 24 hours
+            </span>
+          </div>
+ 
+        </div>
+ 
+      </div>
+ 
+      {/* ── Sumba Ikat ── */}
+      <div
+        className="absolute bottom-0 right-0 pointer-events-none overflow-hidden"
+        style={{ width: '240px', height: '240px' }}
+      >
+        <img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png"
           alt=""
-          className="w-full h-full object-cover scale-[1.05]"
-          initial={{ scale: 1.08 }}
-          animate={{ scale: 1.05 }}
-          transition={{ duration: 6 }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: 0.05,
+            animation: 'ikatSpin 120s linear infinite',
+          }}
         />
       </div>
-
-      {/* ================= OVERLAY ================= */}
-      <div className="absolute inset-0 bg-[#2D3C68]/75" />
-
-      {/* ================= CONTENT ================= */}
-      <div className="relative z-10 w-full px-6">
-
-        <div className="max-w-[1200px] mx-auto">
-
-          {/* slight offset (no perfect symmetry) */}
-          <div className="max-w-[520px] md:ml-[40px]">
-
-            {/* HEADLINE */}
-            <motion.h2
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-[Gambarino] text-[48px] md:text-[64px] leading-[1.05]"
-            >
-              Start with a few details
-            </motion.h2>
-
-            {/* SUBCOPY */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mt-6 text-[16px] text-white/80 leading-relaxed"
-            >
-              Tell us when you want to go and who you’re traveling with.
-              We’ll take care of the rest and shape the trip around you.
-            </motion.p>
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-10 flex items-center gap-6"
-            >
-              <button className="px-8 py-3 rounded-full bg-white text-[#2D3C68] text-[14px] font-medium hover:bg-[#F4F5F2] transition">
-                Check availability
-              </button>
-
-              {/* MICRO TRUST */}
-              <span className="text-[13px] text-white/60">
-                No commitment
-              </span>
-            </motion.div>
-
-          </div>
-
-        </div>
-
-      </div>
-
+ 
+      <style>{`
+        @keyframes ikatSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+      `}</style>
+ 
     </section>
   )
 }

@@ -378,14 +378,14 @@ function OurStory() {
 
 function PhinisiHistory() {
   const IKAT_URL =
-  'https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png'
+    'https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png'
 
   return (
     <section
       className="relative overflow-hidden"
       style={{ background: '#2D3C68' }}
     >
-      {/* ── Sumba Ikat — rotating ambient texture ── */}
+      {/* ── Sumba Ikat ── */}
       <style>{`
         @keyframes ikatRotate {
           from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -432,75 +432,40 @@ function PhinisiHistory() {
         }}
       />
 
-      {/* ── Layout ── */}
-      <div className="relative">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 lg:px-14 py-24 md:py-32">
 
-        {/* Desktop image */}
-        <div
-          className="hidden lg:flex absolute left-0 top-0 bottom-0 items-center"
-          style={{ width: '42%' }}
-        >
+        <div className="grid grid-cols-1 lg:grid-cols-[47fr_53fr] gap-6 lg:gap-14 items-stretch">
+
+          {/* ── Left — image dengan headline overlay ── */}
           <div
-            className="w-full"
+            className="relative overflow-hidden"
             style={{
-              paddingLeft: '48px',
-              paddingTop: '48px',
-              paddingBottom: '48px',
+              borderRadius: '2px',
+              minHeight: '420px',
             }}
           >
+            <img
+              src="https://res.cloudinary.com/dombq6plz/image/upload/v1778534689/ChatGPT_Image_May_12_2026_04_15_19_AM_h2oc4i.png"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              draggable={false}
+            />
+
+            {/* Gradient untuk text readability */}
             <div
-              className="relative overflow-hidden"
+              className="absolute inset-0"
               style={{
-                background: 'rgba(244,245,242,0.05)',
-                padding: '18px',
+                background:
+                  'linear-gradient(to top, rgba(22,30,56,0.95) 0%, rgba(22,30,56,0.5) 40%, transparent 70%)',
               }}
-            >
-              <div
-                className="relative overflow-hidden"
-                style={{
-                  aspectRatio: '0.82 / 1',
-                }}
-              >
-                <img
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1778534689/ChatGPT_Image_May_12_2026_04_15_19_AM_h2oc4i.png"
-                  alt=""
-                  className="w-full h-full object-cover"
-                  draggable={false}
-                />
-
-                {/* Overlay supaya image blend ke bg section */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      'linear-gradient(to right, transparent 58%, rgba(45,60,104,0.55) 100%)',
-                  }}
-                />
-              </div>
-            </div>
+            />
+ 
           </div>
-        </div>
 
-        {/* Mobile image — full width, fixed height */}
-        <div
-          className="block lg:hidden w-full overflow-hidden"
-          style={{ height: '260px' }}
-        >
-          <img
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1775031030/ChatGPT_Image_Apr_1_2026_03_07_15_PM_otnwp1.png"
-            alt=""
-            className="w-full h-full object-cover"
-            draggable={false}
-          />
-        </div>
+          {/* ── Right — body + UNESCO + coda ── */}
+          <div className="flex flex-col justify-center gap-8 lg:py-4">
 
-        {/* Text — pushed kanan, clear dari image */}
-        <div className="max-w-[1280px] mx-auto px-6 md:px-10 lg:px-14 py-24 md:py-28">
-          <div className="lg:ml-[46%]">
-
-            {/* Body */}
             <p
-              className="mb-8"
               style={{
                 fontFamily: 'Switzer, sans-serif',
                 fontWeight: 300,
@@ -509,17 +474,17 @@ function PhinisiHistory() {
                 color: 'rgba(244,245,242,0.72)',
               }}
             >
-              The phinisi originates from Tanah Beru and Bira, South Sulawesi —
-              built by the Konjo-speaking shipbuilders of Ara and long sailed by
-              Bugis and Makassar seafarers across the archipelago. Each vessel is
-              constructed entirely by hand, using techniques passed down through
-              generations of people who learned the sea before they learned
-              anything else.
+              The phinisi originates from Tanah Beru and Bira, South
+              Sulawesi — built by the Konjo-speaking shipbuilders of Ara
+              and long sailed by Bugis and Makassar seafarers across the
+              archipelago. Each vessel is constructed entirely by hand,
+              using techniques passed down through generations of people
+              who learned the sea before they learned anything else.
             </p>
 
             {/* UNESCO callout */}
             <div
-              className="mb-8 pl-5"
+              className="pl-5"
               style={{ borderLeft: '2px solid #B08D57' }}
             >
               <p
@@ -544,15 +509,16 @@ function PhinisiHistory() {
                   color: 'rgba(244,245,242,0.60)',
                 }}
               >
-                The art of phinisi boatbuilding was recognized as part of the
-                Intangible Cultural Heritage of Humanity — a reflection of its
-                enduring craftsmanship and cultural significance.
+                The art of phinisi boatbuilding was recognized as part of
+                the Intangible Cultural Heritage of Humanity — a
+                reflection of its enduring craftsmanship and cultural
+                significance.
               </p>
             </div>
 
             {/* Divider */}
             <div
-              className="mb-8 w-full h-px"
+              className="w-full h-px"
               style={{ background: 'rgba(244,245,242,0.08)' }}
             />
 
@@ -563,13 +529,14 @@ function PhinisiHistory() {
                 fontWeight: 300,
                 fontSize: '14px',
                 lineHeight: '1.85',
-                color: 'rgba(244,245,242,0.60)',
+                color: 'rgba(244,245,242,0.50)',
               }}
             >
-              Serenity was built on the same coastline, by the same hands, in
-              2025. Ironwood and teak. No fiberglass, no aluminum. The Sumba
-              Ikat woven into her interior is not decoration — it is a
-              deliberate acknowledgment that craft and culture belong together.
+              Serenity was built on the same coastline, by the same
+              hands, in 2025. Ironwood and teak. No fiberglass, no
+              aluminum. The Sumba Ikat woven into her interior is not
+              decoration — it is a deliberate acknowledgment that craft
+              and culture belong together.
             </p>
 
           </div>
@@ -646,7 +613,7 @@ function TheCrew() {
             }}
           >
             They know every<br />
-            current by name.
+            current by name
           </h2>
  
           {/* Right — body + stat */}
@@ -2249,7 +2216,7 @@ function WhatMakesItDifferent() {
   const imageRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const ctx = gsap.context(() => { 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,

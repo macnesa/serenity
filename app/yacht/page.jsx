@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "../../lib/gsap"
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 import Footer from '../../components/Footer'
 
@@ -14,6 +14,7 @@ export default function Page() {
       <Hero /> 
       {/* <About/> */}
       <Experience/>
+      {/* <YachtBreaking/> */}
       {/* <Identity/> */}
       {/* <Spaces/> */}
       <Cabins/>
@@ -29,90 +30,266 @@ export default function Page() {
 
 
 function Hero() {
-  const [scale, setScale] = useState(1.05);
-
+  const sectionRef = useRef(null)
+  const bgRef      = useRef(null)
+  const contentRef = useRef(null)
+  const slabRef    = useRef(null)
+  const EASE = [0.22, 1, 0.36, 1]
+ 
+  const shouldReduceMotion = useReducedMotion()
+ 
   useEffect(() => {
-    const t = setTimeout(() => setScale(1.0), 100);
-    return () => clearTimeout(t);
-  }, []);
-
+    if (!sectionRef.current || shouldReduceMotion) return
+ 
+    const ctx = gsap.context(() => {
+ 
+      // ── BG parallax ─────────────────────────────────────────────
+      // scrub 1.2, y 18%, scale ramps 1.06 → 1.08 to prevent edge gaps
+      gsap.to(bgRef.current, {
+        y: '18%',
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      })
+ 
+      // ── Content drift ────────────────────────────────────────────
+      gsap.to(contentRef.current, {
+        y: '6%',
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '42% top',
+          scrub: 0.8,
+        },
+      })
+ 
+      // ── Slab rise ────────────────────────────────────────────────
+      // GSAP only — no FM on this element to avoid conflict.
+      // gsap.set establishes initial state before first paint reveal.
+      gsap.set(slabRef.current, { y: 56, opacity: 0 })
+      gsap.to(slabRef.current, {
+        y: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: slabRef.current,
+          start: 'top 92%',
+          toggleActions: 'play none none none',
+        },
+      })
+ 
+    }, sectionRef)
+ 
+    return () => ctx.revert()
+  }, [shouldReduceMotion])
+ 
+  // ── FM entrance helper — hero content only ───────────────────────
+  const fm = (delay = 0) => ({
+    initial: shouldReduceMotion
+      ? false
+      : { opacity: 0, y: 24, filter: 'blur(6px)' },
+    animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+    transition: { duration: 1.2, delay, ease: EASE },
+  })
+ 
   return (
-    <section className="relative w-full bg-[#F4F5F2] overflow-hidden">
-
-      {/* ================= HERO (UPPER LAYER) ================= */}
-      <div className="relative min-h-[92vh] w-full overflow-hidden bg-[#2D3C68]">
-
-        {/* BG */}
-        <div className="absolute inset-0">
+    <section
+      ref={sectionRef}
+      className="relative w-full overflow-hidden bg-[#F4F5F2]"
+    >
+ 
+      {/* ════════════════════════════════════════
+          HERO
+      ════════════════════════════════════════ */}
+      <div className="relative h-screen min-h-[760px] overflow-hidden bg-[#2D3C68]">
+ 
+        {/* BG image */}
+        <div
+          ref={bgRef}
+          className="absolute inset-0 scale-[1.06] will-change-transform"
+          style={{ transformOrigin: 'center top' }}
+        >
           <img
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776870966/ChatGPT_Image_Apr_22_2026_10_15_17_PM_1_clrjp0.png"
-            alt="Serenity yacht"
-            className="w-full h-full object-cover transition-transform duration-[4000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-            style={{ transform: `scale(${scale})` }}
+            src="https://res.cloudinary.com/dombq6plz/image/upload/v1778592432/ChatGPT_Image_May_12_2026_08_24_49_PM_1_tlgo8z.png"
+            alt="Serenity phinisi at sea"
+            className="h-full w-full object-cover"
           />
         </div>
-
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#2D3C68]/40 via-[#2D3C68]/55 to-[#2D3C68]/85" />
-
-        {/* CONTENT (TRUE CENTER) */}
-        <div className="relative z-10 flex items-center justify-center min-h-[92vh] text-center px-6">
-          <div className="max-w-[720px]">
-
-            <div className="mb-6 text-[11px] tracking-[0.32em] text-[#F4F5F2]/60">
-              THE YACHT
-            </div>
-
-            <h1 className="font-[Gambarino] text-[46px] md:text-[68px] leading-[1.06] tracking-[-0.03em] text-[#F4F5F2]">
-              Traditional Phinisi
-              <br />
-              Elegance
+ 
+        {/* ── Atmospheric layers ── */}
+        <div className="absolute inset-0 bg-[#2D3C68]/18" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(45,60,104,0.62) 0%, rgba(45,60,104,0.18) 34%, transparent 78%)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 35% 45%, rgba(255,255,255,0.04), transparent 56%)',
+          }}
+        />
+ 
+        {/* ── Content ── */}
+        <div
+          ref={contentRef}
+          className="relative z-10 flex h-full items-center justify-center px-6 text-center will-change-transform md:px-10 lg:px-14"
+        >
+          <div className="max-w-[620px]">
+ 
+            <motion.div
+              {...fm(0)}
+              className="mb-6 text-[11px] uppercase tracking-[0.32em] text-[#F4F5F2]/58"
+            >
+              The Yacht
+            </motion.div>
+ 
+            <h1 className="font-[Gambarino] text-[48px] leading-[0.98] tracking-[-0.04em] text-[#F4F5F2] md:text-[76px]">
+              <motion.span {...fm(0.14)} className="block">
+                Built by hand
+              </motion.span>
+              <motion.span {...fm(0.26)} className="block opacity-[0.96]">
+                in South Sulawesi
+              </motion.span>
             </h1>
-
-            <p className="mt-6 text-[15px] text-[#F4F5F2]/75 max-w-[520px] mx-auto leading-[1.7]">
-              Not designed as a vessel alone, but as a space where movement,
-              rest, and shared time naturally find their place.
-            </p>
-
+ 
+            <motion.p
+              {...fm(0.40)}
+              className="mx-auto mt-7 max-w-[430px] text-[14px] leading-[1.82] text-[#F4F5F2]/66 md:text-[15px]"
+            >
+              A contemporary phinisi designed for twelve guests —
+              open decks, quiet cabins, and days that move with the sea.
+            </motion.p>
+ 
+          </div>
+        </div>
+ 
+        {/* Exit bridge — hero bleeds into slab */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[220px] pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(244,245,242,0.06) 42%, rgba(244,245,242,0.94) 100%)',
+          }}
+        />
+      </div>
+ 
+      {/* ════════════════════════════════════════
+          STRUCTURAL SLAB
+          Kept from ChatGPT: ghost number, brass top edge,
+          asymmetric grid, mini stats row.
+          Fixed: animation conflict removed (GSAP only),
+          Teak/Ironwood stat corrected, copy tightened,
+          initial opacity handled via gsap.set.
+      ════════════════════════════════════════ */}
+      <div className="relative z-20 -mt-[110px] px-6 pb-24 md:px-10 md:pb-32 lg:px-14">
+ 
+        {/* slabRef — GSAP only, no FM props */}
+        <div
+          ref={slabRef}
+          className={`
+            relative mx-auto max-w-[1180px]
+            overflow-hidden
+            border border-[#2D3C68]/8
+            bg-[#F4F5F2]/96
+            backdrop-blur-[10px]
+            shadow-[0_24px_60px_rgba(20,30,50,0.08)]
+            ${shouldReduceMotion ? '' : 'opacity-0'}
+          `}
+        >
+          {/* Brass top edge — gradient fade in/out */}
+          <div className="absolute left-0 top-0 h-[1px] w-full bg-gradient-to-r from-[#B08D57]/0 via-[#B08D57]/40 to-[#B08D57]/0" />
+ 
+          <div className="grid md:grid-cols-[1.1fr_0.9fr]">
+ 
+            {/* ── LEFT: headline numbers ── */}
+            <div className="relative px-8 py-10 md:px-14 md:py-14">
+ 
+              {/* Ghost number — tension/depth layer */}
+              <div className="pointer-events-none absolute right-4 top-2 select-none font-[Gambarino] text-[120px] leading-none tracking-[-0.06em] text-[#2D3C68]/[0.03] md:text-[180px]">
+                40
+              </div>
+ 
+              <div className="relative z-[2]">
+                <div className="mb-8 h-[1px] w-8 bg-[#B08D57]/60" />
+ 
+                <h2 className="font-[Gambarino] text-[34px] leading-[1.12] tracking-[-0.03em] text-[#2D3C68] md:text-[46px]">
+                  40.75 meters
+                  <br />
+                  Four cabins
+                  <br />
+                  Twelve guests.
+                </h2>
+              </div>
+            </div>
+ 
+            {/* ── RIGHT: origin + stats ── */}
+            <div className="border-t border-[#2D3C68]/8 px-8 py-10 md:border-l md:border-t-0 md:px-14 md:py-14">
+              <div className="flex h-full flex-col justify-between">
+ 
+                {/* Body copy — concrete, passes tone filter */}
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.34em] text-[#2D3C68]/38 mb-4">
+                    Tanah Beru & Bira · South Sulawesi
+                  </p>
+                  <p className="max-w-[380px] text-[14px] leading-[1.9] text-[#2D3C68]/64 md:text-[15px]">
+                    Ironwood hull. Teak deck. Brass fittings throughout.
+                    Not a conversion — built from the ground up.
+                  </p>
+                </div>
+ 
+                {/* Mini stats — fixed: Teak/Ironwood confusion resolved */}
+                <div className="mt-10 flex flex-wrap gap-x-8 gap-y-5 border-t border-[#2D3C68]/8 pt-6">
+ 
+                  <div>
+                    <div className="font-[Gambarino] text-[28px] leading-none tracking-[-0.03em] text-[#2D3C68]">
+                      10
+                    </div>
+                    <div className="mt-2 text-[10px] uppercase tracking-[0.24em] text-[#2D3C68]/44">
+                      Crew
+                    </div>
+                  </div>
+ 
+                  <div>
+                    <div className="font-[Gambarino] text-[28px] leading-none tracking-[-0.03em] text-[#2D3C68]">
+                      2025
+                    </div>
+                    <div className="mt-2 text-[10px] uppercase tracking-[0.24em] text-[#2D3C68]/44">
+                      Built
+                    </div>
+                  </div>
+ 
+                  {/* Fixed: was "Teak / Ironwood" — now material pair as value, Hull & Deck as label */}
+                  <div>
+                    <div className="font-[Gambarino] text-[22px] leading-none tracking-[-0.02em] text-[#2D3C68]">
+                      Ironwood · Teak
+                    </div>
+                    <div className="mt-2 text-[10px] uppercase tracking-[0.24em] text-[#2D3C68]/44">
+                      Hull & Deck
+                    </div>
+                  </div>
+ 
+                </div>
+              </div>
+            </div>
+ 
           </div>
         </div>
       </div>
-
-      {/* ================= ABOUT (OVERLAP LAYER) ================= */}
-      <div className="relative z-20 -mt-[120px] px-6">
-
-        <div className="max-w-[1000px] mx-auto bg-[#F4F5F2] p-[48px] md:p-[64px] shadow-[0_30px_80px_rgba(0,0,0,0.08)]">
-
-          {/* LABEL */}
-          <p className="text-[11px] tracking-[0.35em] text-[#2D3C68]/40 uppercase mb-6">
-            About
-          </p>
-
-          {/* GRID */}
-          <div className="grid md:grid-cols-2 gap-12 items-start">
-
-            <h2 className="font-[Gambarino] text-[34px] md:text-[42px] leading-[1.2] text-[#2D3C68]">
-              40.75 meters
-              <br />
-              12 guests
-              <br />
-              10 crew
-            </h2>
-
-            <p className="text-[15px] leading-[1.7] text-[#2D3C68]/70">
-              Serenity is a 40.75 meter phinisi yacht accommodating up to 12 guests,
-              supported by a full crew on board. The layout is shaped to balance shared
-              moments and private space across multiple decks, allowing each journey to
-              unfold naturally over time.
-            </p>
-
-          </div>
-
-        </div>
-      </div>
-
+ 
     </section>
-  );
+  )
 }
 
 function About() {
@@ -153,100 +330,187 @@ function About() {
 
 function Experience() {
   return (
-    <section className="bg-[#F4F5F2] pt-[140px] pb-[140px] px-6 border-t border-[#2D3C68]/10">
+    <section className="relative overflow-x-hidden bg-[#F4F5F2] pt-[120px] md:pt-[160px] pb-0 px-6 md:px-10 lg:px-14">
 
-      <div className="max-w-[1000px] mx-auto">
+      <div className="relative max-w-[1040px] mx-auto">
 
-        {/* ================= BLOCK 1 (PRIMARY) ================= */}
-        <div className="mb-[180px] grid md:grid-cols-2 gap-20 items-center">
+        {/* ════════════════════════════════════════
+            BLOCK 1 — Upper Deck
+            Dominant spatial moment.
+        ════════════════════════════════════════ */}
+        <div className="mb-[170px] md:mb-[220px] grid md:grid-cols-[1.08fr_0.92fr] gap-16 md:gap-24 items-center">
 
-          {/* IMAGE (LEFT) */}
-          <div className="relative w-full aspect-[4/5]">
-            <img
-              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068961/27_unvtvm.webp"
-              className="w-full h-full object-cover"
-            />
+          {/* IMAGE FIELD */}
+          <div className="relative w-full">
 
+            {/* MOBILE ONLY: subtle bleed for stronger presence */}
+            <div className="relative -mx-6 md:mx-0">
+              
+              <div className="relative aspect-[4/5] overflow-hidden">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068969/42_bdtrmb.webp"
+                  alt="Upper deck"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+            </div>
+
+            {/* Floating image retained only here */}
             <img
               src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
-              className="absolute -bottom-14 -left-14 w-[240px] h-[280px] object-cover shadow-[0_24px_70px_rgba(0,0,0,0.16)]"
+              alt=""
+              className="
+                hidden md:block
+                absolute
+                -bottom-16
+                -left-16
+                w-[240px]
+                h-[290px]
+                object-cover
+                shadow-[0_24px_70px_rgba(20,30,50,0.14)]
+              "
             />
           </div>
 
-          {/* TEXT (RIGHT) */}
-          <div className="max-w-[520px] md:ml-auto">
-            <h2 className="font-[Gambarino] text-[38px] md:text-[46px] leading-[1.18] text-[#2D3C68]">
-              Life Happens
+          {/* COPY */}
+          <div className="md:ml-auto max-w-[470px]">
+
+            <p className="mb-5 text-[10px] uppercase tracking-[0.38em] text-[#2D3C68]/38">
+              Upper Deck
+            </p>
+
+            <h2 className="font-[Gambarino] text-[38px] md:text-[48px] leading-[1.12] tracking-[-0.03em] text-[#2D3C68]">
+              Open at
               <br />
-              On the Open Deck
+              Every End
             </h2>
 
-            <p className="mt-7 text-[15px] text-[#2D3C68]/75 leading-[1.7]">
-              Breakfast stretches longer than planned. Someone moves to the shade,
-              another stays in the sun. Nothing needs arranging — the day unfolds on its own.
+            <p className="mt-6 max-w-[420px] text-[14px] md:text-[15px] leading-[1.9] text-[#2D3C68]/64">
+              The upper deck runs the full width of Serenity.
+              Sunbeds across the length, a bar at one end.
+              Open sky overhead, sea on every side —
+              nothing between the deck and the horizon.
             </p>
+
           </div>
 
         </div>
 
 
-        {/* ================= BLOCK 2 (SECONDARY) ================= */}
-        <div className="mb-[140px] grid md:grid-cols-2 gap-16 items-center">
+        {/* ════════════════════════════════════════
+            BLOCK 2 — Main Deck
+            More compressed / quieter.
+        ════════════════════════════════════════ */}
+        <div className="mb-[150px] md:mb-[190px] grid md:grid-cols-[0.88fr_1.12fr] gap-14 md:gap-20 items-start">
 
-          {/* TEXT (LEFT) */}
-          <div className="max-w-[480px]">
-            <h2 className="font-[Gambarino] text-[32px] md:text-[38px] leading-[1.22] text-[#2D3C68]">
+          {/* COPY */}
+          <div className="max-w-[390px] pt-2">
+
+            <p className="mb-5 text-[10px] uppercase tracking-[0.38em] text-[#2D3C68]/38">
+              Main Deck
+            </p>
+
+            <h2 className="font-[Gambarino] text-[30px] md:text-[38px] leading-[1.18] tracking-[-0.02em] text-[#2D3C68]">
               A Space Between
               <br />
               Outside and Inside
             </h2>
 
-            <p className="mt-6 text-[15px] text-[#2D3C68]/70 leading-[1.7]">
-              You step inside, but nothing really separates you from the sea.
-              Air moves through, light stays present, and conversations continue
-              without needing to start over.
+            <p className="mt-6 text-[14px] md:text-[15px] leading-[1.88] text-[#2D3C68]/64">
+              The main deck interior runs the length of the vessel.
+              Windows on both sides, the sea always in frame.
+              A living room, a communal table, a bar —
+              designed without the instinct to close things off.
             </p>
+
           </div>
 
-          {/* IMAGE (RIGHT) */}
-          <div className="relative w-full aspect-[4/5]">
-            <img
-              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/04_fqtqkn.webp"
-              className="w-full h-full object-cover"
-            />
+          {/* IMAGE */}
+          <div className="relative md:mt-[32px]">
 
-            <img
-              src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/08_noz6qg.webp"
-              className="absolute top-10 -right-10 w-[180px] h-[220px] object-cover shadow-[0_20px_60px_rgba(0,0,0,0.12)]"
-            />
+            {/* MOBILE ONLY: slightly calmer scale */}
+            <div className="ml-auto w-[92%] md:w-full">
+
+              <div className="aspect-[4/5] overflow-hidden">
+                <img
+                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/04_fqtqkn.webp"
+                  alt="Main deck"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+            </div>
+
           </div>
 
         </div>
 
 
-        {/* ================= CLOSING ================= */}
-        <div className="text-center max-w-[680px] mx-auto mb-[56px]">
+        {/* ════════════════════════════════════════
+            CLOSING
+            Slightly offset — no centered perfection.
+        ════════════════════════════════════════ */}
+        <div className="max-w-[520px] ml-0 md:ml-[8%] mb-[28px] md:mb-[34px]">
 
-          <h2 className="font-[Gambarino] text-[42px] md:text-[50px] leading-[1.12] text-[#2D3C68]">
-            Always Connected
+          <h2 className="font-[Gambarino] text-[34px] md:text-[54px] leading-[1.06] tracking-[-0.035em] text-[#2D3C68]">
+            Every deck.
             <br />
-            to What Surrounds You
+            The same horizon.
           </h2>
 
         </div>
 
-        {/* FULL BLEED */}
-        <div className="w-full h-[540px] overflow-hidden">
-          <img
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
-            className="w-full h-full object-cover"
-          />
-        </div>
+      </div>
+
+
+      {/* ════════════════════════════════════════
+          FULL BLEED ENDING
+      ════════════════════════════════════════ */}
+      <div className="relative w-full overflow-hidden">
+
+        <img
+          src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068893/06_f2yr7e.webp"
+          alt="Serenity at sea"
+          className="
+            w-full
+            h-[420px]
+            md:h-[620px]
+            object-cover
+            object-center
+          "
+        />
 
       </div>
 
+
+      {/* ════════════════════════════════════════
+          ATMOSPHERIC BRIDGE
+      ════════════════════════════════════════ */}
+      <div
+        className="h-[120px] md:h-[160px]"
+        style={{
+          background:
+            'linear-gradient(to bottom, #F4F5F2 0%, rgba(45,60,104,0.08) 100%)',
+        }}
+      />
+
     </section>
-  );
+  )
+}
+
+function YachtBreaking() {
+  return (
+    <section className="bg-[#F4F5F2] py-[120px] md:py-[160px] px-6">
+      <div className="max-w-[560px] mx-auto text-center">
+        <h2 className="font-[Gambarino] text-[40px] md:text-[52px] leading-[1.12] tracking-[-0.03em] text-[#2D3C68]">
+          Four cabins.
+          <br />
+          Each one entirely yours.
+        </h2>
+      </div>
+    </section>
+  )
 }
 
 function Identity() {
@@ -405,215 +669,315 @@ function Spaces() {
 }
 
 function Cabins() {
-  const cabins = [
-    {
-      name: "Forward Cabin",
-      location: "Front Section · Bow",
-      desc: "Closest to the bow. The movement of the sea is felt more directly here — subtle shifts, gentle rises, constant presence. Morning light arrives first, unobstructed.",
-      note: "More movement. Closer to the ocean.",
-      units: "1",
-      occupancy: "2 Guests",
-      deck: "Main",
-      beds: "Twin",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068960/34_nlkpdq.webp",
-      detail:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068958/28_csbw7z.webp",
-    },
-    {
-      name: "Mid Cabin",
-      location: "Center of Vessel",
-      desc: "Positioned at the center, where movement settles into balance. Close to shared spaces, yet acoustically and physically removed from them.",
-      note: "Most stable. Most balanced.",
-      units: "2",
-      occupancy: "2 Guests",
-      deck: "Main",
-      beds: "Twin",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068959/26_uyo84o.webp",
-      detail:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068966/39_t9ofoe.webp",
-    },
-    {
-      name: "Lower Cabin",
-      location: "Lower Deck",
-      desc: "Below the main deck, where external motion softens. Light becomes more controlled, and sound from above fades into the background.",
-      note: "Quieter. More contained.",
-      units: "1",
-      occupancy: "2 Guests",
-      deck: "Lower",
-      beds: "Twin",
-      image:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068955/23_1_gcmciz.webp",
-      detail:
-        "https://res.cloudinary.com/dombq6plz/image/upload/v1776068966/38_1_cx1idm.webp",
-    },
-  ];
+  const shouldReduceMotion = useReducedMotion()
 
-  const [active, setActive] = useState(0);
-  const [show, setShow] = useState(true);
-  const [imgKey, setImgKey] = useState(0);
+  const CABINS = [
+    {
+      name: 'Forward Cabin',
+      location: 'Front Section · Bow',
+      size: '15.74 sqm',
+      desc: 'Closest to the bow. The movement of the sea is felt more directly here — subtle shifts, gentle rises, constant presence. Morning light arrives first, unobstructed.',
+      note: 'More movement. Closer to the ocean.',
+      units: '1',
+      occupancy: '2 Guests',
+      deck: 'Main',
+      beds: 'Twin',
+      image:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068960/34_nlkpdq.webp',
+      detail:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068958/28_csbw7z.webp',
+    },
+    {
+      name: 'Mid Cabin',
+      location: 'Center of Vessel',
+      size: '15.74 sqm',
+      desc: 'Positioned at the center, where movement settles into balance. Close to shared spaces, yet acoustically and physically removed from them.',
+      note: 'Most stable. Most balanced.',
+      units: '2',
+      occupancy: '2 Guests',
+      deck: 'Main',
+      beds: 'Twin',
+      image:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068959/26_uyo84o.webp',
+      detail:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068966/39_t9ofoe.webp',
+    },
+    {
+      name: 'Lower Cabin',
+      location: 'Lower Deck',
+      size: '18.48 sqm',
+      desc: 'Below the main deck, where external motion softens. Light becomes more controlled, and sound from above fades into the background.',
+      note: 'Quieter. More contained.',
+      units: '1',
+      occupancy: '2 Guests',
+      deck: 'Lower',
+      beds: 'Twin',
+      image:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068955/23_1_gcmciz.webp',
+      detail:
+        'https://res.cloudinary.com/dombq6plz/image/upload/v1776068966/38_1_cx1idm.webp',
+    },
+  ]
 
-  const current = cabins[active];
+  const [active, setActive] = useState(0)
+  const [visible, setVisible] = useState(true)
+  const [imgKey, setImgKey] = useState(0)
+
+  const current = CABINS[active]
 
   const select = (i) => {
-    if (i === active) return;
-    setShow(false);
+    if (i === active) return
+
+    if (shouldReduceMotion) {
+      setActive(i)
+      setImgKey((k) => k + 1)
+      return
+    }
+
+    setVisible(false)
+
     setTimeout(() => {
-      setActive(i);
-      setImgKey((k) => k + 1);
-      setShow(true);
-    }, 300);
-  };
+      setActive(i)
+      setImgKey((k) => k + 1)
+      setVisible(true)
+    }, 320)
+  }
 
   const specs = [
-    { label: "Units", value: current.units },
-    { label: "Occupancy", value: current.occupancy },
-    { label: "Deck", value: current.deck },
-    { label: "Beds", value: current.beds },
-  ];
+    { label: 'Size', value: current.size },
+    { label: 'Beds', value: current.beds },
+    { label: 'Occupancy', value: current.occupancy },
+    { label: 'Deck', value: current.deck },
+    { label: 'Units', value: current.units },
+  ]
 
   return (
-    <section className="relative bg-[#2D3C68] overflow-hidden">
+    <section className="relative overflow-hidden bg-[#2D3C68]">
 
-      {/* HEADER */}
-      <div className="max-w-[1200px] mx-auto px-6 pt-[100px] pb-[48px]">
-        <p className="text-[10px] tracking-[0.36em] uppercase text-white/30 mb-4">
-          Cabins
-        </p>
+      {/* ════════════════════════════════════════
+          ATMOSPHERIC ENTRY
+      ════════════════════════════════════════ */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[120px] pointer-events-none z-10"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(244,245,242,0.10) 0%, transparent 100%)',
+        }}
+      />
 
-        <div className="flex items-end justify-between gap-8">
-          <h2 className="font-[Gambarino] text-[52px] md:text-[60px] leading-[1.06] text-white">
-            Where You Stay
-            <br />
-            Shapes the Journey
-          </h2>
 
-          <p className="hidden md:block text-[13px] leading-[1.75] text-white/45 max-w-[260px] pb-2">
-            Each cabin offers a different way of experiencing the sea.
-          </p>
-        </div>
-      </div>
+      {/* ════════════════════════════════════════
+          TABS RAIL
+          No more section header.
+      ════════════════════════════════════════ */}
+      <div className="relative z-20 max-w-[1280px] mx-auto px-6 md:px-10 lg:px-14 pt-[100px] md:pt-[120px]">
 
-      {/* TABS */}
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="flex gap-8 border-b border-white/10">
-          {cabins.map((c, i) => (
-            <button
-              key={i}
-              onClick={() => select(i)}
-              className="relative pb-4 text-left"
-            >
-              <span
-                className={`block text-[13px] tracking-[0.08em] uppercase transition ${
-                  active === i
-                    ? "text-white"
-                    : "text-white/35 hover:text-white/60"
-                }`}
+        <div className="overflow-x-auto scrollbar-hide">
+
+          <div className="relative flex gap-10 md:gap-12 min-w-max pb-5">
+
+            {/* Faded rail line */}
+            <div
+              className="absolute left-0 right-0 bottom-0 h-[1px]"
+              style={{
+                background:
+                  'linear-gradient(to right, rgba(244,245,242,0.10) 0%, rgba(244,245,242,0.06) 40%, rgba(244,245,242,0.02) 100%)',
+              }}
+            />
+
+            {CABINS.map((c, i) => (
+              <button
+                key={i}
+                onClick={() => select(i)}
+                className="relative text-left flex-shrink-0"
               >
-                {c.name.replace(" Cabin", "")}
-              </span>
+                <span
+                  className={`block text-[11px] md:text-[12px] tracking-[0.14em] uppercase transition-colors duration-300 ${
+                    active === i
+                      ? 'text-[#F4F5F2]'
+                      : 'text-[#F4F5F2]/28 hover:text-[#F4F5F2]/54'
+                  }`}
+                >
+                  {c.name.replace(' Cabin', '')}
+                </span>
 
-              <span
-                className={`absolute bottom-0 left-0 h-[1px] bg-white transition-all duration-500 ${
-                  active === i ? "w-full opacity-100" : "w-0 opacity-0"
-                }`}
-              />
-            </button>
-          ))}
+                {/* Active brass line */}
+                <span
+                  className={`absolute -bottom-[21px] left-0 h-[1px] bg-[#B08D57] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    active === i
+                      ? 'w-full opacity-100'
+                      : 'w-0 opacity-0'
+                  }`}
+                />
+              </button>
+            ))}
+
+          </div>
+
         </div>
- 
       </div>
 
-      {/* SPLIT */}
-      <div className="grid md:grid-cols-2">
+
+      {/* ════════════════════════════════════════
+          SPLIT LAYOUT
+      ════════════════════════════════════════ */}
+      <div className="grid md:grid-cols-2 pt-[28px] md:pt-[34px]">
 
         {/* IMAGE */}
-        <div className="relative h-[520px] md:h-[640px] overflow-hidden">
+        <div className="relative h-[440px] md:h-[660px] overflow-hidden">
+
           <img
             key={imgKey}
             src={current.image}
-            alt=""
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1400ms] ${
-              show ? "opacity-100 scale-100" : "opacity-0 scale-[1.04]"
+            alt={current.name}
+            className={`absolute inset-0 w-full h-full object-cover transition-all ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              shouldReduceMotion
+                ? 'opacity-100 scale-100'
+                : visible
+                ? 'duration-[1400ms] opacity-100 scale-100'
+                : 'duration-[1400ms] opacity-0 scale-[1.04]'
             }`}
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+          {/* Bottom vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/22 via-transparent to-transparent pointer-events-none" />
 
+          {/* Interior inset */}
           <div
-            className={`absolute bottom-6 right-6 transition-all duration-700 ${
-              show ? "opacity-100" : "opacity-0"
+            className={`absolute bottom-5 right-5 md:bottom-6 md:right-6 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              shouldReduceMotion
+                ? 'opacity-100'
+                : visible
+                ? 'opacity-100'
+                : 'opacity-0'
             }`}
           >
-            <div className="p-[2px] bg-white/20">
-              <div className="w-[108px] h-[108px] overflow-hidden">
+            <div className="p-[2px] bg-[#F4F5F2]/18">
+
+              <div className="w-[88px] h-[88px] md:w-[108px] md:h-[108px] overflow-hidden">
                 <img
                   src={current.detail}
+                  alt=""
                   className="w-full h-full object-cover"
                 />
               </div>
+
             </div>
-            <p className="mt-[6px] text-[9px] text-white/40 text-right uppercase tracking-[0.28em]">
+
+            <p className="mt-[6px] text-[9px] text-[#F4F5F2]/36 text-right uppercase tracking-[0.28em]">
               Interior
             </p>
           </div>
+
         </div>
 
-        {/* CONTENT */}
-        <div className="bg-[#2D3C68] flex flex-col px-10 md:px-16 py-14 md:py-20">
 
-          <div className={`transition duration-500 ${show ? "opacity-100" : "opacity-0"}`}>
-            <h3 className="font-[Gambarino] text-[42px] md:text-[48px] text-white">
+        {/* CONTENT */}
+        <div className="flex flex-col px-6 py-12 md:px-16 md:py-20">
+
+          {/* Name + location */}
+          <div
+            className={`transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              shouldReduceMotion
+                ? 'opacity-100'
+                : visible
+                ? 'opacity-100'
+                : 'opacity-0'
+            }`}
+          >
+
+            <h3 className="font-[Gambarino] text-[38px] md:text-[50px] leading-[1.06] tracking-[-0.02em] text-[#F4F5F2]">
               {current.name}
             </h3>
-            <p className="mt-[6px] text-[10px] text-white/35 uppercase tracking-[0.32em]">
+
+            <p className="mt-2 text-[10px] text-[#F4F5F2]/30 uppercase tracking-[0.32em]">
               {current.location}
             </p>
+
           </div>
 
-          <div className="mt-12">
-            <p className="text-[15px] leading-[1.9] text-white/65">
+          {/* Description + note */}
+          <div className="mt-8 md:mt-10">
+
+            <p className="text-[14px] md:text-[15px] leading-[1.9] text-[#F4F5F2]/65">
               {current.desc}
             </p>
+
+            <div className="mt-5 flex items-start gap-3">
+
+              <span className="w-[14px] h-[1px] bg-[#F4F5F2]/20 mt-[9px] flex-shrink-0" />
+
+              <p className="text-[12px] italic text-[#F4F5F2]/30">
+                {current.note}
+              </p>
+
+            </div>
+
           </div>
 
-          <div className="mt-5 flex gap-3">
-            <span className="w-[14px] h-[1px] bg-white/20 mt-[6px]" />
-            <p className="text-[12px] italic text-white/35">
-              {current.note}
-            </p>
-          </div>
+          {/* Specs */}
+          <div className="mt-12 md:mt-auto md:pt-10">
 
-          <div className="mt-auto pt-10">
             {specs.map((s) => (
               <div
                 key={s.label}
-                className="flex justify-between py-[12px] border-t border-white/10 text-white/70"
+                className="flex justify-between py-[12px] border-t border-[#F4F5F2]/8"
               >
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+
+                <span className="text-[10px] uppercase tracking-[0.3em] text-[#F4F5F2]/28">
                   {s.label}
                 </span>
-                <span>{s.value}</span>
+
+                <span className="text-[13px] text-[#F4F5F2]/65 text-right">
+                  {s.value}
+                </span>
+
               </div>
             ))}
+
           </div>
 
-          <div className="mt-8 flex gap-8">
-            <button className="bg-white text-[#2D3C68] px-9 py-[14px] text-[11px] uppercase tracking-[0.18em]">
-              Reserve
-            </button>
+          {/* CTA */}
+          <div className="mt-8">
 
-            <button className="text-white/40 text-[11px] uppercase tracking-[0.16em] hover:text-white">
-              Floor Plan →
-            </button>
+            <a
+              href="/contact"
+              className="inline-block border border-[#F4F5F2]/28 px-9 py-[14px] text-[11px] uppercase tracking-[0.18em] text-[#F4F5F2] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#F4F5F2] hover:text-[#2D3C68] hover:border-[#F4F5F2]"
+            >
+              Begin Your Voyage
+            </a>
+
           </div>
 
         </div>
       </div>
 
+
+      {/* ════════════════════════════════════════
+          BATHROOM CALLOUT
+      ════════════════════════════════════════ */}
+      <div className="border-t border-[#F4F5F2]/8 py-7 px-6">
+
+        <p className="text-center text-[10px] uppercase tracking-[0.32em] text-[#F4F5F2]/28 leading-[1.9]">
+          All cabins — dark navy tile · brass fixtures · marble floor · rain shower
+        </p>
+
+      </div>
+
+
+      {/* ════════════════════════════════════════
+          ATMOSPHERIC EXIT
+      ════════════════════════════════════════ */}
+      <div
+        className="h-[80px] pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to bottom, transparent 0%, rgba(244,245,242,0.06) 100%)',
+        }}
+      />
+
     </section>
-  );
+  )
 }
  
 

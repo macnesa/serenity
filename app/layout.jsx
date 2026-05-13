@@ -8,8 +8,14 @@ import Navbar from "../components/Navbar";
 import { MessageCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Serenity Yacht",
-  description: "Private phinisi yacht journeys across Indonesia.",
+  title: {
+    default:
+      "Serenity Phinisi — Intimate Yacht Journeys Across Indonesia",
+    template: "%s | Serenity Phinisi",
+  },
+
+  description:
+    "A contemporary phinisi built in South Sulawesi for intimate ocean adventures through Raja Ampat and Komodo with only twelve guests aboard.",
 };
 
 const geistSans = Geist({
