@@ -5,6 +5,7 @@ import { gsap, ScrollTrigger } from "../../lib/gsap"
 import Image from "next/image";
 import { motion, AnimatePresence,useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 
 import Footer from '../../components/Footer'
@@ -14,7 +15,7 @@ export default function Page() {
   return (
     <main className="bg-[#0a0f14] text-white overflow-hidden">
      <ContactHero/>
-     <ContactForm/>
+     <ContactSection/>
       <Footer/> 
     </main>
   )
@@ -154,584 +155,699 @@ function ContactHero() {
 }
  
 
-
-const REQUIRED = ['name', 'email', 'destination', 'duration', 'guests', 'dates'];
  
 /* ============================================================
-   INLINE INPUT
+   CONSTANTS
    ============================================================ */
-function InlineInput({ value, onChange, placeholder, type = 'text', error = false }) {
-  const [focused, setFocused] = useState(false);
-  const mirrorRef = useRef(null);
-  const inputRef  = useRef(null);
  
-  useEffect(() => {
-    if (!mirrorRef.current || !inputRef.current) return;
-    mirrorRef.current.textContent = value || placeholder;
-    inputRef.current.style.width  = (mirrorRef.current.offsetWidth + 12) + 'px';
-  }, [value, placeholder]);
+   const ease = [0.22, 1, 0.36, 1];
  
-  const borderColor = error && !value
-    ? '#C66A4A'
-    : focused
-    ? '#B08D57'
-    : 'rgba(45,60,104,0.20)';
- 
-  return (
-    <span style={{ position: 'relative', display: 'inline-block' }}>
-      <span
-        ref={mirrorRef}
-        aria-hidden="true"
-        style={{
-          position:      'absolute',
-          visibility:    'hidden',
-          whiteSpace:    'pre',
-          fontFamily:    'inherit',
-          fontSize:      'inherit',
-          letterSpacing: 'inherit',
-          pointerEvents: 'none',
-        }}
-      />
-      <input
-        ref={inputRef}
-        type={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder={placeholder}
-        style={{
-          fontFamily:    'inherit',
-          fontSize:      'inherit',
-          lineHeight:    'inherit',
-          letterSpacing: 'inherit',
-          color:         value ? '#2D3C68' : 'rgba(45,60,104,0.35)',
-          background:    'transparent',
-          border:        'none',
-          borderBottom:  `1.5px solid ${borderColor}`,
-          outline:       'none',
-          padding:       '0 4px 3px',
-          minWidth:      '110px',
-          transition:    'border-color 300ms ease, color 200ms ease',
-          verticalAlign: 'baseline',
-        }}
-      />
-    </span>
-  );
-}
- 
-/* ============================================================
-   INLINE SELECT
-   ============================================================ */
-function InlineSelect({ value, onChange, placeholder, options, error = false }) {
-  const [open, setOpen] = useState(false);
-  const containerRef    = useRef(null);
- 
-  useEffect(() => {
-    const handler = e => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
- 
-  const borderColor = error && !value
-    ? '#C66A4A'
-    : open
-    ? '#B08D57'
-    : 'rgba(45,60,104,0.20)';
- 
-  return (
-    <span ref={containerRef} style={{ position: 'relative', display: 'inline-block' }}>
-      <button
-        type="button"
-        onClick={() => setOpen(o => !o)}
-        style={{
-          fontFamily:    'inherit',
-          fontSize:      'inherit',
-          lineHeight:    'inherit',
-          letterSpacing: 'inherit',
-          color:         value ? '#2D3C68' : 'rgba(45,60,104,0.35)',
-          background:    'transparent',
-          border:        'none',
-          borderBottom:  `1.5px solid ${borderColor}`,
-          outline:       'none',
-          cursor:        'pointer',
-          padding:       '0 4px 3px',
-          transition:    'all 300ms ease',
-          verticalAlign: 'baseline',
-          display:       'inline-flex',
-          alignItems:    'baseline',
-          gap:           '5px',
-        }}
-      >
-        {value || placeholder}
-        <svg
-          width="9" height="5" viewBox="0 0 9 5" fill="none"
-          style={{
-            transform:  open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 300ms ease',
-            opacity:    0.4,
-            alignSelf:  'center',
-            flexShrink: 0,
-          }}
-        >
-          <path
-            d="M1 1L4.5 4.5L8 1"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
- 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8,  scaleY: 0.95 }}
-            animate={{ opacity: 1, y: 0,   scaleY: 1    }}
-            exit={{    opacity: 0, y: -8,  scaleY: 0.95 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              position:        'absolute',
-              top:             'calc(100% + 12px)',
-              left:            0,
-              transformOrigin: 'top center',
-              backgroundColor: '#F4F5F2',
-              border:          '1px solid rgba(45,60,104,0.10)',
-              boxShadow:       '0 24px 60px rgba(22,32,55,0.08)',
-              zIndex:          200,
-              minWidth:        '190px',
-              padding:         '6px 0',
-            }}
-          >
-            {options.map(opt => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => { onChange(opt); setOpen(false); }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#B08D57'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = value === opt ? '#B08D57' : '#2D3C68'; }}
-                style={{
-                  display:       'block',
-                  width:         '100%',
-                  textAlign:     'left',
-                  padding:       '10px 22px',
-                  fontFamily:    'Switzer',
-                  fontWeight:    300,
-                  fontSize:      '13px',
-                  letterSpacing: '0.02em',
-                  color:         value === opt ? '#B08D57' : '#2D3C68',
-                  background:    'transparent',
-                  border:        'none',
-                  cursor:        'pointer',
-                  transition:    'color 150ms ease',
-                }}
-              >
-                {opt}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </span>
-  );
-}
- 
-/* ============================================================
-   CONTACT SIDEBAR
-   ============================================================ */
-function ContactSidebar() {
-  const contacts = [
-    { label: 'Email',     value: 'hello@serenityphinisi.com' },
-    { label: 'WhatsApp',  value: '+62 xxx xxxx xxxx'         },
-    { label: 'Instagram', value: '@serenity.phinisi'         },
-  ];
- 
-  return (
-    <div>
-      <p style={{
-        fontFamily:    'Switzer',
-        fontSize:      '10px',
-        letterSpacing: '0.28em',
-        textTransform: 'uppercase',
-        color:         '#6A6A6A',
-        marginBottom:  '24px',
-      }}>
-        Or reach out directly
-      </p>
- 
-      <div style={{ marginBottom: '28px' }}>
-        <p style={{
-          fontFamily:    'Switzer',
-          fontWeight:    500,
-          fontSize:      '14px',
-          color:         '#2D3C68',
-          marginBottom:  '4px',
-          letterSpacing: '-0.01em',
-        }}>
-          Alexandra Wira
-        </p>
-        <p style={{
-          fontFamily:    'Switzer',
-          fontWeight:    300,
-          fontSize:      '12px',
-          color:         '#6A6A6A',
-          letterSpacing: '0.04em',
-        }}>
-          Guest Experience Manager
-        </p>
-      </div>
- 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {contacts.map(({ label, value }) => (
-          <div key={label} style={{ display: 'flex', gap: '16px', alignItems: 'baseline' }}>
-            <span style={{
-              fontFamily:    'Switzer',
-              fontSize:      '10px',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color:         '#6A6A6A',
-              minWidth:      '72px',
-              flexShrink:    0,
-            }}>
-              {label}
-            </span>
-            <span style={{
-              fontFamily: 'Switzer',
-              fontWeight: 300,
-              fontSize:   '13px',
-              color:      '#2D3C68',
-              lineHeight: 1.5,
-            }}>
-              {value}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
- 
-/* ============================================================
-   MAIN SECTION
-   ============================================================ */
-function ContactForm() {
-  const [fields, setFields] = useState({
-    name:        '',
-    email:       '',
-    phone:       '',
-    destination: '',
-    duration:    '',
-    guests:      '',
-    dates:       '',
-    message:     '',
-  });
-  const [submitted,       setSubmitted]       = useState(false);
-  const [submitAttempted, setSubmitAttempted] = useState(false);
- 
-  const sectionRef = useRef(null);
-  const triggerRef = useRef(null);
-  const linesRef   = useRef([]);
- 
-  const update   = key => val => setFields(f => ({ ...f, [key]: val }));
-  const addRef   = i   => el  => { linesRef.current[i] = el; };
-  const hasErrors = REQUIRED.some(k => !fields[k]);
- 
-  /* Inject Sumba Ikat keyframe once */
-  useEffect(() => {
-    if (document.getElementById('serenity-ikat-kf')) return;
-    const s = document.createElement('style');
-    s.id = 'serenity-ikat-kf';
-    s.textContent = '@keyframes ikatRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
-    document.head.appendChild(s);
-  }, []);
- 
-  /* Stagger reveal on scroll enter */
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- 
-    if (reduce) {
-      gsap.set(linesRef.current.filter(Boolean), { opacity: 1, y: 0 });
-      return;
-    }
- 
-    const lines = linesRef.current.filter(Boolean);
-    gsap.set(lines, { opacity: 0, y: 18 });
- 
-    triggerRef.current = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start:   'top 72%',
-      onEnter: () => {
-        gsap.to(lines, {
-          opacity:  1,
-          y:        0,
-          duration: 0.9,
-          stagger:  0.1,
-          ease:     [0.22, 1, 0.36, 1],
-        });
-      },
-      once: true,
-    });
- 
-    return () => { triggerRef.current?.kill(); };
-  }, []);
- 
-  const handleSubmit = e => {
-    e.preventDefault();
-    setSubmitAttempted(true);
-    if (hasErrors) return;
-    setSubmitted(true);
-  };
- 
-  return (
-    <section
-      ref={sectionRef}
-      style={{ backgroundColor: '#F4F5F2', padding: '48px 0 140px' }}
-    >
-      {/* FIX 1 — single padding system, Tailwind only */}
-      <div className="max-w-[1280px] mx-auto px-6 md:px-10 lg:px-14">
-        <div
-          className="grid grid-cols-1 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_340px]"
-          style={{ gap: '64px', alignItems: 'start' }}
-        >
- 
-          {/* ─── LEFT: CONVERSATIONAL FORM ────────────── */}
-          <AnimatePresence mode="wait">
-            {!submitted ? (
-              <motion.form
-                key="form"
-                onSubmit={handleSubmit}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div style={{
-                  fontFamily:    'Gambarino',
-                  fontSize:      'clamp(20px, 2.2vw, 28px)',
-                  lineHeight:    1.95,
-                  letterSpacing: '-0.02em',
-                  color:         '#2D3C68',
-                }}>
- 
-                  {/* 01 — Name */}
-                  <div ref={addRef(0)}>
-                    My name is{' '}
-                    <InlineInput
-                      value={fields.name}
-                      onChange={update('name')}
-                      placeholder="your name"
-                      error={submitAttempted}
-                    />
-                    ,
-                  </div>
- 
-                  {/* 02 — Email */}
-                  <div ref={addRef(1)}>
-                    and you can reach me at{' '}
-                    <InlineInput
-                      value={fields.email}
-                      onChange={update('email')}
-                      placeholder="your email"
-                      type="email"
-                      error={submitAttempted}
-                    />
-                    .
-                  </div>
- 
-                  {/* 03 — Phone optional, visually subdued */}
-                  <div
-                    ref={addRef(2)}
-                    style={{ fontSize: 'clamp(14px, 1.3vw, 17px)', opacity: 0.48, marginTop: '4px', lineHeight: 1.6 }}
-                  >
-                    <InlineInput
-                      value={fields.phone}
-                      onChange={update('phone')}
-                      placeholder="WhatsApp or phone — optional"
-                      type="tel"
-                    />
-                  </div>
- 
-                  {/* 04 — Destination */}
-                  <div ref={addRef(3)} style={{ marginTop: '36px' }}>
-                    I'm dreaming of sailing through{' '}
-                    <InlineSelect
-                      value={fields.destination}
-                      onChange={update('destination')}
-                      placeholder="where"
-                      options={['Raja Ampat', 'Labuan Bajo', 'Both', 'Not sure yet']}
-                      error={submitAttempted}
-                    />
-                  </div>
- 
-                  {/* 05 — Duration + Guests */}
-                  <div ref={addRef(4)}>
-                    for{' '}
-                    <InlineSelect
-                      value={fields.duration}
-                      onChange={update('duration')}
-                      placeholder="how long"
-                      options={['5–7 nights', '7–10 nights', '10+ nights', 'Not sure yet']}
-                      error={submitAttempted}
-                    />
-                    , with{' '}
-                    <InlineSelect
-                      value={fields.guests}
-                      onChange={update('guests')}
-                      placeholder="how many"
-                      options={['1–4 guests', '5–8 guests', '9–12 guests']}
-                      error={submitAttempted}
-                    />
-                    {' '}aboard.
-                  </div>
- 
-                  {/* 06 — Dates */}
-                  <div ref={addRef(5)} style={{ marginTop: '36px' }}>
-                    I'm thinking of{' '}
-                    <InlineInput
-                      value={fields.dates}
-                      onChange={update('dates')}
-                      placeholder="dates or rough window"
-                      error={submitAttempted}
-                    />
-                    {' '}as a departure window.
-                  </div>
- 
-                  {/* 07 — Message */}
-                  <div ref={addRef(6)} style={{ marginTop: '44px' }}>
-                    <textarea
-                      value={fields.message}
-                      onChange={e => update('message')(e.target.value)}
-                      placeholder="Anything else we should know."
-                      rows={3}
-                      style={{
-                        width:         '100%',
-                        fontFamily:    'Gambarino',
-                        fontSize:      'clamp(20px, 2.2vw, 28px)',
-                        lineHeight:    1.7,
-                        letterSpacing: '-0.02em',
-                        color:         '#2D3C68',
-                        background:    'transparent',
-                        border:        'none',
-                        borderBottom:  '1.5px solid rgba(45,60,104,0.16)',
-                        outline:       'none',
-                        resize:        'none',
-                        padding:       '0 0 10px 0',
-                        display:       'block',
-                      }}
-                    />
-                  </div>
-                </div>
- 
-                {/* SUBMIT */}
-                <div ref={addRef(7)} style={{ marginTop: '56px' }}>
-                  <button
-                    type="submit"
-                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#B08D57'; }}
-                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#2D3C68'; }}
-                    style={{
-                      fontFamily:      'Switzer',
-                      fontWeight:      400,
-                      fontSize:        '11px',
-                      letterSpacing:   '0.28em',
-                      textTransform:   'uppercase',
-                      color:           '#F4F5F2',
-                      backgroundColor: '#2D3C68',
-                      border:          'none',
-                      padding:         '17px 52px',
-                      cursor:          'pointer',
-                      transition:      'background-color 500ms ease',
-                      display:         'block',
-                    }}
-                  >
-                    Start the Conversation
-                  </button>
- 
-                  {/* FIX 3 — validation feedback */}
-                  <AnimatePresence>
-                    {submitAttempted && hasErrors && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -6 }}
-                        animate={{ opacity: 1, y: 0  }}
-                        exit={{    opacity: 0         }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                        style={{
-                          fontFamily:    'Switzer',
-                          fontWeight:    300,
-                          fontSize:      '12px',
-                          letterSpacing: '0.03em',
-                          color:         '#C66A4A',
-                          marginTop:     '14px',
-                        }}
-                      >
-                        Please complete the highlighted fields above.
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.form>
-            ) : (
-              /* ─── SUCCESS STATE ─────────────────────── */
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0  }}
-                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                style={{ paddingTop: '16px' }}
-              >
-                <p style={{
-                  fontFamily:    'Gambarino',
-                  fontSize:      'clamp(26px, 3vw, 44px)',
-                  lineHeight:    1.2,
-                  letterSpacing: '-0.03em',
-                  color:         '#2D3C68',
-                }}>
-                  Thank you, {fields.name}.<br />
-                  Alexandra will be<br />
-                  in touch shortly.
-                </p>
-                <div style={{
-                  width:           '48px',
-                  height:          '1px',
-                  backgroundColor: '#B08D57',
-                  marginTop:       '36px',
-                }} />
-              </motion.div>
-            )}
-          </AnimatePresence>
- 
-          {/* ─── RIGHT: SIDEBAR + SUMBA IKAT ──────────── */}
-          {/* FIX 2 — sticky via Tailwind only, no conflicting inline position */}
-          <div className="md:sticky top-[120px] relative">
-            <ContactSidebar />
- 
-            {/* FIX 4 — hidden on mobile, absolute bleed causes overflow on single col */}
-            <div
-              aria-hidden="true"
-              className="hidden md:block"
-              style={{
-                position:      'absolute',
-                bottom:        '-80px',
-                right:         '-32px',
-                width:         '180px',
-                height:        '180px',
-                opacity:       0.06,
-                pointerEvents: 'none',
-                animation:     'ikatRotate 120s linear infinite',
-              }}
-            >
-              <img
-                src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png"
-                alt=""
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              />
-            </div>
-          </div>
- 
-        </div>
-      </div>
-    </section>
-  );
-}
+   const DESTINATIONS = ["Labuan Bajo", "Raja Ampat", "Both", "Not sure yet"];
+   const DURATIONS    = ["5–7 nights", "7–10 nights", "10+ nights", "Not sure yet"];
+   const GUESTS_OPTS  = ["1–4 guests", "5–8 guests", "9–12 guests"];
+    
+   // Required field keys — name, email, message minimum
+   const REQUIRED = ["name", "email", "message"];
+    
+   /* ============================================================
+      TEXT INPUT
+      Label above, border-bottom only.
+      Focus → brass. Error (required + empty) → terracotta.
+      ============================================================ */
+    
+   function TextInput({
+     label,
+     value,
+     onChange,
+     placeholder,
+     type       = "text",
+     required   = false,
+     error      = false,
+     autoComplete,
+   }) {
+     const [focused, setFocused] = useState(false);
+    
+     const borderColor =
+       error && !value
+         ? "#C66A4A"
+         : focused
+         ? "#B08D57"
+         : "rgba(45,60,104,0.42)";
+    
+     return (
+       <div className="flex flex-col">
+         <label className="flex flex-col gap-2">
+           <span className="text-[10px] uppercase tracking-[0.28em] text-[#5C5C5C] font-[Switzer] font-light">
+             {label}
+             {required && (
+               <span className="ml-1 text-[#B08D57]" aria-hidden="true">*</span>
+             )}
+           </span>
+    
+           <input
+             type={type}
+             value={value}
+             onChange={(e) => onChange(e.target.value)}
+             onFocus={() => setFocused(true)}
+             onBlur={() => setFocused(false)}
+             placeholder={placeholder}
+             autoComplete={autoComplete}
+             className="
+               w-full
+               bg-transparent
+               outline-none
+               pb-[11px]
+               text-[14px]
+               leading-[1.6]
+               tracking-[-0.01em]
+               font-[Switzer]
+               font-light
+               text-[#2D3C68]
+               placeholder:text-[#6A6A6A]
+             "
+             style={{
+               borderBottom: `1px solid ${borderColor}`,
+               transition:   "border-color 300ms ease",
+             }}
+           />
+         </label>
+       </div>
+     );
+   }
+    
+   /* ============================================================
+      SELECT INPUT
+      Label above, border-bottom trigger, animated dropdown.
+      Keyboard-accessible via native hidden select on mobile.
+      ============================================================ */
+    
+   function SelectInput({
+     label,
+     value,
+     onChange,
+     placeholder,
+     options,
+     required = false,
+     error    = false,
+   }) {
+     const [open, setOpen]     = useState(false);
+     const containerRef        = useRef(null);
+    
+     // close on outside click
+     useEffect(() => {
+       const handler = (e) => {
+         if (containerRef.current && !containerRef.current.contains(e.target)) {
+           setOpen(false);
+         }
+       };
+       document.addEventListener("mousedown", handler);
+       return () => document.removeEventListener("mousedown", handler);
+     }, []);
+    
+     // close on escape
+     useEffect(() => {
+       const handler = (e) => { if (e.key === "Escape") setOpen(false); };
+       document.addEventListener("keydown", handler);
+       return () => document.removeEventListener("keydown", handler);
+     }, []);
+    
+     const borderColor =
+       error && !value
+         ? "#C66A4A"
+         : open
+         ? "#B08D57"
+         : "rgba(45,60,104,0.42)";
+    
+     return (
+       <div ref={containerRef} className="relative flex flex-col">
+         {/* label */}
+         <span className="text-[10px] uppercase tracking-[0.28em] text-[#5C5C5C] font-[Switzer] font-light mb-2">
+           {label}
+           {required && (
+             <span className="ml-1 text-[#B08D57]" aria-hidden="true">*</span>
+           )}
+         </span>
+    
+         {/* trigger */}
+         <button
+           type="button"
+           aria-haspopup="listbox"
+           aria-expanded={open}
+           onClick={() => setOpen((o) => !o)}
+           className="
+             flex items-center justify-between
+             w-full pb-[11px]
+             bg-transparent outline-none cursor-pointer
+             text-left
+           "
+           style={{
+             borderBottom: `1px solid ${borderColor}`,
+             transition:   "border-color 300ms ease",
+           }}
+         >
+           <span
+             className="text-[14px] tracking-[-0.01em] font-[Switzer] font-light transition-colors duration-300"
+             style={{ color: value ? "#2D3C68" : "#6A6A6A" }}
+           >
+             {value || placeholder}
+           </span>
+    
+           <ChevronDown
+             strokeWidth={1.4}
+             className="h-[13px] w-[13px] text-[#2D3C68]/36 flex-shrink-0 transition-transform duration-300"
+             style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+           />
+         </button>
+    
+         {/* dropdown */}
+         <AnimatePresence>
+           {open && (
+             <motion.ul
+               role="listbox"
+               initial={{ opacity: 0, y: -6, scaleY: 0.96 }}
+               animate={{ opacity: 1, y: 0,  scaleY: 1    }}
+               exit={{    opacity: 0, y: -6, scaleY: 0.96 }}
+               transition={{ duration: 0.18, ease }}
+               style={{ transformOrigin: "top center" }}
+               className="
+                 absolute top-[calc(100%+6px)] left-0
+                 z-[200] w-full min-w-[180px]
+                 bg-[#F4F5F2]
+                 border border-[#2D3C68]/10
+                 shadow-[0_24px_60px_rgba(22,32,55,0.08)]
+                 py-1.5
+               "
+             >
+               {options.map((opt) => (
+                 <li key={opt} role="option" aria-selected={value === opt}>
+                   <button
+                     type="button"
+                     onClick={() => { onChange(opt); setOpen(false); }}
+                     className="
+                       block w-full text-left
+                       px-5 py-[10px]
+                       text-[13px] font-[Switzer] font-light tracking-[0.02em]
+                       transition-colors duration-150
+                     "
+                     style={{ color: value === opt ? "#B08D57" : "#2D3C68" }}
+                     onMouseEnter={(e) => { e.currentTarget.style.color = "#B08D57"; }}
+                     onMouseLeave={(e) => { e.currentTarget.style.color = value === opt ? "#B08D57" : "#2D3C68"; }}
+                   >
+                     {opt}
+                   </button>
+                 </li>
+               ))}
+             </motion.ul>
+           )}
+         </AnimatePresence>
+       </div>
+     );
+   }
+    
+   /* ============================================================
+      TEXTAREA INPUT
+      Label above, border-bottom, auto-grows via rows.
+      ============================================================ */
+    
+   function TextareaInput({
+     label,
+     value,
+     onChange,
+     placeholder,
+     required = false,
+     error    = false,
+     rows     = 4,
+   }) {
+     const [focused, setFocused] = useState(false);
+    
+     const borderColor =
+       error && !value
+         ? "#C66A4A"
+         : focused
+         ? "#B08D57"
+         : "rgba(45,60,104,0.42)";
+    
+     return (
+       <div className="flex flex-col">
+         <label className="flex flex-col gap-2">
+           <span className="text-[10px] uppercase tracking-[0.28em] text-[#5C5C5C] font-[Switzer] font-light">
+             {label}
+             {required && (
+               <span className="ml-1 text-[#B08D57]" aria-hidden="true">*</span>
+             )}
+           </span>
+    
+           <textarea
+             value={value}
+             onChange={(e) => onChange(e.target.value)}
+             onFocus={() => setFocused(true)}
+             onBlur={() => setFocused(false)}
+             placeholder={placeholder}
+             rows={rows}
+             className="
+               w-full
+               bg-transparent
+               outline-none
+               pb-[11px]
+               text-[14px]
+               leading-[1.8]
+               tracking-[-0.01em]
+               font-[Switzer]
+               font-light
+               text-[#2D3C68]
+               placeholder:text-[#6A6A6A]
+               resize-none
+               block
+             "
+             style={{
+               borderBottom: `1px solid ${borderColor}`,
+               transition:   "border-color 300ms ease",
+             }}
+           />
+         </label>
+       </div>
+     );
+   }
+    
+   /* ============================================================
+      CONTACT SIDEBAR
+      Alexandra Wira + direct contact channels.
+      Links are actionable (mailto, wa.me, instagram).
+      "Response within 24 hours" — from Foundation.
+      ============================================================ */
+    
+   function ContactSidebar() {
+     const contacts = [
+       {
+         label: "Email",
+         value: "hello@serenityphinisi.com",
+         href:  "mailto:hello@serenityphinisi.com",
+       },
+       {
+         label: "WhatsApp",
+         value: "+62 xxx xxxx xxxx", // REPLACE with actual number
+         href:  "https://wa.me/62xxxxxxxxxx",
+       },
+       {
+         label: "Instagram",
+         value: "@serenity.phinisi",
+         href:  "https://instagram.com/serenity.phinisi",
+       },
+     ];
+    
+     return (
+       <div>
+         {/* eyebrow */}
+         <p className="
+           text-[10px] uppercase tracking-[0.28em]
+           text-[#6A6A6A] font-[Switzer] font-light
+           mb-6
+         ">
+           Or reach out directly
+         </p>
+    
+         {/* person */}
+         <div className="mb-7">
+           <p className="font-[Switzer] font-medium text-[14px] text-[#2D3C68] tracking-[-0.01em] leading-[1.4]">
+             Alexandra Wira
+           </p>
+           <p className="font-[Switzer] font-light text-[12px] text-[#6A6A6A] tracking-[0.04em] mt-[5px]">
+             Guest Experience Manager
+           </p>
+         </div>
+    
+         {/* contacts list */}
+         <div className="flex flex-col gap-3">
+           {contacts.map(({ label, value, href }) => (
+             <div key={label} className="flex gap-4 items-baseline">
+               <span className="
+                 font-[Switzer] font-light
+                 text-[10px] uppercase tracking-[0.22em]
+                 text-[#6A6A6A]
+                 min-w-[72px] flex-shrink-0
+               ">
+                 {label}
+               </span>
+               <a
+                 href={href}
+                 target={href.startsWith("http") ? "_blank" : undefined}
+                 rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                 className="
+                   font-[Switzer] font-light
+                   text-[13px] text-[#2D3C68]
+                   leading-[1.5]
+                   hover:text-[#B08D57]
+                   transition-colors duration-300
+                 "
+               >
+                 {value}
+               </a>
+             </div>
+           ))}
+         </div>
+    
+         {/* response time */}
+         <div className="mt-8 pt-7 border-t border-[#2D3C68]/08">
+           <p className="font-[Switzer] font-light text-[12px] text-[#2D3C68]/44 leading-[1.7]">
+             We respond within 24 hours.
+           </p>
+         </div>
+       </div>
+     );
+   }
+    
+   /* ============================================================
+      CONTACT SECTION — main export
+      Two-column layout: form (left) + sidebar (right, sticky).
+      GSAP stagger reveal per field row on scroll enter.
+      AnimatePresence: form ↔ success state.
+      Sumba Ikat rotating ambient texture.
+      Validation: required fields highlighted on submit attempt.
+      ============================================================ */
+    
+    function ContactSection() {
+     const [fields, setFields] = useState({
+       name:        "",
+       email:       "",
+       phone:       "",
+       destination: "",
+       duration:    "",
+       guests:      "",
+       dates:       "",
+       message:     "",
+     });
+    
+     const [submitted,       setSubmitted]       = useState(false);
+     const [submitAttempted, setSubmitAttempted] = useState(false);
+    
+     const sectionRef = useRef(null);
+     const triggerRef = useRef(null);
+     const rowRefs    = useRef([]);
+    
+     const set    = (key) => (val) => setFields((f) => ({ ...f, [key]: val }));
+     const addRef = (i)   => (el)  => { rowRefs.current[i] = el; };
+    
+     const hasErrors = REQUIRED.some((k) => !fields[k]);
+    
+     /* ── SUMBA IKAT keyframe injection ─── */
+     useEffect(() => {
+       if (typeof document === "undefined") return;
+       if (document.getElementById("serenity-ikat-kf")) return;
+       const s    = document.createElement("style");
+       s.id       = "serenity-ikat-kf";
+       s.textContent =
+         "@keyframes ikatRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}";
+       document.head.appendChild(s);
+     }, []);
+    
+     /* ── GSAP stagger reveal ──────────── */
+     useEffect(() => {
+       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+       const rows   = rowRefs.current.filter(Boolean);
+    
+       if (reduce) {
+         gsap.set(rows, { opacity: 1, y: 0 });
+         return;
+       }
+    
+       gsap.set(rows, { opacity: 0, y: 20 });
+    
+       triggerRef.current = ScrollTrigger.create({
+         trigger: sectionRef.current,
+         start:   "top 74%",
+         onEnter: () => {
+           gsap.to(rows, {
+             opacity:  1,
+             y:        0,
+             duration: 0.85,
+             stagger:  0.09,
+             ease:     ease,
+           });
+         },
+         once: true,
+       });
+    
+       return () => { triggerRef.current?.kill(); };
+     }, []);
+    
+     /* ── SUBMIT ───────────────────────── */
+     const handleSubmit = (e) => {
+       e.preventDefault();
+       setSubmitAttempted(true);
+       if (hasErrors) return;
+       // TODO: replace with actual API call (e.g. fetch POST to /api/contact)
+       setSubmitted(true);
+     };
+    
+     return (
+       <section
+         ref={sectionRef}
+         className="
+           relative
+           bg-[#F4F5F2]
+           px-6 py-20
+           md:px-10 md:py-28
+           lg:px-14
+           overflow-hidden
+         "
+       >
+         {/* ── SUMBA IKAT — ambient texture ── */}
+         {/* Third Ikat placement on Contact page */}
+         <div
+           aria-hidden="true"
+           className="pointer-events-none absolute bottom-[-40px] right-[-40px] hidden md:block"
+           style={{
+             width:     "200px",
+             height:    "200px",
+             opacity:   0.05,
+             animation: "ikatRotate 120s linear infinite",
+           }}
+         >
+           <img
+             src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486588/ChatGPT_Image_May_11_2026_03_01_56_PM_1_v2exmt.png"
+             alt=""
+             style={{ width: "100%", height: "100%", objectFit: "contain" }}
+           />
+         </div>
+    
+         <div className="relative mx-auto max-w-[1280px]">
+    
+           {/* ── TWO-COLUMN GRID ─────────────────────── */}
+    
+           <div className="
+             grid grid-cols-1 gap-14
+             md:grid-cols-[1fr_300px] md:gap-16
+             lg:grid-cols-[1fr_340px] lg:gap-20
+             items-start
+           ">
+    
+             {/* ── LEFT: FORM ─────────────────────────── */}
+    
+             <AnimatePresence mode="wait">
+               {!submitted ? (
+    
+                 <motion.form
+                   key="form"
+                   onSubmit={handleSubmit}
+                   exit={{ opacity: 0, y: -12 }}
+                   transition={{ duration: 0.4, ease }}
+                   noValidate
+                 >
+                   <div className="flex flex-col gap-8">
+    
+                     {/* ROW 1 — Full Name + Email */}
+                     <div
+                       ref={addRef(1)}
+                       className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+                     >
+                       <TextInput
+                         label="Full Name"
+                         value={fields.name}
+                         onChange={set("name")}
+                         placeholder="Your full name"
+                         required
+                         error={submitAttempted}
+                         autoComplete="name"
+                       />
+                       <TextInput
+                         label="Email"
+                         value={fields.email}
+                         onChange={set("email")}
+                         placeholder="your@email.com"
+                         type="email"
+                         required
+                         error={submitAttempted}
+                         autoComplete="email"
+                       />
+                     </div>
+    
+                     {/* ROW 2 — Phone (optional) */}
+                     <div ref={addRef(2)} className="max-w-[320px]">
+                       <TextInput
+                         label="Phone or WhatsApp — optional"
+                         value={fields.phone}
+                         onChange={set("phone")}
+                         placeholder="+62 xxx xxxx xxxx"
+                         type="tel"
+                         autoComplete="tel"
+                       />
+                     </div>
+    
+                     {/* ROW 3 — Destination + Duration */}
+                     <div
+                       ref={addRef(3)}
+                       className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+                     >
+                       <SelectInput
+                         label="Destination"
+                         value={fields.destination}
+                         onChange={set("destination")}
+                         placeholder="Select a destination"
+                         options={DESTINATIONS}
+                       />
+                       <SelectInput
+                         label="Duration"
+                         value={fields.duration}
+                         onChange={set("duration")}
+                         placeholder="How long"
+                         options={DURATIONS}
+                       />
+                     </div>
+    
+                     {/* ROW 4 — Guests + Preferred Dates */}
+                     <div
+                       ref={addRef(4)}
+                       className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+                     >
+                       <SelectInput
+                         label="Number of Guests"
+                         value={fields.guests}
+                         onChange={set("guests")}
+                         placeholder="How many guests"
+                         options={GUESTS_OPTS}
+                       />
+                       <TextInput
+                         label="Preferred Dates"
+                         value={fields.dates}
+                         onChange={set("dates")}
+                         placeholder="Month, window, or exact dates"
+                       />
+                     </div>
+    
+                     {/* ROW 5 — Message */}
+                     <div ref={addRef(5)}>
+                       <TextareaInput
+                         label="Message"
+                         value={fields.message}
+                         onChange={set("message")}
+                         placeholder="Tell us about your preferences, activities, or anything we should know."
+                         required
+                         error={submitAttempted}
+                         rows={4}
+                       />
+                     </div>
+    
+                     {/* ROW 6 — Submit */}
+                     <div ref={addRef(6)} className="pt-2">
+                       <button
+                         type="submit"
+                         className="
+                           font-[Switzer] font-light
+                           text-[11px] uppercase tracking-[0.28em]
+                           text-[#F4F5F2]
+                           bg-[#2D3C68]
+                           px-12 py-[16px]
+                           transition-colors duration-500
+                           hover:bg-[#B08D57]
+                           cursor-pointer
+                           border-none
+                           outline-none
+                         "
+                       >
+                         Send Enquiry
+                       </button>
+    
+                       {/* Validation feedback — only shows after submit attempt */}
+                       <AnimatePresence>
+                         {submitAttempted && hasErrors && (
+                           <motion.p
+                             initial={{ opacity: 0, y: -6 }}
+                             animate={{ opacity: 1, y: 0  }}
+                             exit={{    opacity: 0         }}
+                             transition={{ duration: 0.35, ease }}
+                             className="
+                               font-[Switzer] font-light
+                               text-[12px] tracking-[0.03em]
+                               text-[#C66A4A]
+                               mt-4
+                             "
+                           >
+                             Please fill in your name, email, and message.
+                           </motion.p>
+                         )}
+                       </AnimatePresence>
+                     </div>
+    
+                   </div>
+                 </motion.form>
+    
+               ) : (
+    
+                 /* ── SUCCESS STATE ───────────────────── */
+    
+                 <motion.div
+                   key="success"
+                   initial={{ opacity: 0, y: 24 }}
+                   animate={{ opacity: 1, y: 0  }}
+                   transition={{ duration: 0.9, ease }}
+                   className="pt-4"
+                 >
+                   <p className="
+                     font-[Gambarino]
+                     text-[clamp(28px,3.2vw,46px)]
+                     leading-[1.18]
+                     tracking-[-0.03em]
+                     text-[#2D3C68]
+                   ">
+                     Thank you, {fields.name}.<br />
+                     Alexandra will be<br />
+                     in touch shortly.
+                   </p>
+    
+                   {/* brass divider */}
+                   <div className="mt-9 h-px w-12 bg-[#B08D57]" />
+    
+                   <p className="
+                     mt-6
+                     font-[Switzer] font-light
+                     text-[13px] leading-[1.7]
+                     text-[#2D3C68]/56
+                     max-w-[320px]
+                   ">
+                     We typically respond within 24 hours.
+                     Keep an eye on {fields.email}.
+                   </p>
+                 </motion.div>
+    
+               )}
+             </AnimatePresence>
+    
+             {/* ── RIGHT: SIDEBAR ─────────────────────── */}
+             {/*
+               Sticky on desktop — stays in viewport while
+               the form scrolls. top-[120px] accounts for
+               the fixed navbar height.
+             */}
+    
+             <div
+               ref={addRef(7)}
+               className="md:sticky md:top-[120px]"
+             >
+               <ContactSidebar />
+             </div>
+    
+           </div>
+         </div>
+       </section>
+     );
+   }

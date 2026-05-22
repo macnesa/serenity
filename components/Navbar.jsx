@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -10,17 +10,128 @@ import {
   X,
 } from "lucide-react";
 
+/*
+  ============================================================
+  NAV ITEMS
+  Each item carries its own contextual image.
+  Replace Unsplash URLs with Cloudinary vessel/destination
+  photos before launch.
+  ============================================================
+*/
+
+const NAV_ITEMS = [
+  {
+    label: "Home",
+    href: "/",
+    image:
+      "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=1600&fit=crop",
+    // REPLACE → vessel exterior, wide ocean shot
+  },
+
+  {
+    label: "The Yacht",
+    href: "/yacht",
+    image:
+      "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=1600&fit=crop",
+    // REPLACE → deck render or interior — Upper Deck / Living Room
+  },
+
+  {
+    label: "Experiences",
+    href: "/experiences",
+    image:
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1600&fit=crop",
+    // REPLACE → candid ocean activity, natural light
+  },
+
+  {
+    label: "Destinations",
+    href: "/destinations",
+    image:
+      "https://images.unsplash.com/photo-1537956965359-7573183d1f57?q=80&w=1600&fit=crop",
+    // REPLACE → aerial Labuan Bajo or Raja Ampat landscape
+  },
+
+  {
+    label: "Rates & Schedule",
+    href: "/rates-and-schedule",
+    image:
+      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=1600&fit=crop",
+    // REPLACE → aerial vessel shot, route context
+  },
+
+  {
+    label: "About",
+    href: "/about",
+    image:
+      "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?q=80&w=1600&fit=crop",
+    // REPLACE → crew candid, golden hour on deck
+  },
+
+  {
+    label: "Contact",
+    href: "/contact",
+    image:
+      "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?q=80&w=1600&fit=crop",
+    // REPLACE → horizon, late light, open ocean
+  },
+];
+
+/*
+  ============================================================
+  CONSTANTS
+  ============================================================
+*/
+
+const DEFAULT_IMAGE = NAV_ITEMS[0].image;
+
+const LOGO =
+  "https://res.cloudinary.com/dombq6plz/image/upload/v1777356413/SERENITY_LOGO-02_u1bcf2_1_zc65st.png";
+
+const ease = [0.22, 1, 0.36, 1];
+
+/* ========================================================== */
+/* COMPONENT                                                   */
+/* ========================================================== */
+
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [show, setShow] = useState(true);
+  const [open, setOpen]         = useState(false);
+  const [show, setShow]         = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered]   = useState(null); // item.label | null
 
   const lastScroll = useRef(0);
 
   /*
-    ========================================
-    SCROLL SYSTEM
-    ========================================
+    ──────────────────────────────────────────────────────────
+    REDUCED MOTION
+    ──────────────────────────────────────────────────────────
+  */
+
+  const reduce =
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false;
+
+  /*
+    ──────────────────────────────────────────────────────────
+    ACTIVE IMAGE
+    Computed from hovered state. Falls back to DEFAULT_IMAGE.
+    This is the key for AnimatePresence — changing it triggers
+    the blur crossfade between contextual images.
+    ──────────────────────────────────────────────────────────
+  */
+
+  const activeImage =
+    hovered !== null
+      ? NAV_ITEMS.find((n) => n.label === hovered)?.image ?? DEFAULT_IMAGE
+      : DEFAULT_IMAGE;
+
+  /*
+    ──────────────────────────────────────────────────────────
+    SCROLL — hide on scroll down past 120px, show on scroll up
+    RAF-throttled for performance.
+    ──────────────────────────────────────────────────────────
   */
 
   useEffect(() => {
@@ -35,25 +146,18 @@ export default function Navbar() {
 
           if (current < 40) {
             setShow(true);
-
             lastScroll.current = current;
-
             ticking = false;
-
             return;
           }
 
-          if (
-            current > lastScroll.current &&
-            current > 120
-          ) {
+          if (current > lastScroll.current && current > 120) {
             setShow(false);
           } else {
             setShow(true);
           }
 
           lastScroll.current = current;
-
           ticking = false;
         });
 
@@ -61,188 +165,92 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener(
-      "scroll",
-      handleScroll,
-      {
-        passive: true,
-      },
-    );
-
-    return () =>
-      window.removeEventListener(
-        "scroll",
-        handleScroll,
-      );
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   /*
-    ========================================
-    BODY LOCK
-    ========================================
+    ──────────────────────────────────────────────────────────
+    BODY LOCK — prevent background scroll when menu is open
+    ──────────────────────────────────────────────────────────
   */
 
   useEffect(() => {
-    document.body.style.overflow = open
-      ? "hidden"
-      : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  /*
-    ========================================
-    MENU ROWS
-    ========================================
-  */
-
-  const menuRows = [
-    [
-      {
-        label: "Home",
-        href: "/",
-        className:
-          "text-[64px] tracking-[-0.042em] md:text-[74px]",
-      },
-
-      {
-        label: "The Yacht",
-        href: "/yacht",
-        className:
-          "text-[70px] tracking-[-0.05em] md:text-[80px]",
-      },
-    ],
-
-    [
-      {
-        label: "Experiences",
-        href: "/experiences",
-        className:
-          "text-[68px] tracking-[-0.05em] md:text-[78px]",
-      },
-
-      {
-        label: "Destinations",
-        href: "/destinations",
-        className:
-          "text-[70px] tracking-[-0.05em] md:text-[80px]",
-      },
-    ],
-
-    [
-      {
-        label: "Rates & Schedule",
-        href: "/rates-and-schedule",
-        className:
-          "text-[52px] tracking-[-0.028em] md:text-[60px]",
-      },
-
-      {
-        label: "About",
-        href: "/about",
-        className:
-          "text-[58px] tracking-[-0.04em] md:text-[66px]",
-      },
-
-      {
-        label: "Contact",
-        href: "/contact",
-        className:
-          "text-[58px] tracking-[-0.04em] md:text-[66px]",
-      },
-    ],
-  ];
-
-  /*
-    ========================================
-    MOBILE MENU
-    ========================================
-  */
-
-  const mobileMenu = [
-    {
-      label: "Home",
-      href: "/",
-    },
-
-    {
-      label: "The Yacht",
-      href: "/yacht",
-    },
-
-    {
-      label: "Experiences",
-      href: "/experiences",
-    },
-
-    {
-      label: "Destinations",
-      href: "/destinations",
-    },
-
-    {
-      label: "Rates & Schedule",
-      href: "/rates-and-schedule",
-    },
-
-    {
-      label: "About",
-      href: "/about",
-    },
-
-    {
-      label: "Contact",
-      href: "/contact",
-    },
-  ];
+  /* ========================================================= */
+  /* RENDER                                                     */
+  /* ========================================================= */
 
   return (
     <>
-      {/* ========================================= */}
-      {/* NAVBAR */}
-      {/* ========================================= */}
+      {/* ──────────────────────────────────────────────────── */}
+      {/* NAVBAR — collapsed state                             */}
+      {/* Transparent at top → frosted glass on scroll.        */}
+      {/* Hides on scroll down, shows on scroll up.            */}
+      {/* ──────────────────────────────────────────────────── */}
 
       <motion.header
         animate={{
-          y: show ? 0 : -140,
-          opacity: show ? 1 : 0,
+          y:       show ? 0   : -110,
+          opacity: show ? 1   : 0,
         }}
-        transition={{
-          duration: 0.55,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="fixed left-1/2 top-4 z-50 w-[94%] max-w-[1240px] -translate-x-1/2 md:top-5"
+        transition={{ duration: 0.45, ease }}
+        className="
+          fixed left-1/2 top-4 z-50
+          w-[94%] max-w-[1240px]
+          -translate-x-1/2
+          md:top-5
+        "
       >
         <div
-          className={`relative overflow-hidden rounded-full border transition-all duration-500 ${
-            scrolled
+          className={`
+            relative overflow-hidden rounded-full border
+            transition-all duration-500
+            ${scrolled
               ? "border-[#2D3C68]/10 bg-[#F4F5F2]/92 shadow-[0_14px_40px_rgba(0,0,0,0.06)] backdrop-blur-xl"
-              : "border-white/14 bg-black/[0.08] backdrop-blur-[14px]"
-          }`}
+              : "border-white/14 bg-white/[0.04] shadow-[0_8px_30px_rgba(255,255,255,0.04)] backdrop-blur-[18px]"
+            }
+          `}
         >
-          {/* ATMOSPHERIC EDGE */}
-
+          {/* top edge shimmer */}
           <div
-            className={`absolute left-0 top-0 h-px w-full transition-all duration-500 ${
-              scrolled
+            className={`
+              absolute left-0 top-0 h-px w-full
+              transition-all duration-500
+              ${scrolled
                 ? "bg-gradient-to-r from-transparent via-[#B08D57]/26 to-transparent"
                 : "bg-gradient-to-r from-transparent via-white/12 to-transparent"
-            }`}
+              }
+            `}
           />
 
-          {/* INNER */}
+          {/* soft radial light */}
+          <div className="
+            pointer-events-none absolute inset-0
+            bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.10),transparent_62%)]
+          " />
 
+          {/* top-down light */}
+          <div className="
+            pointer-events-none absolute inset-0
+            bg-[linear-gradient(to_bottom,rgba(255,255,255,0.08),transparent_52%)]
+          " />
+
+          {/* inner grid */}
           <div
-            className={`grid grid-cols-3 items-center px-4 py-[10px] transition-all duration-500 md:px-7 md:py-4 ${
-              scrolled
-                ? "text-[#2D3C68]"
-                : "text-[#F4F5F2]"
-            }`}
+            className={`
+              relative z-[2]
+              grid grid-cols-3 items-center
+              px-4 py-[10px]
+              transition-all duration-500
+              md:px-7 md:py-4
+              ${scrolled ? "text-[#2D3C68]" : "text-[#F4F5F2]"}
+            `}
           >
-            {/* LEFT */}
-
+            {/* LEFT — menu trigger */}
             <div className="flex items-center justify-start">
               <button
                 onClick={() => setOpen(true)}
@@ -250,407 +258,436 @@ export default function Navbar() {
               >
                 <Menu
                   strokeWidth={1.5}
-                  className="h-[15px] w-[15px] opacity-[0.86] transition-all duration-300 group-hover:opacity-100"
+                  className="h-[15px] w-[15px] opacity-[0.86]"
                 />
-
-                <span className="hidden text-[11px] uppercase tracking-[0.32em] opacity-[0.88] transition-all duration-300 group-hover:opacity-100 sm:block">
+                <span className="hidden text-[11px] uppercase tracking-[0.32em] opacity-[0.88] sm:block">
                   Menu
                 </span>
               </button>
             </div>
 
-            {/* CENTER */}
-
+            {/* CENTER — wordmark, light + dark versions */}
             <div className="flex justify-center">
               <Link
                 href="/"
                 className="relative block h-[28px] w-[122px] md:h-[40px] md:w-[180px]"
               >
-                {/* LIGHT */}
-
                 <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1777356413/SERENITY_LOGO-02_u1bcf2_1_zc65st.png"
+                  src={LOGO}
                   alt="Serenity"
                   fill
                   priority
-                  className={`object-contain transition-all duration-500 ${
-                    scrolled
-                      ? "opacity-0"
-                      : "opacity-[0.95]"
-                  }`}
+                  className={`
+                    object-contain transition-opacity duration-500
+                    ${scrolled ? "opacity-0" : "opacity-[0.95]"}
+                  `}
                 />
-
-                {/* DARK */}
-
                 <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1777356413/SERENITY_LOGO-02_u1bcf2_1_zc65st.png"
+                  src={LOGO}
                   alt="Serenity"
                   fill
                   priority
-                  className={`object-contain brightness-0 transition-all duration-500 ${
-                    scrolled
-                      ? "opacity-[0.9]"
-                      : "opacity-0"
-                  }`}
+                  className={`
+                    object-contain brightness-0 transition-opacity duration-500
+                    ${scrolled ? "opacity-[0.9]" : "opacity-0"}
+                  `}
                 />
               </Link>
             </div>
 
-            {/* RIGHT */}
-
+            {/* RIGHT — reserve CTA */}
             <div className="flex justify-end">
-              {/* MOBILE */}
-
+              {/* mobile */}
               <Link
                 href="/contact"
-                className={`group inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.28em] transition-all duration-300 md:hidden ${
-                  scrolled
-                    ? "text-[#2D3C68]/84"
-                    : "text-[#F4F5F2]/82"
-                }`}
+                className={`
+                  group inline-flex items-center gap-1.5
+                  text-[10px] uppercase tracking-[0.28em]
+                  transition-all duration-300 md:hidden
+                  ${scrolled ? "text-[#2D3C68]/84" : "text-[#F4F5F2]/82"}
+                `}
               >
                 <span>Enquire</span>
-
-                <ArrowUpRight
-                  strokeWidth={1.5}
-                  className="h-[11px] w-[11px] transition-transform duration-300 group-hover:translate-x-[1px] group-hover:-translate-y-[1px]"
-                />
+                <ArrowUpRight strokeWidth={1.5} className="h-[11px] w-[11px]" />
               </Link>
 
-              {/* DESKTOP */}
-
+              {/* desktop */}
               <Link
                 href="/contact"
-                className={`group hidden items-center gap-2 rounded-full border px-5 py-2 text-[12px] uppercase tracking-[0.28em] transition-all duration-300 md:inline-flex ${
-                  scrolled
-                    ? "border-[#2D3C68]/14 bg-[#2D3C68] text-[#F4F5F2] hover:scale-[1.03]"
+                className={`
+                  group hidden items-center gap-2 rounded-full border
+                  px-5 py-2 text-[12px] uppercase tracking-[0.28em]
+                  transition-all duration-300 md:inline-flex
+                  ${scrolled
+                    ? "border-[#2D3C68]/14 bg-[#2D3C68] text-[#F4F5F2]"
                     : "border-[#F4F5F2]/32 text-[#F4F5F2] hover:bg-[#F4F5F2] hover:text-[#2D3C68]"
-                }`}
+                  }
+                `}
               >
                 <span>Reserve</span>
-
-                <ArrowUpRight
-                  strokeWidth={1.5}
-                  className="h-[13px] w-[13px] transition-transform duration-300 group-hover:translate-x-[1px] group-hover:-translate-y-[1px]"
-                />
+                <ArrowUpRight strokeWidth={1.5} className="h-[13px] w-[13px]" />
               </Link>
             </div>
           </div>
         </div>
       </motion.header>
 
-      {/* ========================================= */}
-      {/* FULLSCREEN MENU */}
-      {/* ========================================= */}
+      {/* ──────────────────────────────────────────────────── */}
+      {/* FULLSCREEN MENU                                      */}
+      {/* ──────────────────────────────────────────────────── */}
 
       <AnimatePresence mode="wait">
         {open && (
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.45,
-            }}
-            className="fixed inset-0 z-[100] overflow-hidden bg-[#24345A] text-[#F4F5F2] md:bg-[#2D3C68]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease }}
+            className="
+              fixed inset-0 z-[100]
+              overflow-hidden
+              bg-[#24345A] text-[#F4F5F2]
+              md:bg-[#27375F]
+            "
           >
-            {/* ========================================= */}
-            {/* ATMOSPHERE */}
-            {/* ========================================= */}
+            {/* ── ATMOSPHERE — three layers ─────────────────── */}
 
+            {/* warm brass radial — top right */}
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_68%_22%,rgba(176,141,87,0.08),transparent_50%)]" />
 
+            {/* cool light radial — mid left */}
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_35%_45%,rgba(255,255,255,0.03),transparent_55%)]" />
 
+            {/* depth gradient — top + bottom darkening */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/[0.10] via-transparent to-black/[0.24]" />
 
-            {/* ========================================= */}
-            {/* ATMOSPHERIC EMBLEM */}
-            {/* ========================================= */}
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                scale: 1.08,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-              }}
-              transition={{
-                duration: 1.8,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="pointer-events-none absolute right-[-14%] top-1/2 hidden -translate-y-1/2 lg:block"
-            >
-              <div className="relative h-[820px] w-[820px]">
-                {/* GLOW */}
-
-                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.04),transparent_68%)] blur-3xl" />
-
-                {/* EMBLEM */}
-
+            {/* ── IMAGE PRELOAD — hidden, forces browser cache ─── */}
+            {/*
+              All nav images preloaded on mount so crossfade is
+              instant with no flicker on first hover per item.
+              pointer-events-none + aria-hidden ensures no a11y impact.
+            */}
+            <div aria-hidden="true" className="pointer-events-none absolute opacity-0">
+              {NAV_ITEMS.map((item) => (
                 <Image
-                  src="https://res.cloudinary.com/dombq6plz/image/upload/v1778486752/ChatGPT_Image_May_11_2026_03_01_56_PM_2_k2aiwl.png"
-                  alt="Serenity Emblem"
+                  key={item.label}
+                  src={item.image}
+                  alt=""
                   fill
                   priority
-                  className="
-                    object-contain
-                    opacity-[0.035]
-                    blur-[0.4px]
-                    contrast-125
-                    brightness-125
-                    mix-blend-screen
-                  "
+                  className="object-cover"
                 />
-              </div>
-            </motion.div>
+              ))}
+            </div>
 
-            {/* ========================================= */}
-            {/* CONTENT */}
-            {/* ========================================= */}
+            {/* ── CONTENT WRAPPER ──────────────────────────────── */}
 
             <div
               className="
-                relative
-                flex
-                h-full
-                flex-col
+                relative flex h-full flex-col
                 px-6
                 pt-[max(env(safe-area-inset-top),24px)]
                 pb-[max(env(safe-area-inset-bottom),24px)]
-                md:px-12
-                md:py-10
+                md:px-0 md:py-0
               "
             >
-              {/* TOP */}
 
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-5">
-                <div className="text-[10px] uppercase tracking-[0.32em] text-white/46 md:text-[11px]">
-                  Serenity
+              {/* ================================================ */}
+              {/* MOBILE MENU                                       */}
+              {/* ================================================ */}
+
+              <div className="flex flex-1 flex-col md:hidden">
+
+                {/* mobile top bar */}
+                <div className="flex items-center justify-between border-b border-white/[0.08] pb-5">
+                  <div className="relative h-[22px] w-[96px]">
+                    <Image
+                      src={LOGO}
+                      alt="Serenity"
+                      fill
+                      className="object-contain opacity-[0.92]"
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="group inline-flex items-center gap-3 text-white/56 transition-all duration-300 hover:text-white/90"
+                  >
+                    <span className="text-[10px] uppercase tracking-[0.32em]">Close</span>
+                    <X strokeWidth={1.4} className="h-[15px] w-[15px] transition-transform duration-500 group-hover:rotate-90" />
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => setOpen(false)}
-                  className="group inline-flex items-center gap-3 text-white/56 transition-all duration-500 hover:text-white/90"
-                >
-                  <span className="text-[10px] uppercase tracking-[0.32em] md:text-[11px]">
-                    Close
-                  </span>
-
-                  <X
-                    strokeWidth={1.4}
-                    className="h-[15px] w-[15px] transition-transform duration-500 group-hover:rotate-90"
-                  />
-                </button>
-              </div>
-
-              {/* ========================================= */}
-              {/* MOBILE NAVIGATION */}
-              {/* ========================================= */}
-
-              <div className="flex flex-1 items-center md:hidden">
-                <div className="w-full">
-                  {mobileMenu.map((item, i) => (
-                    <motion.div
-                      key={item.label}
-                      initial={{
-                        opacity: 0,
-                        y: 24,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.55,
-                        delay:
-                          0.06 + i * 0.06,
-                        ease: [
-                          0.22,
-                          1,
-                          0.36,
-                          1,
-                        ],
-                      }}
-                      className="border-b border-white/[0.08]"
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() =>
-                          setOpen(false)
-                        }
-                        className="group flex items-center justify-between py-5"
+                {/* mobile nav list */}
+                <div className="flex flex-1 items-center">
+                  <div className="w-full">
+                    {NAV_ITEMS.map((item, i) => (
+                      <motion.div
+                        key={item.label}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.55,
+                          delay: 0.06 + i * 0.06,
+                          ease,
+                        }}
+                        className="border-b border-white/[0.08]"
                       >
-                        <span className="font-[Gambarino] text-[34px] leading-none tracking-[-0.04em]">
-                          {item.label}
-                        </span>
-
-                        <ArrowUpRight
-                          strokeWidth={1.4}
-                          className="
-                            h-[15px]
-                            w-[15px]
-                            text-white/28
-                            transition-all
-                            duration-500
-                            group-hover:translate-x-[1px]
-                            group-hover:-translate-y-[1px]
-                            group-hover:text-white/72
-                          "
-                        />
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ========================================= */}
-              {/* DESKTOP NAVIGATION */}
-              {/* ========================================= */}
-
-              <div className="hidden flex-1 items-center justify-center md:flex">
-                <div className="w-full max-w-[1240px]">
-                  <div className="flex flex-col items-center">
-                    {/* ROW 1 */}
-
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: 18,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.7,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="flex items-end justify-center gap-x-24"
-                    >
-                      {menuRows[0].map(
-                        (item) => (
-                          <Link
-                            key={item.label}
-                            href={item.href}
-                            onClick={() =>
-                              setOpen(false)
-                            }
-                            className="group inline-flex items-center"
-                          >
-                            <span
-                              className={`font-[Gambarino] leading-[0.92] text-white transition-all duration-700 group-hover:opacity-[0.72] ${item.className}`}
-                            >
-                              {item.label}
-                            </span>
-                          </Link>
-                        ),
-                      )}
-                    </motion.div>
-
-                    {/* ROW 2 */}
-
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: 18,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.7,
-                        delay: 0.04,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="mt-5 flex items-start justify-center gap-x-16"
-                    >
-                      {menuRows[1].map(
-                        (item) => (
-                          <Link
-                            key={item.label}
-                            href={item.href}
-                            onClick={() =>
-                              setOpen(false)
-                            }
-                            className="group inline-flex items-center"
-                          >
-                            <span
-                              className={`font-[Gambarino] leading-[0.92] text-white transition-all duration-700 group-hover:opacity-[0.72] ${item.className}`}
-                            >
-                              {item.label}
-                            </span>
-                          </Link>
-                        ),
-                      )}
-                    </motion.div>
-
-                    {/* ROW 3 */}
-
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: 18,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.7,
-                        delay: 0.08,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="mt-10 flex items-start justify-center gap-x-14"
-                    >
-                      {menuRows[2].map(
-                        (item) => (
-                          <Link
-                            key={item.label}
-                            href={item.href}
-                            onClick={() =>
-                              setOpen(false)
-                            }
-                            className="group inline-flex items-center"
-                          >
-                            <span
-                              className={`font-[Gambarino] leading-[0.94] text-white/78 transition-all duration-700 group-hover:text-white ${item.className}`}
-                            >
-                              {item.label}
-                            </span>
-                          </Link>
-                        ),
-                      )}
-                    </motion.div>
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className="group flex items-center justify-between py-5"
+                        >
+                          <span className="font-[Gambarino] text-[34px] leading-none tracking-[-0.04em]">
+                            {item.label}
+                          </span>
+                          <ArrowUpRight
+                            strokeWidth={1.4}
+                            className="h-[15px] w-[15px] text-white/28 transition-opacity duration-300 group-hover:text-white/72"
+                          />
+                        </Link>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
-              </div>
 
-              {/* FOOTER */}
-
-              <div className="grid gap-3 border-t border-white/[0.08] pt-6 text-[10px] uppercase tracking-[0.2em] text-white/34 md:grid-cols-3 md:text-[11px] md:text-white/36">
-                <div>
+                {/* mobile bottom — single label, passes tone filter */}
+                <div className="border-t border-white/[0.08] pt-6 text-[10px] uppercase tracking-[0.2em] text-white/34">
                   Indonesia Archipelago
                 </div>
 
-                <div className="md:text-center">
-                  Quiet journeys across the sea
+              </div>
+
+              {/* ================================================ */}
+              {/* DESKTOP MENU                                      */}
+              {/* 42% nav left · 58% image right                   */}
+              {/* Image dominant — more cinematic than nav dominant */}
+              {/* ================================================ */}
+
+              <div className="hidden h-full md:grid md:grid-cols-[42fr_58fr]">
+
+                {/* ── LEFT COLUMN — navigation ─────────────────── */}
+
+                <div className="relative flex flex-col justify-between border-r border-white/[0.06] px-12 py-10">
+
+                  {/* desktop top bar */}
+                  <div className="relative flex items-center justify-between">
+
+                    {/* logo */}
+                    <div className="relative h-[26px] w-[120px]">
+                      <Image
+                        src={LOGO}
+                        alt="Serenity"
+                        fill
+                        className="object-contain opacity-[0.92]"
+                      />
+                    </div>
+
+                    {/* close */}
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="group inline-flex items-center gap-3 text-white/56 transition-all duration-300 hover:text-white/90"
+                    >
+                      <span className="text-[10px] uppercase tracking-[0.32em]">Close</span>
+                      <X strokeWidth={1.4} className="h-[15px] w-[15px] transition-transform duration-500 group-hover:rotate-90" />
+                    </button>
+
+                    {/*
+                      ── BRASS DRAW LINE ──────────────────────────
+                      Single 1px signature line that draws
+                      left→right below the top bar on menu open.
+                      scaleX: 0 → 1, originX: left, delay: 0.25s.
+                      Gradient fades to transparent at right edge.
+                    */}
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 1.0, delay: 0.25, ease }}
+                      style={{ originX: 0 }}
+                      className="
+                        absolute -bottom-5 left-0
+                        h-px w-full
+                        bg-gradient-to-r
+                        from-[#B08D57]/50
+                        via-[#B08D57]/25
+                        to-transparent
+                      "
+                    />
+                  </div>
+
+                  {/* desktop nav list */}
+                  <nav
+                    className="flex flex-1 flex-col justify-center"
+                    onMouseLeave={() => setHovered(null)}
+                  >
+                    <div className="w-full">
+                      {NAV_ITEMS.map((item, i) => (
+                        <motion.div
+                          key={item.label}
+                          initial={reduce
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 28 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.65,
+                            delay: reduce ? 0 : 0.05 + i * 0.04,
+                            ease,
+                          }}
+                        >
+                          {/*
+                            ── SIBLING FADE ──────────────────────
+                            Framer Motion animate — real animation.
+                            Hovered item  → opacity 1
+                            Siblings      → opacity 0.18
+                            Idle          → all opacity 1
+                          */}
+                          <motion.div
+                            animate={{
+                              opacity:
+                                hovered === null || hovered === item.label
+                                  ? 1
+                                  : 0.18,
+                            }}
+                            transition={{ duration: 0.4, ease }}
+                          >
+                            <Link
+                              href={item.href}
+                              onClick={() => setOpen(false)}
+                              onMouseEnter={() => setHovered(item.label)}
+                              className="group flex items-center border-b border-white/[0.05] py-[18px]"
+                            >
+                              {/*
+                                ── LABEL ───────────────────────────
+                                Font: Gambarino 46px — H3 range,
+                                commanding without overwhelming.
+                                Hover: text transitions to brass
+                                (#C7A36A) over 600ms.
+                                transition-colors (not transition-all)
+                                — specific, performant.
+                              */}
+                              <span
+                                className="
+                                  font-[Gambarino]
+                                  text-[46px]
+                                  leading-[0.88]
+                                  tracking-[-0.05em]
+                                  text-[#E9E5DD]
+                                  transition-colors
+                                  duration-600
+                                  group-hover:text-[#C7A36A]
+                                "
+                              >
+                                {item.label}
+                              </span>
+                            </Link>
+                          </motion.div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </nav>
+
+                  {/* desktop bottom — single label */}
+                  <div className="border-t border-white/[0.08] pt-6 text-[10px] uppercase tracking-[0.2em] text-white/34">
+                    Indonesia Archipelago
+                  </div>
+
                 </div>
 
-                <div className="md:text-right">
-                  Serenity Yacht
+                {/* ── RIGHT COLUMN — image panel ───────────────── */}
+                {/*
+                  Three layers:
+                  1. AnimatePresence crossfade (blur + scale + opacity)
+                  2. Ambient motion loop inside each image (scale + y)
+                  3. Gradient overlays for blending and depth
+                */}
+
+                <div className="relative overflow-hidden">
+
+                  <AnimatePresence mode="sync">
+                    <motion.div
+                      key={activeImage}
+                      initial={reduce
+                        ? { opacity: 1, scale: 1, filter: "blur(0px)" }
+                        : { opacity: 0, scale: 1.05, filter: "blur(10px)" }
+                      }
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1.0, ease }}
+                      className="absolute inset-0"
+                    >
+                      {/*
+                        ── AMBIENT IMAGE MOTION ─────────────────────
+                        Slow breathing loop — scale + y drift over 20s.
+                        Image feels alive without any user interaction.
+                        reduce motion: disabled entirely.
+                      */}
+                      <motion.div
+                        animate={reduce ? {} : {
+                          scale: [1.02, 1.05, 1.02],
+                          y: [0, -10, 0],
+                        }}
+                        transition={{
+                          duration: 20,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0"
+                      >
+                        <Image
+                          src={activeImage}
+                          alt="Serenity"
+                          fill
+                          priority
+                          className="object-cover"
+                        />
+                      </motion.div>
+
+                      {/*
+                        ── GRADIENT OVERLAYS ────────────────────────
+                        Left: hard blend from nav bg (#27375F) to
+                        transparent at 42% — ensures text always
+                        readable against any image content.
+
+                        Bottom + top: subtle darkening for depth.
+                      */}
+
+                      {/* left blend — nav bg color match */}
+                      <div
+                        className="
+                          absolute inset-0
+                          bg-[linear-gradient(to_right,
+                            rgba(39,55,95,0.96)_0%,
+                            rgba(39,55,95,0.78)_12%,
+                            rgba(39,55,95,0.38)_24%,
+                            rgba(0,0,0,0)_42%
+                          )]
+                        "
+                      />
+
+                      {/* vertical depth gradient */}
+                      <div
+                        className="
+                          absolute inset-0
+                          bg-gradient-to-t
+                          from-black/[0.24]
+                          via-transparent
+                          to-black/[0.08]
+                        "
+                      />
+
+                    </motion.div>
+                  </AnimatePresence>
+
                 </div>
+                {/* end right column */}
+
               </div>
+              {/* end desktop grid */}
+
             </div>
+            {/* end content wrapper */}
+
           </motion.div>
         )}
       </AnimatePresence>

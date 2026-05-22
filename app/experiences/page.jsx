@@ -1868,569 +1868,321 @@ function ExperienceDining() {
 
 function ExperienceHumanMoments() {
   const sectionRef = useRef(null);
-
-  const wrap1Ref = useRef(null);
-  const wrap2Ref = useRef(null);
-  const wrap3Ref = useRef(null);
-  const wrap4Ref = useRef(null);
-
+ 
+  // individual refs — hooks must not be called inside array literals
+  const wrap1Ref  = useRef(null);
+  const wrap2Ref  = useRef(null);
+  const wrap3Ref  = useRef(null);
+  const wrap4Ref  = useRef(null);
   const inner1Ref = useRef(null);
   const inner2Ref = useRef(null);
   const inner3Ref = useRef(null);
   const inner4Ref = useRef(null);
-
+  
+const IMAGES = [
+  {
+    src: "https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    // REPLACE → candid on deck, natural light, Indonesia
+  },
+  {
+    src: "https://images.pexels.com/photos/1574843/pexels-photo-1574843.jpeg?auto=compress&cs=tinysrgb&w=900",
+    // REPLACE → Indonesia landscape, wrong geography currently
+  },
+  {
+    src: "https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=1000",
+    // REPLACE → vessel or activity shot, Indonesia
+  },
+  {
+    src: "https://images.pexels.com/photos/3225528/pexels-photo-3225528.jpeg?auto=compress&cs=tinysrgb&w=800",
+    // REPLACE → Mediterranean coastal — Foundation 10.2 ❌
+  },
+];
+ 
+/*
+  Uniform aspect ratio — all four images same height per row.
+  Perfectly even 2×2 grid. No height gaps in grid rows.
+  3/4 portrait: consistent with gallery sections across the site.
+*/
+const ASPECT = "3 / 4";
+ 
+const PARALLAX = [
+  { scrub: 1.8, y: -28 },
+  { scrub: 2.2, y: -16 },
+  { scrub: 1.6, y: -34 },
+  { scrub: 2.4, y: -10 },
+];
+ 
+const SHADOWS = [
+  "0 34px 80px rgba(18,24,36,0.08)",
+  "0 24px 64px rgba(18,24,36,0.10)",
+  "0 18px 52px rgba(18,24,36,0.06)",
+  "0 16px 40px rgba(18,24,36,0.08)",
+];
+ 
+  // arrays built from individual refs — safe for iteration
+  const wrapRefs  = [wrap1Ref,  wrap2Ref,  wrap3Ref,  wrap4Ref];
+  const innerRefs = [inner1Ref, inner2Ref, inner3Ref, inner4Ref];
+ 
   useEffect(() => {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-
-    const wrappers = [
-      wrap1Ref,
-      wrap2Ref,
-      wrap3Ref,
-      wrap4Ref,
-    ];
-
+ 
+    /* ── REDUCED MOTION ── */
+ 
     if (reduce) {
-      wrappers.forEach((r) => {
-        if (!r.current) return;
-
-        gsap.set(r.current, {
-          opacity: 1,
-          y: 0,
-        });
+      wrapRefs.forEach((r) => {
+        if (r.current) gsap.set(r.current, { opacity: 1, y: 0 });
       });
-
       return;
     }
-
+ 
     const ctx = gsap.context(() => {
       const ease = [0.22, 1, 0.36, 1];
-
-      // ─────────────────────────────────────
-      // ENTRANCE
-      // Softer. Slower. Less performative.
-      // ─────────────────────────────────────
-      wrappers.forEach((ref, i) => {
+ 
+      /* ── ENTRANCE — per wrapper, stagger ── */
+ 
+      wrapRefs.forEach((ref, i) => {
         if (!ref.current) return;
-
+ 
         gsap.fromTo(
           ref.current,
+          { opacity: 0, y: 28 },
           {
-            opacity: 0,
-            y: 28,
-          },
-          {
-            opacity: 1,
-            y: 0,
+            opacity:  1,
+            y:        0,
             duration: 1.25,
             ease,
             delay: i * 0.08,
-
             scrollTrigger: {
               trigger: ref.current,
-              start: "top 90%",
+              start:   "top 90%",
             },
           }
         );
       });
-
-      // ─────────────────────────────────────
-      // PARALLAX
-      // Memory drift. Not movement.
-      // ─────────────────────────────────────
-      const parallax = [
-        {
-          inner: inner1Ref,
-          wrap: wrap1Ref,
-          scrub: 1.8,
-          y: -28,
-        },
-
-        {
-          inner: inner2Ref,
-          wrap: wrap2Ref,
-          scrub: 2.2,
-          y: -16,
-        },
-
-        {
-          inner: inner3Ref,
-          wrap: wrap3Ref,
-          scrub: 1.6,
-          y: -34,
-        },
-
-        {
-          inner: inner4Ref,
-          wrap: wrap4Ref,
-          scrub: 2.4,
-          y: -10,
-        },
-      ];
-
-      parallax.forEach(
-        ({ inner, wrap, scrub, y }) => {
-          if (!inner.current || !wrap.current)
-            return;
-
-          gsap.fromTo(
-            inner.current,
-            {
-              y: 0,
-              scale: 1.02,
+ 
+      /*
+        ── KEN BURNS — inner image shifts within overflow-hidden wrapper.
+        Wrapper stays fixed in the grid. Only the image inside moves.
+        Different rates create visual variety within each frame.
+        Does NOT create scattered layout — containers are always in grid.
+      */
+ 
+      wrapRefs.forEach((wrapRef, i) => {
+        const innerRef = innerRefs[i];
+        const { scrub, y } = PARALLAX[i];
+ 
+        if (!innerRef.current || !wrapRef.current) return;
+ 
+        gsap.fromTo(
+          innerRef.current,
+          { y: 0, scale: 1.02 },
+          {
+            y,
+            scale: 1.045,
+            ease:  "none",
+            scrollTrigger: {
+              trigger: wrapRef.current,
+              start:   "top bottom",
+              end:     "bottom top",
+              scrub,
             },
-            {
-              y,
-              scale: 1.045,
-              ease: "none",
-
-              scrollTrigger: {
-                trigger: wrap.current,
-                start: "top bottom",
-                end: "bottom top",
-                scrub,
-              },
-            }
-          );
-        }
-      );
+          }
+        );
+      });
+ 
     }, sectionRef);
-
+ 
     return () => ctx.revert();
   }, []);
-
-  // ─────────────────────────────────────────
-  // IMAGES
-  // Mobile now keeps compositional rhythm.
-  // Not just stacked feed.
-  // ─────────────────────────────────────────
-  const images = [
-    {
-      wrapRef: wrap1Ref,
-      innerRef: inner1Ref,
-
-      src:
-        "https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=1200",
-
-      aspect: "4 / 5",
-
-      cls: `
-        w-[92%]
-        md:w-[54%]
-
-        ml-0
-
-        relative
-        z-[2]
-      `,
-    },
-
-    {
-      wrapRef: wrap2Ref,
-      innerRef: inner2Ref,
-
-      src:
-        "https://images.pexels.com/photos/1574843/pexels-photo-1574843.jpeg?auto=compress&cs=tinysrgb&w=900",
-
-      aspect: "3 / 4",
-
-      cls: `
-        w-[72%]
-        md:w-[36%]
-
-        ml-auto
-        mr-[2%]
-
-        mt-[-8vw]
-        md:-mt-[24vh]
-
-        relative
-        z-[3]
-      `,
-    },
-
-    {
-      wrapRef: wrap3Ref,
-      innerRef: inner3Ref,
-
-      src:
-        "https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=1000",
-
-      aspect: "16 / 10",
-
-      cls: `
-        w-[88%]
-        md:w-[50%]
-
-        ml-[4%]
-        md:ml-[14%]
-
-        mt-[12vw]
-        md:mt-[8vh]
-
-        relative
-        z-[1]
-      `,
-    },
-
-    {
-      wrapRef: wrap4Ref,
-      innerRef: inner4Ref,
-
-      src:
-        "https://images.pexels.com/photos/3225528/pexels-photo-3225528.jpeg?auto=compress&cs=tinysrgb&w=800",
-
-      aspect: "1 / 1",
-
-      cls: `
-        w-[56%]
-        md:w-[28%]
-
-        ml-auto
-        mr-[6%]
-
-        mt-[10vw]
-        md:mt-[6vh]
-
-        relative
-        z-[4]
-      `,
-    },
-  ];
-
+ 
   return (
     <section
       ref={sectionRef}
-      className="
-        relative
-        w-full
-        overflow-hidden
-      "
+      className="relative w-full overflow-hidden"
       style={{
-        background: `
-          linear-gradient(
-            to bottom,
-
-            #EDEEE9 0%,
-            #F4F5F2 18%,
-            #F4F5F2 100%
-          )
-        `,
-
-        paddingTop:
-          "clamp(78px, 11vh, 118px)",
-
-        paddingBottom:
-          "clamp(88px, 13vh, 138px)",
+        background:     "linear-gradient(to bottom, #EDEEE9 0%, #F4F5F2 18%, #F4F5F2 100%)",
+        paddingTop:     "clamp(78px, 11vh, 118px)",
+        paddingBottom:  "clamp(88px, 13vh, 138px)",
       }}
     >
-      {/* ─────────────────────────────────────
-          DINING AFTERGLOW
-      ───────────────────────────────────── */}
+      {/* dining afterglow — top atmospheric bridge */}
       <div
-        className="
-          absolute
-          top-0
-          inset-x-0
-          pointer-events-none
-        "
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0"
         style={{
           height: "180px",
-
-          background: `
-            linear-gradient(
-              to bottom,
-
-              rgba(18,24,36,0.10) 0%,
-              rgba(18,24,36,0.05) 24%,
-              rgba(18,24,36,0.015) 52%,
-
-              transparent 100%
-            )
-          `,
+          background: `linear-gradient(
+            to bottom,
+            rgba(18,24,36,0.10) 0%,
+            rgba(18,24,36,0.05) 24%,
+            rgba(18,24,36,0.015) 52%,
+            transparent 100%
+          )`,
         }}
-        aria-hidden="true"
       />
-
-      {/* ─────────────────────────────────────
-          IKAT DIVIDER
-      ───────────────────────────────────── */}
+ 
+      {/* Sumba Ikat divider */}
       <div
-        className="
-          relative
-          w-full
-          max-w-[1280px]
-          mx-auto
-
-          px-6
-          md:px-10
-          lg:px-14
-
-          mb-4
-        "
         aria-hidden="true"
+        className="relative mx-auto mb-4 w-full max-w-[1280px] px-6 md:px-10 lg:px-14"
       >
         <div
           style={{
-            position: "relative",
-
-            height: "1px",
-
-            background:
-              "rgba(176,141,87,0.16)",
-
-            overflow: "hidden",
+            height:     "1px",
+            background: "rgba(176,141,87,0.16)",
+            overflow:   "hidden",
           }}
-        >
-          <div
-            style={{
-              position: "absolute",
-
-              inset: "-8px 0",
-
-              backgroundRepeat: "repeat-x",
-
-              backgroundSize: "60px auto",
-
-              backgroundPosition: "center",
-
-              opacity: 0.035,
-            }}
-          />
-        </div>
+        />
       </div>
-
-      {/* ─────────────────────────────────────
-          GRAIN
-      ───────────────────────────────────── */}
+ 
+      {/* grain texture */}
       <div
-        className="
-          absolute
-          inset-[-10%]
-
-          opacity-[0.028]
-
-          mix-blend-soft-light
-
-          pointer-events-none
-        "
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-[-10%] opacity-[0.028] mix-blend-soft-light"
         style={{
           backgroundImage:
             "url('https://res.cloudinary.com/dombq6plz/image/upload/v1747227718/noise_t0x7vx.png')",
         }}
-        aria-hidden="true"
       />
-
-      {/* ─────────────────────────────────────
-          WARM RESIDUAL ATMOSPHERE
-      ───────────────────────────────────── */}
+ 
+      {/* warm atmospheric */}
       <div
-        className="
-          absolute
-          inset-0
-          pointer-events-none
-        "
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `
-            radial-gradient(
-              circle at 74% 22%,
-
-              rgba(176,141,87,0.045) 0%,
-              rgba(176,141,87,0.018) 24%,
-
-              transparent 54%
-            )
-          `,
+          background: `radial-gradient(
+            circle at 74% 22%,
+            rgba(176,141,87,0.045) 0%,
+            rgba(176,141,87,0.018) 24%,
+            transparent 54%
+          )`,
         }}
-        aria-hidden="true"
       />
-
-      {/* ─────────────────────────────────────
-          LEFT DENSITY
-      ───────────────────────────────────── */}
+ 
+      {/* left density */}
       <div
-        className="
-          absolute
-          inset-0
-          pointer-events-none
-        "
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `
-            radial-gradient(
-              ellipse at 0% 50%,
-
-              rgba(45,60,104,0.035) 0%,
-              transparent 52%
-            )
-          `,
+          background: `radial-gradient(
+            ellipse at 0% 50%,
+            rgba(45,60,104,0.035) 0%,
+            transparent 52%
+          )`,
         }}
-        aria-hidden="true"
       />
-
-      {/* ─────────────────────────────────────
-          IMAGES
-      ───────────────────────────────────── */}
-      <div
-        className="
-          relative
-          w-full
-          max-w-[1280px]
-          mx-auto
-
-          px-6
-          md:px-10
-          lg:px-14
-        "
-      >
-        {images.map((img, i) => (
-          <div
-            key={i}
-            ref={img.wrapRef}
-            className={`
-              relative
-              overflow-hidden
-
-              ${img.cls}
-            `}
-            style={{
-              aspectRatio: img.aspect,
-
-              boxShadow:
-                i === 0
-                  ? "0 34px 80px rgba(18,24,36,0.08)"
-                  : i === 1
-                  ? "0 24px 64px rgba(18,24,36,0.10)"
-                  : i === 2
-                  ? "0 18px 52px rgba(18,24,36,0.06)"
-                  : "0 16px 40px rgba(18,24,36,0.08)",
-            }}
-          >
-            {/* IMAGE */}
+ 
+      {/* ── IMAGE GRID ─────────────────────────────────────────── */}
+      {/*
+        Structured 2×2 grid.
+        No arbitrary widths, no negative margins, no scattered positioning.
+        Ken Burns applied to inner image — container stays in grid.
+        Uniform aspect ratio (3/4) — all images same height per row.
+        Clean, even 2×2 grid at all screen sizes.
+      */}
+ 
+      <div className="relative mx-auto w-full max-w-[1280px] px-6 md:px-10 lg:px-14">
+        <div className="grid grid-cols-2 gap-3 md:gap-6 lg:gap-8">
+          {IMAGES.map((img, i) => (
             <div
-              ref={img.innerRef}
+              key={i}
+              ref={wrapRefs[i]}
+              className="relative overflow-hidden"
               style={{
-                position: "absolute",
-
-                inset: "-10%",
+                aspectRatio: ASPECT,
+                boxShadow:   SHADOWS[i],
               }}
             >
-              <img
-                src={img.src}
-                alt=""
-                role="presentation"
-                loading="lazy"
-                className="
-                  w-full
-                  h-full
-                  object-cover
-                "
+              {/*
+                Inner div — slightly larger than wrapper (inset -10%).
+                GSAP moves this div via Ken Burns.
+                overflow-hidden on parent clips the movement.
+              */}
+              <div
+                ref={innerRefs[i]}
+                style={{ position: "absolute", inset: "-10%" }}
+              >
+                <img
+                  src={img.src}
+                  alt=""
+                  role="presentation"
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                  style={{
+                    filter: "brightness(0.90) saturate(0.84) contrast(1.02)",
+                  }}
+                />
+              </div>
+ 
+              {/* atmospheric top fall-off */}
+              <div
+                className="absolute inset-0"
                 style={{
-                  filter: `
-                    brightness(0.90)
-                    saturate(0.84)
-                    contrast(1.02)
-                  `,
+                  background: `linear-gradient(
+                    to bottom,
+                    rgba(12,18,28,0.12) 0%,
+                    transparent 24%
+                  )`,
+                }}
+              />
+ 
+              {/* lower shadow pocket */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(
+                    to top,
+                    rgba(10,14,22,0.22) 0%,
+                    rgba(10,14,22,0.08) 18%,
+                    transparent 46%
+                  )`,
+                }}
+              />
+ 
+              {/* warm memory wash */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `radial-gradient(
+                    ellipse at 60% 48%,
+                    rgba(176,141,87,0.06) 0%,
+                    transparent 68%
+                  )`,
+                }}
+              />
+ 
+              {/* edge softening */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.03)",
                 }}
               />
             </div>
-
-            {/* ─────────────────────────────────
-                ATMOSPHERIC TOP FALL-OFF
-            ───────────────────────────────── */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  linear-gradient(
-                    to bottom,
-
-                    rgba(12,18,28,0.12) 0%,
-                    transparent 24%
-                  )
-                `,
-              }}
-            />
-
-            {/* ─────────────────────────────────
-                LOWER SHADOW POCKET
-            ───────────────────────────────── */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  linear-gradient(
-                    to top,
-
-                    rgba(10,14,22,0.22) 0%,
-                    rgba(10,14,22,0.08) 18%,
-
-                    transparent 46%
-                  )
-                `,
-              }}
-            />
-
-            {/* ─────────────────────────────────
-                WARM MEMORY WASH
-            ───────────────────────────────── */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  radial-gradient(
-                    ellipse at 60% 48%,
-
-                    rgba(176,141,87,0.06) 0%,
-                    transparent 68%
-                  )
-                `,
-              }}
-            />
-
-            {/* ─────────────────────────────────
-                EDGE SOFTENING
-            ───────────────────────────────── */}
-            <div
-              className="absolute inset-0"
-              style={{
-                boxShadow:
-                  "inset 0 0 0 1px rgba(255,255,255,0.03)",
-              }}
-            />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-
-      {/* ─────────────────────────────────────
-          MEMORY FADE OUT
-      ───────────────────────────────────── */}
+ 
+      {/* memory fade out — atmospheric bridge to next section */}
       <div
-        className="
-          absolute
-          bottom-0
-          inset-x-0
-          pointer-events-none
-        "
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0"
         style={{
           height: "140px",
-
-          background: `
-            linear-gradient(
-              to bottom,
-
-              transparent 0%,
-
-              rgba(45,60,104,0.025) 54%,
-              rgba(45,60,104,0.08) 100%
-            )
-          `,
+          background: `linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(45,60,104,0.025) 54%,
+            rgba(45,60,104,0.08) 100%
+          )`,
         }}
-        aria-hidden="true"
       />
     </section>
   );
 }
+ 
  
 
 

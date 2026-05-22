@@ -957,369 +957,295 @@ function IndonesiaKosmik() {
 
 function ExperienceStructure() {
   const sectionRef = useRef(null);
-  const ikatRef = useRef(null);
-
-  const DESTINATIONS = [
-    {
-      id: 'labuan-bajo',
-
-      name: 'Labuan Bajo',
-
-      dark: false,
-
-      atmosphere: 'radial-gradient(circle at 68% 22%, rgba(176,141,87,0.05), transparent 54%)',
-
-      sumbaIkat: true,
-
-      hero: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_09_52_24_PM_ksm8ag.png',
-
-      mainImage: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_27_PM_sk1t1e.png',
-
-      description:
-        'The terrain here is ancient. Volcanic ridgelines drop sharply into coral systems, currents run strong through the straits, and Komodo dragons move through the landscape as if forty million years have changed nothing.',
-
-      meta: 'Best: April – November · Dry season · Strong currents',
-
-      eyebrow: 'East Nusa Tenggara',
-
-      gallery: [
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_31_PM_maxcdv.png',
-
-          text: 'The anchor drops before sunrise. By eight, already on the island.',
-        },
-
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_34_PM_ot1mm8.png',
-
-          text: "Padar's ridgeline from the top. Serenity below.",
-        },
-
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_38_PM_u9zpja.png',
-
-          text: 'Back on deck by noon — the current took everything it had.',
-        },
-      ],
-    },
-
-    {
-      id: 'raja-ampat',
-
-      name: 'Raja Ampat',
-
-      dark: false,
-
-      atmosphere: 'radial-gradient(circle at 35% 45%, rgba(176,141,87,0.04), transparent 58%)',
-
-      sumbaIkat: false,
-
-      hero: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_18_PM_ylbg4q.png',
-
-      mainImage: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_28_23_PM_1_pbeqgf.png',
-
-      description:
-        'Nothing prepares you for the stillness. Visibility reaches thirty meters. Beneath the surface, 1,300 species of reef fish — moving slowly, unhurried, the way everything moves in Raja Ampat.',
-
-      meta: 'Best: October – April · Calm seas · Deep visibility',
-
-      eyebrow: 'West Papua',
-
-      gallery: [
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png',
-
-          text: 'The limestone karst from the water, just after dawn.',
-        },
-
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_29_52_PM_fzz6eu.png',
-
-          text: 'Thirty meters of visibility. The reef floor feels close.',
-        },
-
-        {
-          img: 'https://res.cloudinary.com/dombq6plz/image/upload/v1776869887/ChatGPT_Image_Apr_22_2026_09_57_35_PM_1_vwbdwb.png',
-
-          text: 'Dinner on deck. The kind of quiet you stop trying to fill.',
-        },
-      ],
-    },
-  ];
-
+  const ikatRef    = useRef(null);
+   
+const DESTINATIONS = [
+  {
+    id: "labuan-bajo",
+    name: "Labuan Bajo",
+    dark: false,
+    atmosphere:
+      "radial-gradient(circle at 68% 22%, rgba(176,141,87,0.05), transparent 54%)",
+    sumbaIkat: true,
+    hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_09_52_24_PM_ksm8ag.png",
+    mainImage:
+      "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_27_PM_sk1t1e.png",
+    description:
+      "The terrain here is ancient. Volcanic ridgelines drop sharply into coral systems, currents run strong through the straits, and Komodo dragons move through the landscape as if forty million years have changed nothing.",
+    meta: "Best: April – November · Dry season · Strong currents",
+    eyebrow: "East Nusa Tenggara",
+    gallery: [
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_31_PM_maxcdv.png",
+        text: "The anchor drops before sunrise. By eight, already on the island.",
+      },
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_34_PM_ot1mm8.png",
+        text: "Padar's ridgeline from the top. Serenity below.",
+      },
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_38_PM_u9zpja.png",
+        text: "Back on deck by noon — the current took everything it had.",
+      },
+    ],
+  },
+ 
+  {
+    id: "raja-ampat",
+    name: "Raja Ampat",
+    dark: false,
+    atmosphere:
+      "radial-gradient(circle at 35% 45%, rgba(176,141,87,0.04), transparent 58%)",
+    sumbaIkat: false,
+    hero: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869679/ChatGPT_Image_Apr_22_2026_09_52_18_PM_ylbg4q.png",
+    mainImage:
+      "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_28_23_PM_1_pbeqgf.png",
+    description:
+      "Nothing prepares you for the stillness. Visibility reaches thirty meters. Beneath the surface, 1,300 species of reef fish — moving slowly, unhurried, the way everything moves in Raja Ampat.",
+    meta: "Best: October – April · Calm seas · Deep visibility",
+    eyebrow: "West Papua",
+    gallery: [
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png",
+        text: "The limestone karst from the water, just after dawn.",
+      },
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_29_52_PM_fzz6eu.png",
+        text: "Thirty meters of visibility. The reef floor feels close.",
+      },
+      {
+        img: "https://res.cloudinary.com/dombq6plz/image/upload/v1776869887/ChatGPT_Image_Apr_22_2026_09_57_35_PM_1_vwbdwb.png",
+        text: "Dinner on deck. The kind of quiet you stop trying to fill.",
+      },
+    ],
+  },
+];
+ 
   useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ 
     const ctx = gsap.context(() => {
+ 
+      /* ── REDUCED MOTION — set all final states ── */
+ 
       if (reduce) {
         gsap.set(
           [
-            '.dest-hero-inner',
-            '.dest-main-img',
-            '.dest-gallery-img',
-            '.dest-title-wrap',
-            '.dest-eyebrow',
-            '.dest-text-block > *',
-            '.dest-gallery-item',
+            ".dest-hero-inner",
+            ".dest-main-img",
+            ".dest-gallery-img",
+            ".dest-title-wrap",
+            ".dest-eyebrow",
+            ".dest-text-block > *",
+            ".dest-gallery-item",
           ],
           {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            clipPath: 'inset(0% 0% 0% 0%)',
+            opacity:  1,
+            y:        0,
+            scale:    1,
+            filter:   "blur(0px)",
+            clipPath: "inset(0% 0% 0% 0%)",
           }
         );
-
         return;
       }
-
+ 
+      /* ── SUMBA IKAT rotation ── */
+ 
       if (ikatRef.current) {
         gsap.to(ikatRef.current, {
           rotation: 360,
           duration: 220,
-          ease: 'none',
-          repeat: -1,
+          ease:     "none",
+          repeat:   -1,
         });
       }
-
+ 
+      /* ── RESPONSIVE ANIMATION SYSTEM ── */
+ 
       const mm = gsap.matchMedia();
-
+ 
       mm.add(
         {
-          isDesktop: '(min-width: 768px)',
-          isMobile: '(max-width: 767px)',
+          isDesktop: "(min-width: 768px)",
+          isMobile:  "(max-width: 767px)",
         },
-
         (context) => {
           const { isDesktop } = context.conditions;
-
-          gsap.utils.toArray('.dest-block').forEach((block) => {
-            const hero = block.querySelector('.dest-hero');
-
-            const heroInner = block.querySelector('.dest-hero-inner');
-
-            const heroImg = block.querySelector('.dest-hero-img');
-
-            const eyebrow = block.querySelector('.dest-eyebrow');
-
-            const titleWrap = block.querySelector('.dest-title-wrap');
-
-            const mainWrap = block.querySelector('.dest-main-wrap');
-
-            const mainImg = block.querySelector('.dest-main-img');
-
-            const galleryImages = block.querySelectorAll('.dest-gallery-img');
-
-            const textChildren = block.querySelectorAll('.dest-text-block > *');
-
-            const gallery = block.querySelectorAll('.dest-gallery-item');
-
-            // HERO REVEAL
-
+ 
+          gsap.utils.toArray(".dest-block").forEach((block) => {
+            const hero      = block.querySelector(".dest-hero");
+            const heroInner = block.querySelector(".dest-hero-inner");
+            const heroImg   = block.querySelector(".dest-hero-img");
+            const eyebrow   = block.querySelector(".dest-eyebrow");
+            const titleWrap = block.querySelector(".dest-title-wrap");
+            const mainWrap  = block.querySelector(".dest-main-wrap");
+            const mainImg   = block.querySelector(".dest-main-img");
+            const textChildren = block.querySelectorAll(".dest-text-block > *");
+            const gallery   = block.querySelectorAll(".dest-gallery-item");
+ 
+            /* ── HERO REVEAL — clip + scale + blur scrub ── */
+ 
             gsap.fromTo(
               heroInner,
               {
-                scale: isDesktop ? 1.16 : 1.06,
-
-                clipPath: isDesktop ? 'inset(16% 20% 16% 20%)' : 'inset(6% 3% 6% 3%)',
-
-                filter: 'blur(8px)',
+                scale:    isDesktop ? 1.16 : 1.06,
+                clipPath: isDesktop
+                  ? "inset(16% 20% 16% 20%)"
+                  : "inset(6% 3% 6% 3%)",
+                filter: "blur(8px)",
               },
-
               {
-                scale: 1,
-
-                clipPath: 'inset(0% 0% 0% 0%)',
-
-                filter: 'blur(0px)',
-
-                ease: 'power3.out',
-
+                scale:    1,
+                clipPath: "inset(0% 0% 0% 0%)",
+                filter:   "blur(0px)",
+                ease:     "power3.out",
                 scrollTrigger: {
-                  trigger: hero,
-                  start: 'top 92%',
-                  end: 'top 34%',
-                  scrub: isDesktop ? 1.8 : 1,
+                  trigger:            hero,
+                  start:              "top 92%",
+                  end:                "top 34%",
+                  scrub:              isDesktop ? 1.8 : 1,
                   invalidateOnRefresh: true,
                 },
               }
             );
-
-            // INTERNAL HERO PARALLAX
-
+ 
+            /* ── HERO INTERNAL PARALLAX ── */
+ 
             gsap.to(heroImg, {
               yPercent: isDesktop ? -10 : -6,
-
-              ease: 'none',
-
+              ease:     "none",
               scrollTrigger: {
-                trigger: hero,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1.2,
+                trigger:            hero,
+                start:              "top bottom",
+                end:                "bottom top",
+                scrub:              1.2,
                 invalidateOnRefresh: true,
               },
             });
-
-            // EYEBROW
-
+ 
+            /* ── EYEBROW ── */
+ 
             gsap.fromTo(
               eyebrow,
-              {
-                opacity: 0,
-                y: 18,
-              },
-
+              { opacity: 0, y: 18 },
               {
                 opacity: 1,
-                y: 0,
-
+                y:       0,
                 duration: 1.1,
-
-                ease: 'power2.out',
-
+                ease:    "power2.out",
                 scrollTrigger: {
-                  trigger: hero,
-                  start: 'top 60%',
+                  trigger:            hero,
+                  start:              "top 60%",
                   invalidateOnRefresh: true,
                 },
               }
             );
-
-            // TITLE
-
+ 
+            /* ── TITLE ── */
+ 
             gsap.fromTo(
               titleWrap,
+              { opacity: 0, y: isDesktop ? 72 : 34 },
               {
-                opacity: 0,
-                y: isDesktop ? 72 : 34,
-              },
-
-              {
-                opacity: 1,
-                y: 0,
-
+                opacity:  1,
+                y:        0,
                 duration: isDesktop ? 1.8 : 1.1,
-
-                ease: 'power3.out',
-
+                ease:     "power3.out",
                 scrollTrigger: {
-                  trigger: hero,
-                  start: 'top 56%',
+                  trigger:            hero,
+                  start:              "top 56%",
                   invalidateOnRefresh: true,
                 },
               }
             );
-
-            // MAIN IMAGE REVEAL
-
+ 
+            /* ── MAIN IMAGE REVEAL + INTERNAL PARALLAX ── */
+ 
             gsap.fromTo(
               mainImg,
+              { opacity: 0, y: 56, scale: 1.12 },
               {
-                opacity: 0,
-                y: 56,
-                scale: 1.12,
-              },
-
-              {
-                opacity: 1,
-                y: 0,
-                scale: 1.08,
-
+                opacity:  1,
+                y:        0,
+                scale:    1.08, // stays slightly scaled to buffer yPercent parallax below
                 duration: isDesktop ? 1.6 : 1.05,
-
-                ease: 'power2.out',
-
+                ease:     "power2.out",
                 scrollTrigger: {
-                  trigger: mainWrap,
-                  start: 'top 82%',
+                  trigger:            mainWrap,
+                  start:              "top 82%",
                   invalidateOnRefresh: true,
                 },
               }
             );
-
-            // INTERNAL MAIN IMAGE PARALLAX
-
+ 
             gsap.to(mainImg, {
               yPercent: isDesktop ? -8 : -5,
-
-              ease: 'none',
-
+              ease:     "none",
               scrollTrigger: {
-                trigger: mainWrap,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
+                trigger:            mainWrap,
+                start:              "top bottom",
+                end:                "bottom top",
+                scrub:              1,
                 invalidateOnRefresh: true,
               },
             });
-
-            // TEXT
-
+ 
+            /* ── TEXT BLOCK ── */
+ 
             gsap.fromTo(
               textChildren,
+              { opacity: 0, y: 20 },
               {
-                opacity: 0,
-                y: 20,
-              },
-
-              {
-                opacity: 1,
-                y: 0,
-
+                opacity:  1,
+                y:        0,
                 duration: 1.05,
-
-                stagger: 0.07,
-
-                ease: 'power2.out',
-
+                stagger:  0.07,
+                ease:     "power2.out",
                 scrollTrigger: {
-                  trigger: mainWrap,
-                  start: 'top 72%',
+                  trigger:            mainWrap,
+                  start:              "top 72%",
                   invalidateOnRefresh: true,
                 },
               }
             );
-
-            // GALLERY
-
+ 
+            /* ── GALLERY ITEMS ── */
+ 
             gallery.forEach((item, index) => {
-              const img = item.querySelector('.dest-gallery-img');
-
+              const img = item.querySelector(".dest-gallery-img");
+ 
+              // entrance
               gsap.fromTo(
                 item,
+                { opacity: 0, y: 18 },
                 {
-                  opacity: 0,
-                  y: 18,
-                },
-
-                {
-                  opacity: 1,
-                  y: 0,
-
+                  opacity:  1,
+                  y:        0,
                   duration: 1,
-
-                  ease: 'power2.out',
-
+                  ease:     "power2.out",
                   scrollTrigger: {
-                    trigger: item,
-                    start: 'top 94%',
+                    trigger:            item,
+                    start:              "top 94%",
                     invalidateOnRefresh: true,
                   },
                 }
               );
-
+ 
+              /*
+                Ken Burns — image moves within overflow-hidden container.
+                Container stays fixed in grid (not scattered).
+                Different rates create visual variety WITHIN each frame,
+                not across the grid layout.
+              */
               gsap.to(img, {
                 yPercent: index % 2 === 0 ? -7 : -11,
-
-                ease: 'none',
-
+                ease:     "none",
                 scrollTrigger: {
-                  trigger: item,
-                  start: 'top bottom',
-                  end: 'bottom top',
-                  scrub: 1,
+                  trigger:            item,
+                  start:              "top bottom",
+                  end:                "bottom top",
+                  scrub:              1,
                   invalidateOnRefresh: true,
                 },
               });
@@ -1328,17 +1254,24 @@ function ExperienceStructure() {
         }
       );
     }, sectionRef);
-
+ 
     return () => ctx.revert();
   }, []);
-
+ 
   return (
     <section ref={sectionRef}>
       {DESTINATIONS.map((dest) => (
         <div key={dest.id}>
           <div className="dest-block relative overflow-hidden bg-[#F4F5F2]">
-            <div className="absolute inset-0 pointer-events-none z-0" style={{ background: dest.atmosphere }} />
-
+ 
+            {/* atmosphere */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{ background: dest.atmosphere }}
+            />
+ 
+            {/* Sumba Ikat — Labuan Bajo only */}
             {dest.sumbaIkat && (
               <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                 <div className="absolute -right-[24%] top-[18%] w-[82vw] max-w-[1200px] opacity-[0.028]">
@@ -1352,9 +1285,9 @@ function ExperienceStructure() {
                 </div>
               </div>
             )}
-
-            {/* HERO */}
-
+ 
+            {/* ── HERO ─────────────────────────────── */}
+ 
             <div className="dest-hero relative overflow-hidden h-[60vh] md:h-[72vh]">
               <div className="dest-hero-inner absolute inset-0 will-change-transform overflow-hidden">
                 <img
@@ -1362,23 +1295,21 @@ function ExperienceStructure() {
                   alt={dest.name}
                   className="dest-hero-img absolute inset-0 w-full h-[118%] object-cover will-change-transform"
                 />
-
+ 
                 <div className="absolute inset-0 bg-black/30" />
-
+ 
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `
-                      linear-gradient(
-                        to bottom,
-                        rgba(0,0,0,0.02),
-                        rgba(0,0,0,0.16) 35%,
-                        rgba(0,0,0,0.46)
-                      )
-                    `,
+                    background: `linear-gradient(
+                      to bottom,
+                      rgba(0,0,0,0.02),
+                      rgba(0,0,0,0.16) 35%,
+                      rgba(0,0,0,0.46)
+                    )`,
                   }}
                 />
-
+ 
                 <div
                   className="absolute inset-0 opacity-[0.04] mix-blend-soft-light"
                   style={{
@@ -1389,13 +1320,12 @@ function ExperienceStructure() {
                   }}
                 />
               </div>
-
+ 
               <div className="absolute inset-0 flex items-end md:items-center px-6 md:px-10 lg:px-14 pb-10 md:pb-0">
                 <div className="max-w-[820px]">
                   <p className="dest-eyebrow text-[#F4F5F2]/70 text-[10px] md:text-[11px] tracking-[0.32em] uppercase mb-5">
                     {dest.eyebrow}
                   </p>
-
                   <div className="overflow-hidden">
                     <div className="dest-title-wrap">
                       <h2 className="font-[Gambarino] text-[#F4F5F2] text-[48px] md:text-[74px] lg:text-[86px] leading-[0.92] tracking-[-0.045em]">
@@ -1406,10 +1336,12 @@ function ExperienceStructure() {
                 </div>
               </div>
             </div>
-
-            {/* MAIN */}
-
+ 
+            {/* ── MAIN ─────────────────────────────── */}
+ 
             <div className="relative z-10 pt-[76px] md:pt-[132px]">
+ 
+              {/* mobile */}
               <div className="md:hidden">
                 <div className="pr-10 pl-6">
                   <div className="dest-main-wrap overflow-hidden aspect-[3/2]">
@@ -1420,22 +1352,22 @@ function ExperienceStructure() {
                     />
                   </div>
                 </div>
-
                 <div className="pt-12 px-6">
                   <div className="dest-text-block max-w-[520px]">
-                    <p className="text-[#B08D57] text-[11px] tracking-[0.28em] uppercase mb-4">{dest.name}</p>
-
+                    <p className="text-[#B08D57] text-[11px] tracking-[0.28em] uppercase mb-4">
+                      {dest.name}
+                    </p>
                     <p className="text-[14px] leading-[1.95] mb-7 text-[#2D3C68]/76">
                       {dest.description}
                     </p>
-
                     <p className="text-[11px] tracking-[0.18em] uppercase mb-10 text-[#2D3C68]/38">
                       {dest.meta}
                     </p>
                   </div>
                 </div>
               </div>
-
+ 
+              {/* desktop */}
               <div className="hidden md:grid grid-cols-12 gap-12 items-start max-w-[1340px] mx-auto px-10 lg:px-14">
                 <div className="col-span-7">
                   <div className="pr-12">
@@ -1448,28 +1380,32 @@ function ExperienceStructure() {
                     </div>
                   </div>
                 </div>
-
                 <div className="col-span-4 col-start-9 pt-16">
                   <div className="dest-text-block max-w-[360px]">
-                    <p className="text-[#B08D57] text-[11px] tracking-[0.3em] uppercase mb-5">{dest.eyebrow}</p>
-
+                    <p className="text-[#B08D57] text-[11px] tracking-[0.3em] uppercase mb-5">
+                      {dest.eyebrow}
+                    </p>
                     <p className="text-[15px] leading-[2] mb-8 text-[#2D3C68]/76">
                       {dest.description}
                     </p>
-
                     <p className="text-[11px] tracking-[0.18em] uppercase mb-12 text-[#2D3C68]/36">
                       {dest.meta}
                     </p>
                   </div>
                 </div>
               </div>
+ 
             </div>
-
-            {/* GALLERY */}
-
+ 
+            {/* ── GALLERY ──────────────────────────── */}
+ 
             <div className="relative z-10 pt-[110px] md:pt-[170px] pb-[110px] md:pb-[170px]">
+ 
+              {/* mobile gallery */}
               <div className="md:hidden px-6">
                 <div className="space-y-14">
+ 
+                  {/* first image — full width */}
                   <div className="dest-gallery-item">
                     <div className="aspect-[4/5] overflow-hidden mb-5">
                       <img
@@ -1478,15 +1414,20 @@ function ExperienceStructure() {
                         className="dest-gallery-img w-full h-[118%] object-cover will-change-transform"
                       />
                     </div>
-
                     <p className="text-[13px] leading-[1.75] max-w-[270px] text-[#2D3C68]/56">
                       {dest.gallery[0].text}
                     </p>
                   </div>
-
+ 
+                  {/*
+                    FIX 2 — mobile gallery two-column.
+                    REMOVED: `pt-12` on j === 2.
+                    Both images now top-aligned within the 2-col grid.
+                    Structured, no arbitrary vertical offset.
+                  */}
                   <div className="grid grid-cols-2 gap-4">
                     {[1, 2].map((j) => (
-                      <div key={j} className={`dest-gallery-item ${j === 2 ? 'pt-12' : ''}`}>
+                      <div key={j} className="dest-gallery-item">
                         <div className="aspect-[4/5] overflow-hidden mb-3">
                           <img
                             src={dest.gallery[j].img}
@@ -1494,17 +1435,20 @@ function ExperienceStructure() {
                             className="dest-gallery-img w-full h-[118%] object-cover will-change-transform"
                           />
                         </div>
-
                         <p className="text-[12px] leading-[1.75] text-[#2D3C68]/56">
                           {dest.gallery[j].text}
                         </p>
                       </div>
                     ))}
                   </div>
+ 
                 </div>
               </div>
-
+ 
+              {/* desktop gallery */}
               <div className="hidden md:grid grid-cols-12 gap-6 items-start max-w-[1340px] mx-auto px-10 lg:px-14">
+ 
+                {/* left — portrait, col-span-5 */}
                 <div className="dest-gallery-item col-span-5">
                   <div className="pr-10">
                     <div className="aspect-[3/4] overflow-hidden mb-5">
@@ -1514,17 +1458,22 @@ function ExperienceStructure() {
                         className="dest-gallery-img w-full h-[118%] object-cover will-change-transform"
                       />
                     </div>
-
                     <p className="text-[13px] leading-[1.8] max-w-[290px] pl-1 text-[#2D3C68]/56">
                       {dest.gallery[0].text}
                     </p>
                   </div>
                 </div>
-
-                <div className="col-span-5 col-start-8 pt-24">
-                  <div className="space-y-24">
-                    {[1, 2].map((j, index) => (
-                      <div key={j} className={`dest-gallery-item ${index === 1 ? '-ml-10' : ''}`}>
+ 
+                {/*
+                  right — two stacked landscape images, col-span-5 col-start-8.
+                  FIX 1 — REMOVED: `-ml-10` on index === 1.
+                  Both images now sit cleanly within their column.
+                  No arbitrary negative margin. Grid always organized.
+                */}
+                <div className="col-span-5 col-start-8">
+                  <div className="space-y-10">
+                    {[1, 2].map((j) => (
+                      <div key={j} className="dest-gallery-item">
                         <div className="aspect-[16/9] overflow-hidden mb-4">
                           <img
                             src={dest.gallery[j].img}
@@ -1532,7 +1481,6 @@ function ExperienceStructure() {
                             className="dest-gallery-img w-full h-[118%] object-cover will-change-transform"
                           />
                         </div>
-
                         <p className="text-[13px] leading-[1.8] max-w-[380px] text-[#2D3C68]/56">
                           {dest.gallery[j].text}
                         </p>
@@ -1540,14 +1488,16 @@ function ExperienceStructure() {
                     ))}
                   </div>
                 </div>
+ 
               </div>
             </div>
+ 
           </div>
         </div>
       ))}
     </section>
   );
-}
+}   
 
 
 

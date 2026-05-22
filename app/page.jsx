@@ -17,9 +17,12 @@ export default function Home() {
       <Introduction/>
       <QuickContext/>
       <Experiences/>
-      {/* <Activities/> */}
       <Destinations/>
       <Yacht/>
+      
+      
+      {/* <Activities/> */}
+     
       {/* <Crew/> */}
       {/* <Rates/> */}
       {/* <ExperienceDay/> */}
@@ -853,374 +856,456 @@ function Hero() {
 
 
 function Introduction() {
-  const sectionRef = useRef(null);
 
-  const headlineRef = useRef(null);
-  const descRef = useRef(null);
-  const imageRef = useRef(null);
+  function getConfig() {
+    return {
 
-  const leftImgRef = useRef(null);
-  const rightImgRef = useRef(null);
-  const bottomImgRef = useRef(null);
+      images: {
+        left:
+          "https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp",
 
-  useEffect(() => {
-    if (!sectionRef.current) return;
+        center:
+          "https://res.cloudinary.com/dombq6plz/image/upload/v1778509540/ChatGPT_Image_May_11_2026_09_24_55_PM_1_bc9y57.png",
 
-    const isDesktop = window.innerWidth >= 1280;
+        right:
+          "https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/40_oxbvdi.webp",
+      },
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+      text: {
+        label: "Experience",
 
-    if (prefersReducedMotion) {
-      const headlineEl = headlineRef.current;
-      const descEl = descRef.current;
-      const imageEl = imageRef.current;
+        headlineLine1: "A way of living",
 
-      const leftEl = leftImgRef.current;
-      const rightEl = rightImgRef.current;
-      const bottomEl = bottomImgRef.current;
+        headlineLine2: "at open water",
 
-      if (headlineEl) {
-        const lines = headlineEl.querySelectorAll(".line") || [];
+        description:
+          "Six in the morning, someone is already in the water. By afternoon, the anchor is down somewhere the crew knows well. By day three, the only schedule is the tide.",
+      },
 
-        gsap.set(lines, {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-        });
-      }
+      animation: {
 
-      if (descEl) {
-        gsap.set(descEl, {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-        });
-      }
-
-      if (imageEl) {
-        gsap.set(imageEl, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-        });
-      }
-
-      if (isDesktop) {
-        if (leftEl) gsap.set(leftEl, { y: 0 });
-        if (rightEl) gsap.set(rightEl, { y: 0 });
-        if (bottomEl) gsap.set(bottomEl, { y: 0 });
-      }
-
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      const headlineEl = headlineRef.current;
-      const descEl = descRef.current;
-      const imageEl = imageRef.current;
-
-      const leftEl = leftImgRef.current;
-      const rightEl = rightImgRef.current;
-      const bottomEl = bottomImgRef.current;
-
-      // HEADLINE
-      if (headlineEl) {
-        const lines = headlineEl.querySelectorAll(".line") || [];
-
-        gsap.fromTo(
-          lines,
-          {
+        headline: {
+          from: {
             opacity: 0,
             y: 34,
             filter: "blur(8px)",
           },
-          {
+
+          to: {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
             duration: 1.3,
             stagger: 0.16,
             ease: "power3.out",
+          },
 
-            scrollTrigger: {
-              trigger: headlineEl,
-              start: "top 84%",
-            },
-          }
-        );
-      }
+          start: "top 84%",
+        },
 
-      // DESCRIPTION
-      if (descEl) {
-        gsap.fromTo(
-          descEl,
-          {
+        description: {
+          from: {
             opacity: 0,
             y: 24,
             filter: "blur(6px)",
           },
-          {
+
+          to: {
             opacity: 1,
             y: 0,
             filter: "blur(0px)",
             duration: 1.3,
             delay: 0.1,
             ease: "power2.out",
+          },
 
-            scrollTrigger: {
-              trigger: descEl,
-              start: "top 88%",
-            },
-          }
-        );
-      }
+          start: "top 88%",
+        },
 
-      // CENTER IMAGE
-      if (imageEl) {
-        gsap.fromTo(
-          imageEl,
-          {
+        mobileImage: {
+          from: {
             opacity: 0,
             scale: 1.04,
             y: 24,
           },
-          {
+
+          to: {
             opacity: 1,
             scale: 1,
             y: 0,
             duration: 1.5,
             ease: "power3.out",
+          },
+
+          start: "top 90%",
+        },
+
+        desktopGrid: {
+          from: {
+            opacity: 0,
+            y: 28,
+          },
+
+          to: {
+            opacity: 1,
+            y: 0,
+            duration: 1.3,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+
+          start: "top 88%",
+        },
+      },
+
+      classes: {
+
+        section:
+          "relative w-full overflow-hidden bg-[#F4F5F2] px-6 py-24 md:px-10 md:py-32",
+
+        topBridge:
+          "pointer-events-none absolute left-0 top-0 h-[140px] w-full bg-gradient-to-b from-[#2D3C68]/14 via-[#2D3C68]/05 to-transparent",
+
+        radialTexture:
+          "pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-multiply bg-[radial-gradient(circle_at_center,#2D3C68_0%,transparent_62%)]",
+
+        textWrapper:
+          "relative mx-auto max-w-6xl text-center",
+
+        label:
+          "mb-5 text-[10px] uppercase tracking-[0.38em] text-[#2D3C68]/58",
+
+        headline:
+          "mx-auto max-w-[620px] font-[Gambarino] text-[40px] leading-[1.04] tracking-[-0.03em] text-[#2D3C68] sm:text-[46px] md:text-[68px]",
+
+        description:
+          "mx-auto mt-5 max-w-[520px] text-[14px] leading-[1.72] text-[#2D3C68]/72 md:mt-6 md:text-[15px]",
+
+        mobileWrapper:
+          "md:hidden mx-auto mt-14 max-w-[300px]",
+
+        mobileImage:
+          "relative aspect-[4/5] overflow-hidden shadow-[0_18px_44px_rgba(45,60,104,0.08)]",
+
+        desktopGrid:
+          "relative mx-auto mt-20 hidden max-w-6xl md:grid md:grid-cols-[1fr_1.4fr_1fr] md:items-end md:gap-4",
+
+        sideImage:
+          "relative aspect-[3/4] overflow-hidden shadow-[0_18px_40px_rgba(45,60,104,0.08)]",
+
+        centerImage:
+          "relative aspect-[4/5] overflow-hidden shadow-[0_24px_60px_rgba(22,32,55,0.10)]",
+
+        image:
+          "object-cover transition-transform duration-[1800ms] hover:scale-[1.03]",
+
+        overlayLeft:
+          "absolute inset-0 bg-gradient-to-t from-[#2D3C68]/08 to-transparent",
+
+        overlayCenter:
+          "absolute inset-0 bg-gradient-to-t from-[#2D3C68]/12 to-transparent",
+
+        overlayMobile:
+          "absolute inset-0 bg-gradient-to-t from-[#2D3C68]/10 to-transparent",
+
+        bottomBridge:
+          "pointer-events-none absolute bottom-0 left-0 h-[80px] w-full bg-gradient-to-t from-[#F4F5F2] to-transparent",
+      },
+    };
+  }
+
+  const config = getConfig();
+
+  const sectionRef = useRef(null);
+
+  const headlineRef = useRef(null);
+
+  const descRef = useRef(null);
+
+  const mobileImgRef = useRef(null);
+
+  const gridRef = useRef(null);
+
+  const imgLeftRef = useRef(null);
+
+  const imgCtrRef = useRef(null);
+
+  const imgRightRef = useRef(null);
+
+  useEffect(() => {
+
+    if (!sectionRef.current) return;
+
+    const isDesktop = window.innerWidth >= 768;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+
+      const lines =
+        headlineRef.current?.querySelectorAll(".line") ?? [];
+
+      gsap.set(lines, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+      });
+
+      if (descRef.current) {
+        gsap.set(descRef.current, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+        });
+      }
+
+      if (mobileImgRef.current) {
+        gsap.set(mobileImgRef.current, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+        });
+      }
+
+      const cols = [
+        imgLeftRef.current,
+        imgCtrRef.current,
+        imgRightRef.current,
+      ].filter(Boolean);
+
+      if (cols.length > 0) {
+        gsap.set(cols, {
+          opacity: 1,
+          y: 0,
+        });
+      }
+
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+
+      const lines =
+        headlineRef.current?.querySelectorAll(".line") ?? [];
+
+      if (lines.length > 0) {
+        gsap.fromTo(
+          lines,
+          config.animation.headline.from,
+          {
+            ...config.animation.headline.to,
 
             scrollTrigger: {
-              trigger: imageEl,
-              start: "top 90%",
+              trigger: headlineRef.current,
+              start: config.animation.headline.start,
             },
           }
         );
       }
 
-      // DESKTOP ONLY PARALLAX
-      if (isDesktop) {
-        const parallaxConfig = {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        };
+      if (descRef.current) {
+        gsap.fromTo(
+          descRef.current,
+          config.animation.description.from,
+          {
+            ...config.animation.description.to,
 
-        if (leftEl) {
-          gsap.to(leftEl, {
-            y: -46,
-            ease: "none",
-            scrollTrigger: parallaxConfig,
-          });
-        }
+            scrollTrigger: {
+              trigger: descRef.current,
+              start: config.animation.description.start,
+            },
+          }
+        );
+      }
 
-        if (rightEl) {
-          gsap.to(rightEl, {
-            y: -74,
-            ease: "none",
-            scrollTrigger: parallaxConfig,
-          });
-        }
+      if (!isDesktop && mobileImgRef.current) {
+        gsap.fromTo(
+          mobileImgRef.current,
+          config.animation.mobileImage.from,
+          {
+            ...config.animation.mobileImage.to,
 
-        if (bottomEl) {
-          gsap.to(bottomEl, {
-            y: -104,
-            ease: "none",
-            scrollTrigger: parallaxConfig,
-          });
+            scrollTrigger: {
+              trigger: mobileImgRef.current,
+              start: config.animation.mobileImage.start,
+            },
+          }
+        );
+      }
+
+      if (isDesktop && gridRef.current) {
+
+        const cols = [
+          imgLeftRef.current,
+          imgCtrRef.current,
+          imgRightRef.current,
+        ].filter(Boolean);
+
+        if (cols.length > 0) {
+          gsap.fromTo(
+            cols,
+            config.animation.desktopGrid.from,
+            {
+              ...config.animation.desktopGrid.to,
+
+              scrollTrigger: {
+                trigger: gridRef.current,
+                start: config.animation.desktopGrid.start,
+              },
+            }
+          );
         }
       }
+
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+
+  }, [config.animation]);
 
   return (
     <section
       ref={sectionRef}
-      className="
-        relative
-        w-full
-        overflow-hidden
-        bg-[#F4F5F2]
-        px-6
-        py-24
-        md:px-10
-        md:py-32
-      "
+      className={config.classes.section}
     >
-      {/* TOP TRANSITION */}
-      <div className="pointer-events-none absolute left-0 top-0 h-[140px] w-full bg-gradient-to-b from-[#2D3C68]/14 via-[#2D3C68]/05 to-transparent" />
 
-      {/* SUBTLE TEXTURE */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.03] mix-blend-multiply bg-[radial-gradient(circle_at_center,#2D3C68_0%,transparent_62%)]" />
+      {/* atmospheric bridge — top */}
 
-      <div className="relative mx-auto max-w-6xl text-center">
-        {/* LABEL */}
-        <div className="mb-5 text-[10px] uppercase tracking-[0.38em] text-[#2D3C68]/58">
-          Experience
+      <div className={config.classes.topBridge} />
+
+      {/* radial texture */}
+
+      <div className={config.classes.radialTexture} />
+
+      {/* TEXT BLOCK */}
+
+      <div className={config.classes.textWrapper}>
+
+        {/* label */}
+
+        <div className={config.classes.label}>
+          {config.text.label}
         </div>
 
-        {/* HEADLINE */}
+        {/* headline */}
+
         <h2
           ref={headlineRef}
-          className="
-            mx-auto
-            max-w-[620px]
-            font-[Gambarino]
-            text-[40px]
-            leading-[1.04]
-            tracking-[-0.03em]
-            text-[#2D3C68]
-            sm:text-[46px]
-            md:text-[68px]
-          "
+          className={config.classes.headline}
         >
           <span className="line block">
-            A way of living
+            {config.text.headlineLine1}
           </span>
 
           <span className="line block">
-          at open water
+            {config.text.headlineLine2}
           </span>
         </h2>
 
-        {/* DESCRIPTION */}
+        {/* description */}
+
         <p
           ref={descRef}
-          className="
-            mx-auto
-            mt-5
-            max-w-[520px]
-            text-[14px]
-            leading-[1.72]
-            text-[#2D3C68]/72
-            md:mt-6
-            md:text-[15px]
-          "
+          className={config.classes.description}
         >
-          Six in the morning, someone is already in the water. By afternoon, the anchor is down somewhere the crew knows well. By day three, the only schedule is the tide
+          {config.text.description}
         </p>
 
-     
-
-        {/* MAIN IMAGE */}
-        <div className="mx-auto mt-14 max-w-[340px] sm:mt-16 sm:max-w-[360px] md:mt-20 md:max-w-[390px]">
-          <div
-            ref={imageRef}
-            className="
-              relative
-              aspect-[4/5]
-              overflow-hidden
-              shadow-[0_18px_44px_rgba(45,60,104,0.08)]
-            "
-          >
-            <Image
-              src="https://res.cloudinary.com/dombq6plz/image/upload/v1778509540/ChatGPT_Image_May_11_2026_09_24_55_PM_1_bc9y57.png"
-              alt="Life on board Serenity yacht"
-              fill
-              priority
-              className="object-cover transition-transform duration-[1800ms] hover:scale-[1.03]"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2D3C68]/12 to-transparent" />
-          </div>
-        </div>
       </div>
 
-      {/* LEFT IMAGE */}
-      <div
-        ref={leftImgRef}
-        className="
-          pointer-events-none
-          absolute
-          left-[6%]
-          top-[42%]
-          hidden
-          w-[250px]
-          xl:block
-        "
-      >
+      {/* MOBILE IMAGE */}
+
+      <div className={config.classes.mobileWrapper}>
+
         <div
-          className="
-            relative
-            aspect-[4/5]
-            overflow-hidden
-            shadow-[0_18px_40px_rgba(45,60,104,0.08)]
-          "
+          ref={mobileImgRef}
+          className={config.classes.mobileImage}
         >
+
           <Image
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068973/49_ph3xr3.webp"
-            alt="Open sea moment"
+            src={config.images.center}
+            alt="Life on board Serenity"
             fill
-            className="object-cover"
+            priority
+            className={config.classes.image}
           />
+
+          <div className={config.classes.overlayMobile} />
+
         </div>
+
       </div>
 
-      {/* RIGHT IMAGE */}
+      {/* DESKTOP GRID */}
+
       <div
-        ref={rightImgRef}
-        className="
-          pointer-events-none
-          absolute
-          right-[5%]
-          top-[38%]
-          hidden
-          w-[270px]
-          xl:block
-        "
+        ref={gridRef}
+        className={config.classes.desktopGrid}
       >
+
+        {/* LEFT */}
+
         <div
-          className="
-            relative
-            aspect-[4/5]
-            overflow-hidden
-            shadow-[0_18px_40px_rgba(45,60,104,0.08)]
-          "
+          ref={imgLeftRef}
+          className={config.classes.sideImage}
         >
+
           <Image
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068967/40_oxbvdi.webp"
-            alt="Interior space on board"
+            src={config.images.left}
+            alt="Open sea moment on board Serenity"
             fill
-            className="object-cover"
+            className={config.classes.image}
           />
+
+          <div className={config.classes.overlayLeft} />
+
         </div>
+
+        {/* CENTER */}
+
+        <div
+          ref={imgCtrRef}
+          className={config.classes.centerImage}
+        >
+
+          <Image
+            src={config.images.center}
+            alt="Life on board Serenity"
+            fill
+            priority
+            className={config.classes.image}
+          />
+
+          <div className={config.classes.overlayCenter} />
+
+        </div>
+
+        {/* RIGHT */}
+
+        <div
+          ref={imgRightRef}
+          className={config.classes.sideImage}
+        >
+
+          <Image
+            src={config.images.right}
+            alt="Interior space on board Serenity"
+            fill
+            className={config.classes.image}
+          />
+
+          <div className={config.classes.overlayLeft} />
+
+        </div>
+
       </div>
 
-      {/* LOWER RIGHT IMAGE */}
-      <div
-        ref={bottomImgRef}
-        className="
-          pointer-events-none
-          absolute
-          bottom-[2%]
-          right-[16%]
-          hidden
-          w-[220px]
-          xl:block
-        "
-      >
-        <div
-          className="
-            relative
-            aspect-[4/5]
-            overflow-hidden
-            shadow-[0_18px_40px_rgba(45,60,104,0.08)]
-          "
-        >
-          <Image
-            src="https://res.cloudinary.com/dombq6plz/image/upload/v1776068965/37_rlznw3.webp"
-            alt="Ocean environment"
-            fill
-            className="object-cover"
-          />
-        </div>
-      </div>
+      {/* atmospheric bridge — bottom */}
+
+      <div className={config.classes.bottomBridge} />
+
     </section>
   );
 }
