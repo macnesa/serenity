@@ -46,384 +46,91 @@ export default function Page() {
 }
 
 function Hero() {
-  const containerRef = useRef(null);
-
-  const rafRef = useRef(null);
-  const observerRef = useRef(null);
-  const mountedRef = useRef(false);
-
-  const stateRef = useRef({
-    autoProgress: 0,
-    lastTime: null,
-
-    userHasScrolled: false,
-
-    scrollCurrent: 0,
-    scrollTarget: 0,
-
-    transitionMix: 0,
-    visualCurrent: 0,
-
-    // NEW
-    idleDrift: 0,
-    widthMultiplier: 0.0038,
-    introPhase: 0,
-    introComplete: false,
-  });
-
-  useEffect(() => {
-    if (mountedRef.current) return;
-    mountedRef.current = true;
-
-    const node = containerRef.current;
-
-    if (!node) return;
-
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (reduceMotion) {
-      node.style.setProperty("--shift", "0.24");
-
-      return () => {
-        mountedRef.current = false;
-      };
-    }
-
-    const s = stateRef.current;
-
-    // ─────────────────────────────────────
-    // Cache mobile multiplier
-    // ─────────────────────────────────────
-    const setMultiplier = () => {
-      s.widthMultiplier =
-        window.innerWidth < 768
-          ? 0.00185
-          : 0.0036;
-    };
-
-    setMultiplier();
-
-    window.addEventListener(
-      "resize",
-      setMultiplier
-    );
-
-    let isVisible = true;
-
-    // ─────────────────────────────────────
-    // Visibility
-    // ─────────────────────────────────────
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        isVisible =
-          entry.intersectionRatio > 0.08;
-      },
-      {
-        threshold: [0, 0.08],
-      }
-    );
-
-    observerRef.current.observe(node);
-
-    // ─────────────────────────────────────
-    // Scroll Tracking
-    // ─────────────────────────────────────
-    const handleScroll = () => {
-      const y = window.scrollY || 0;
-
-      if (!s.userHasScrolled && y > 8) {
-        s.userHasScrolled = true;
-      }
-
-      s.scrollTarget = y;
-    };
-
-    // Initial value
-    handleScroll();
-
-    // ─────────────────────────────────────
-    // RAF LOOP
-    // ─────────────────────────────────────
-    const loop = (timestamp) => {
-      rafRef.current =
-        requestAnimationFrame(loop);
-
-      if (!isVisible || !containerRef.current)
-        return;
-
-      // ─────────────────────────────────
-      // Delta
-      // ─────────────────────────────────
-      const delta =
-        s.lastTime !== null
-          ? Math.min(
-              timestamp - s.lastTime,
-              100
-            )
-          : 16.67;
-
-      s.lastTime = timestamp;
-
-      const dt = delta / 1000;
-
-      // ─────────────────────────────────
-      // Intro arrival
-      // Smooth atmospheric settling
-      // ─────────────────────────────────
-      if (!s.introComplete) {
-        s.introPhase += dt * 0.38;
-
-        if (s.introPhase >= 1) {
-          s.introPhase = 1;
-          s.introComplete = true;
-        }
-      }
-
-      const introEase =
-        1 -
-        Math.pow(
-          1 - s.introPhase,
-          3
-        );
-
-      // ─────────────────────────────────
-      // Ambient tide
-      // FIX:
-      // Full oscillation
-      // Slower
-      // Less mechanical
-      // ─────────────────────────────────
-      s.autoProgress += delta / 9400;
-
-      const autoShift =
-        Math.sin(
-          s.autoProgress * Math.PI * 2
-        ) *
-          0.5 +
-        0.5;
-
-      // ─────────────────────────────────
-      // Tiny natural drift
-      // Prevents robotic sync
-      // ─────────────────────────────────
-      s.idleDrift += dt * 0.11;
-
-      const drift =
-        Math.sin(s.idleDrift * 1.7) *
-        0.018;
-
-      // ─────────────────────────────────
-      // Scroll smoothing
-      // ─────────────────────────────────
-      const scrollLerp =
-        1 - Math.exp(-3.4 * dt);
-
-      s.scrollCurrent +=
-        (s.scrollTarget -
-          s.scrollCurrent) *
-        scrollLerp;
-
-      // ─────────────────────────────────
-      // Non-linear scroll mapping
-      // More cinematic
-      // ─────────────────────────────────
-      const normalizedScroll =
-        Math.min(
-          s.scrollCurrent *
-            s.widthMultiplier,
-          1
-        );
-
-      const scrollShift =
-        1 -
-        Math.pow(
-          1 - normalizedScroll,
-          2.2
-        );
-
-      // ─────────────────────────────────
-      // Auto <-> Scroll blend
-      // FIX:
-      // not permanently killed
-      // ─────────────────────────────────
-      const mixTarget = Math.min(
-        s.scrollCurrent / 220,
-        1
-      );
-
-      const mixLerp =
-        1 - Math.exp(-4.2 * dt);
-
-      s.transitionMix +=
-        (mixTarget -
-          s.transitionMix) *
-        mixLerp;
-
-      // ─────────────────────────────────
-      // Final target
-      // ─────────────────────────────────
-      let targetShift =
-        autoShift *
-          (1 - s.transitionMix) +
-        scrollShift *
-          s.transitionMix;
-
-      // Tiny imperfection
-      targetShift += drift;
-
-      // Intro settling
-      targetShift *=
-        0.82 + introEase * 0.18;
-
-      if (!Number.isFinite(targetShift)) {
-        targetShift = 0;
-      }
-
-      targetShift = Math.max(
-        0,
-        Math.min(1, targetShift)
-      );
-
-      // ─────────────────────────────────
-      // Inertia
-      // Slightly slower
-      // more liquid
-      // ─────────────────────────────────
-      const inertiaLerp =
-        1 - Math.exp(-1.85 * dt);
-
-      s.visualCurrent +=
-        (targetShift -
-          s.visualCurrent) *
-        inertiaLerp;
-
-      // ─────────────────────────────────
-      // Paint guard
-      // Prevent needless repaint spam
-      // ─────────────────────────────────
-      const rounded =
-        s.visualCurrent.toFixed(4);
-
-      if (
-        node.style.getPropertyValue(
-          "--shift"
-        ) !== rounded
-      ) {
-        node.style.setProperty(
-          "--shift",
-          rounded
-        );
-      }
-    };
-
-    window.addEventListener(
-      "scroll",
-      handleScroll,
-      {
-        passive: true,
-      }
-    );
-
-    rafRef.current =
-      requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll
-      );
-
-      window.removeEventListener(
-        "resize",
-        setMultiplier
-      );
-
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(
-          rafRef.current
-        );
-
-        rafRef.current = null;
-      }
-
-      if (observerRef.current && node) {
-        observerRef.current.unobserve(
-          node
-        );
-
-        observerRef.current.disconnect();
-
-        observerRef.current = null;
-      }
-
-      mountedRef.current = false;
-    };
-  }, []);
-
-  // ─────────────────────────────────────────
-  // Panels
-  // Slight asymmetry retained
-  // ─────────────────────────────────────────
   const panels = [
     {
-      angle: 118,
-      radial: "26%",
-      warmOpacity: 0.90,
-      depth: 0.22,
-      offset: 0.98,
+      angle: "118deg",
+      radialX: "26%",
+      radialY: "42%",
+      imageOpacity: 0.76,
+      warmOpacity: 0.28,
+      brassOpacity: 0.08,
+      duration: "14s",
+      brassDuration: "15.2s",
+      delay: "0s",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1776869680/ChatGPT_Image_Apr_22_2026_08_27_54_PM_n8evgp.png",
+      alt: "Guests returning from the water onto the teak deck of Serenity",
+      objectPosition: "62% center",
     },
     {
-      angle: 198,
-      radial: "74%",
-      warmOpacity: 0.84,
-      depth: 0.28,
-      offset: 0.94,
+      angle: "198deg",
+      radialX: "74%",
+      radialY: "42%",
+      imageOpacity: 0.7,
+      warmOpacity: 0.26,
+      brassOpacity: 0.075,
+      duration: "15.5s",
+      brassDuration: "16.8s",
+      delay: "1.3s",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1778922404/ChatGPT_Image_May_16_2026_04_05_14_PM_liebfi.png",
+      alt: "Serenity phinisi moving through Indonesian waters",
+      objectPosition: "center center",
     },
     {
-      angle: 302,
-      radial: "36%",
-      warmOpacity: 0.95,
-      depth: 0.24,
-      offset: 1.04,
+      angle: "302deg",
+      radialX: "36%",
+      radialY: "42%",
+      imageOpacity: 0.72,
+      warmOpacity: 0.3,
+      brassOpacity: 0.085,
+      duration: "14.8s",
+      brassDuration: "16s",
+      delay: "2.6s",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1778922405/ChatGPT_Image_May_16_2026_03_49_22_PM_cyflb6.png",
+      alt: "Warm evening atmosphere aboard Serenity",
+      objectPosition: "center center",
     },
     {
-      angle: 62,
-      radial: "70%",
-      warmOpacity: 1,
-      depth: 0.30,
-      offset: 1.08,
+      angle: "62deg",
+      radialX: "70%",
+      radialY: "42%",
+      imageOpacity: 0.74,
+      warmOpacity: 0.32,
+      brassOpacity: 0.09,
+      duration: "16s",
+      brassDuration: "17.4s",
+      delay: "3.9s",
+      image:
+        "https://res.cloudinary.com/dombq6plz/image/upload/v1778534687/ChatGPT_Image_May_12_2026_04_07_19_AM_lu1htz.png",
+      alt: "Quiet human moment aboard Serenity at sea",
+      objectPosition: "70% center",
     },
   ];
 
   return (
     <section
-      ref={containerRef}
-      style={{
-        "--shift": 0,
-      }}
       className="
         relative
+        isolate
         h-[92vh]
         min-h-[720px]
         overflow-hidden
         bg-[#2D3C68]
       "
     >
-      {/* ─────────────────────────────────────────
-          PANEL FIELD
-      ───────────────────────────────────────── */}
+      {/* ========================================================= */}
+      {/* PANEL FIELD — BLUE DOMINANT, STATIC IMAGES, WARM TIDE LATER */}
+      {/* ========================================================= */}
 
       <div
         className="
           absolute
           inset-0
-
           grid
           grid-cols-2
           grid-rows-2
-
           md:grid-cols-4
           md:grid-rows-1
         "
@@ -434,172 +141,200 @@ function Hero() {
             className="
               relative
               overflow-hidden
+              bg-[#2D3C68]
             "
           >
-            {/* Cool Base */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  linear-gradient(
-                    ${panel.angle}deg,
-                    #2B3B67 0%,
-                    #3A4A75 58%,
-                    #F4F5F2 220%
-                  )
-                `,
-              }}
-            />
-
-            {/* Warm Tide */}
-            <div
-              className="absolute inset-0"
-              style={{
-                opacity: `
-                  calc(
-                    var(--shift) *
-                    ${panel.warmOpacity} *
-                    ${panel.offset}
-                  )
-                `,
-
-                filter: `
-                  blur(
-                    calc(
-                      (1 - var(--shift)) * 2px
-                    )
-                  )
-                `,
-
-                background: `
-                  linear-gradient(
-                    ${panel.angle}deg,
-                    #695547 0%,
-                    #8B6A4F 46%,
-                    #A27B5A 100%
-                  )
-                `,
-              }}
-            />
-
-            {/* Brass Atmosphere */}
-            <div
+            {/* IMAGE */}
+            <Image
+              src={panel.image}
+              alt={panel.alt}
+              fill
+              priority
+              sizes="(min-width: 768px) 25vw, 50vw"
               className="
-                absolute
-                inset-0
-                pointer-events-none
+                h-full
+                w-full
+                object-cover
               "
               style={{
-                opacity: `
-                  calc(
-                    0.34 +
-                    var(--shift) * 0.52
-                  )
-                `,
+                objectPosition: panel.objectPosition,
+                opacity: panel.imageOpacity,
+              }}
+            />
 
+            {/* BLUE IMAGE WASH — DOMINANT LAYER */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+              "
+              style={{
                 background: `
-                  radial-gradient(
-                    circle at ${panel.radial} 42%,
-                    rgba(
-                      176,
-                      141,
-                      87,
-                      calc(
-                        var(--shift) * 0.13
-                      )
-                    ),
-                    transparent 60%
+                  linear-gradient(
+                    ${panel.angle},
+                    rgba(31, 47, 86, 0.86) 0%,
+                    rgba(45, 60, 104, 0.76) 42%,
+                    rgba(58, 74, 117, 0.58) 72%,
+                    rgba(244, 245, 242, 0.045) 180%
                   )
                 `,
               }}
             />
 
-            {/* Atmospheric Depth */}
+            {/* DEEP MARITIME ANCHOR */}
             <div
-              className="absolute inset-0"
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+              "
               style={{
                 background: `
                   linear-gradient(
                     to bottom,
-
-                    rgba(
-                      24,
-                      32,
-                      54,
-                      calc(
-                        ${panel.depth} +
-                        var(--shift) * 0.13
-                      )
-                    ),
-
-                    rgba(
-                      24,
-                      32,
-                      54,
-                      calc(
-                        0.44 +
-                        var(--shift) * 0.17
-                      )
-                    )
+                    rgba(8, 13, 26, 0.18) 0%,
+                    rgba(18, 28, 52, 0.36) 48%,
+                    rgba(8, 13, 26, 0.7) 100%
                   )
                 `,
               }}
             />
 
-            {/* Soft Panel Bleed */}
+            {/* BLUE BREATH — FIRST IMPRESSION */}
             <div
               className="
+                serenity-blue-breath
+                pointer-events-none
                 absolute
-                top-0
+                inset-0
+              "
+              style={{
+                "--duration": panel.duration,
+                "--delay": panel.delay,
+                background: `
+                  radial-gradient(
+                    circle at ${panel.radialX} ${panel.radialY},
+                    rgba(244, 245, 242, 0.08),
+                    transparent 58%
+                  ),
+                  linear-gradient(
+                    ${panel.angle},
+                    rgba(45, 60, 104, 0.3),
+                    rgba(31, 47, 86, 0.14),
+                    transparent
+                  )
+                `,
+              }}
+            />
+
+            {/* WARM TIDE — ARRIVES LATER, NEVER DOMINATES */}
+            <div
+              className="
+                serenity-warm-tide
+                pointer-events-none
+                absolute
+                inset-0
+              "
+              style={{
+                "--duration": panel.duration,
+                "--delay": panel.delay,
+                "--warmOpacity": panel.warmOpacity,
+                background: `
+                  linear-gradient(
+                    ${panel.angle},
+                    rgba(105, 85, 71, 0.54) 0%,
+                    rgba(139, 106, 79, 0.5) 46%,
+                    rgba(162, 123, 90, 0.4) 100%
+                  )
+                `,
+              }}
+            />
+
+            {/* BRASS BREATH — SMALL ACCENT ONLY */}
+            <div
+              className="
+                serenity-brass-breath
+                pointer-events-none
+                absolute
+                inset-0
+              "
+              style={{
+                "--brassDuration": panel.brassDuration,
+                "--delay": panel.delay,
+                "--brassOpacity": panel.brassOpacity,
+                background: `
+                  radial-gradient(
+                    circle at ${panel.radialX} ${panel.radialY},
+                    rgba(176, 141, 87, 0.42),
+                    transparent 62%
+                  )
+                `,
+              }}
+            />
+
+            {/* BOTTOM READABILITY */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-0
+              "
+              style={{
+                background: `
+                  linear-gradient(
+                    to top,
+                    rgba(5, 8, 15, 0.6) 0%,
+                    rgba(5, 8, 15, 0.28) 34%,
+                    transparent 76%
+                  )
+                `,
+              }}
+            />
+
+            {/* PANEL BLEED */}
+            <div
+              className="
+                pointer-events-none
+                absolute
                 right-[-6%]
+                top-0
                 h-full
                 w-[14%]
-                blur-[20px]
-                opacity-[0.05]
-                pointer-events-none
+                opacity-[0.055]
               "
               style={{
                 background: `
                   linear-gradient(
                     to right,
-                    rgba(255,255,255,0),
-                    rgba(255,255,255,0.16),
-                    rgba(255,255,255,0)
+                    rgba(255, 255, 255, 0),
+                    rgba(255, 255, 255, 0.18),
+                    rgba(255, 255, 255, 0)
                   )
                 `,
               }}
             />
 
-            {/* Divider */}
+            {/* DESKTOP DIVIDER */}
             {i !== 3 && (
               <div
                 className="
-                  hidden
-                  md:block
-
+                  pointer-events-none
                   absolute
-                  top-[14%]
                   right-0
-
+                  top-[14%]
+                  hidden
                   h-[72%]
                   w-px
+                  md:block
                 "
                 style={{
-                  opacity:
-                    i === 1
-                      ? 0.05
-                      : 0.09,
-
+                  opacity: i === 1 ? 0.055 : 0.09,
                   background: `
                     linear-gradient(
                       to bottom,
                       transparent,
-                      rgba(
-                        244,
-                        245,
-                        242,
-                        1
-                      ),
+                      rgba(244, 245, 242, 0.92),
                       transparent
                     )
                   `,
@@ -607,32 +342,25 @@ function Hero() {
               />
             )}
 
-            {/* Mobile Horizontal */}
+            {/* MOBILE HORIZONTAL DIVIDER */}
             {i < 2 && (
               <div
                 className="
-                  md:hidden
-
+                  pointer-events-none
                   absolute
                   bottom-0
                   left-[12%]
-
                   h-px
                   w-[76%]
+                  md:hidden
                 "
                 style={{
-                  opacity: 0.07,
-
+                  opacity: 0.075,
                   background: `
                     linear-gradient(
                       to right,
                       transparent,
-                      rgba(
-                        244,
-                        245,
-                        242,
-                        1
-                      ),
+                      rgba(244, 245, 242, 0.88),
                       transparent
                     )
                   `,
@@ -640,32 +368,25 @@ function Hero() {
               />
             )}
 
-            {/* Mobile Vertical */}
+            {/* MOBILE VERTICAL DIVIDER */}
             {i % 2 === 0 && (
               <div
                 className="
-                  md:hidden
-
+                  pointer-events-none
                   absolute
-                  top-[12%]
                   right-0
-
-                  w-px
+                  top-[12%]
                   h-[76%]
+                  w-px
+                  md:hidden
                 "
                 style={{
-                  opacity: 0.07,
-
+                  opacity: 0.075,
                   background: `
                     linear-gradient(
                       to bottom,
                       transparent,
-                      rgba(
-                        244,
-                        245,
-                        242,
-                        1
-                      ),
+                      rgba(244, 245, 242, 0.88),
                       transparent
                     )
                   `,
@@ -676,63 +397,83 @@ function Hero() {
         ))}
       </div>
 
-      {/* Humid atmosphere */}
+      {/* ========================================================= */}
+      {/* GLOBAL ATMOSPHERE */}
+      {/* ========================================================= */}
+
       <div
         className="
+          pointer-events-none
           absolute
           inset-0
-          pointer-events-none
         "
         style={{
           background: `
             radial-gradient(
               ellipse at 52% 8%,
-              rgba(255,255,255,0.06),
+              rgba(255, 255, 255, 0.055),
               transparent 52%
             ),
-
             radial-gradient(
               ellipse at 74% 22%,
-              rgba(
-                176,
-                141,
-                87,
-                calc(var(--shift) * 0.055)
-              ),
-              transparent 44%
+              rgba(45, 60, 104, 0.22),
+              transparent 48%
             )
           `,
         }}
       />
 
-      {/* Warm imperfection */}
+      {/* CENTER READABILITY VEIL */}
       <div
         className="
-          absolute
-          top-[-8%]
-          right-[16%]
-
-          w-[18vw]
-          h-[18vw]
-
-          blur-[80px]
-          opacity-[0.04]
           pointer-events-none
+          absolute
+          inset-0
         "
         style={{
           background:
-            "rgba(176,141,87,0.42)",
+            "radial-gradient(ellipse at center, rgba(6,10,20,0.4), rgba(9,14,25,0.2) 32%, transparent 58%)",
         }}
       />
 
-      {/* Grain */}
+      {/* MOBILE BOTTOM READABILITY VEIL */}
       <div
         className="
-          absolute
-          inset-[-10%]
-          opacity-[0.038]
-          mix-blend-soft-light
           pointer-events-none
+          absolute
+          inset-0
+          md:hidden
+        "
+        style={{
+          background:
+            "linear-gradient(to top, rgba(5,8,15,0.72) 0%, rgba(5,8,15,0.36) 34%, transparent 72%)",
+        }}
+      />
+
+      {/* SUBTLE WARM IMPERFECTION — NOT DOMINANT */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          right-[16%]
+          top-[-8%]
+          h-[18vw]
+          w-[18vw]
+          opacity-[0.024]
+          blur-[80px]
+        "
+        style={{
+          background: "rgba(176, 141, 87, 0.34)",
+        }}
+      />
+
+      {/* GRAIN */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          opacity-[0.032]
         "
         style={{
           backgroundImage:
@@ -740,19 +481,19 @@ function Hero() {
         }}
       />
 
-      {/* Content */}
+      {/* ========================================================= */}
+      {/* CONTENT */}
+      {/* ========================================================= */}
+
       <div
         className="
+          pointer-events-none
           absolute
           inset-0
-
           flex
-          pointer-events-none
-
           items-end
           justify-start
           pb-[10vh]
-
           md:items-center
           md:justify-center
           md:pb-0
@@ -763,31 +504,22 @@ function Hero() {
             w-full
             max-w-[620px]
             px-6
-
             text-left
-
-            md:text-center
             md:mx-auto
+            md:text-center
           "
         >
           <p
             className="
               mb-4
               uppercase
-
               md:mb-5
             "
             style={{
-              fontFamily:
-                "Switzer, sans-serif",
-
+              fontFamily: "Switzer, sans-serif",
               fontSize: "11px",
-
               letterSpacing: "0.28em",
-
-              color:
-                "rgba(244,245,242,0.44)",
-
+              color: "rgba(244,245,242,0.5)",
               fontWeight: 400,
             }}
           >
@@ -797,25 +529,12 @@ function Hero() {
           <h1
             className="text-[#F4F5F2]"
             style={{
-              fontFamily:
-                "Gambarino, serif",
-
-              fontSize:
-                "clamp(36px, 6vw, 68px)",
-
+              fontFamily: "Gambarino, serif",
+              fontSize: "clamp(40px, 6.4vw, 76px)",
               lineHeight: 1.02,
-
-              letterSpacing:
-                "-0.035em",
-
+              letterSpacing: "-0.035em",
               fontWeight: 400,
-
-              opacity: `
-                calc(
-                  0.89 +
-                  var(--shift) * 0.05
-                )
-              `,
+              textShadow: "0 18px 54px rgba(5,8,15,0.4)",
             }}
           >
             No schedules.
@@ -827,51 +546,176 @@ function Hero() {
             className="
               mt-4
               max-w-[420px]
-
+              md:mx-auto
               md:mt-5
               md:max-w-[480px]
-              md:mx-auto
             "
             style={{
-              fontFamily:
-                "Switzer, sans-serif",
-
+              fontFamily: "Switzer, sans-serif",
               fontSize: "14px",
-
               lineHeight: 1.9,
-
-              color:
-                "rgba(244,245,242,0.64)",
-
+              color: "rgba(244,245,242,0.68)",
               fontWeight: 300,
+              textShadow: "0 12px 34px rgba(5,8,15,0.32)",
             }}
           >
-            Some mornings begin in the water.
-            Others stay slow from the start,
+            Some mornings begin in the water. Others stay slow from the start,
             with nowhere particular to be.
           </p>
         </div>
       </div>
 
-      {/* Atmospheric Exit */}
+      {/* ========================================================= */}
+      {/* ATMOSPHERIC EXIT */}
+      {/* ========================================================= */}
+
       <div
         aria-hidden="true"
         className="
+          pointer-events-none
           absolute
           bottom-0
           left-0
           right-0
-          pointer-events-none
-          h-[140px]
+          h-[150px]
         "
         style={{
           background: `
             linear-gradient(
               to bottom,
               transparent,
-              rgba(244,245,242,0.04) 58%,
-              rgba(244,245,242,0.16) 100%
+              rgba(244,245,242,0.045) 58%,
+              rgba(244,245,242,0.17) 100%
             )
+          `,
+        }}
+      />
+
+      {/* ========================================================= */}
+      {/* KEYFRAMES — BLUE FIRST, THEN WARM, LOOP BACK TO BLUE */}
+      {/* ========================================================= */}
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .serenity-blue-breath {
+              opacity: 0.22;
+              animation-name: serenityBlueBreath;
+              animation-duration: var(--duration);
+              animation-delay: var(--delay);
+              animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+              animation-iteration-count: infinite;
+              animation-direction: normal;
+              will-change: opacity;
+            }
+
+            .serenity-warm-tide {
+              opacity: 0;
+              animation-name: serenityWarmTideBlueFirst;
+              animation-duration: var(--duration);
+              animation-delay: var(--delay);
+              animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+              animation-iteration-count: infinite;
+              animation-direction: normal;
+              will-change: opacity;
+            }
+
+            .serenity-brass-breath {
+              opacity: 0;
+              animation-name: serenityBrassBreathBlueFirst;
+              animation-duration: var(--brassDuration);
+              animation-delay: var(--delay);
+              animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+              animation-iteration-count: infinite;
+              animation-direction: normal;
+              will-change: opacity;
+            }
+
+            @keyframes serenityBlueBreath {
+              0% {
+                opacity: 0.24;
+              }
+
+              34% {
+                opacity: 0.22;
+              }
+
+              58% {
+                opacity: 0.14;
+              }
+
+              78% {
+                opacity: 0.1;
+              }
+
+              100% {
+                opacity: 0.24;
+              }
+            }
+
+            @keyframes serenityWarmTideBlueFirst {
+              0% {
+                opacity: 0;
+              }
+
+              38% {
+                opacity: 0;
+              }
+
+              60% {
+                opacity: calc(var(--warmOpacity) * 0.42);
+              }
+
+              78% {
+                opacity: var(--warmOpacity);
+              }
+
+              100% {
+                opacity: 0;
+              }
+            }
+
+            @keyframes serenityBrassBreathBlueFirst {
+              0% {
+                opacity: 0;
+              }
+
+              44% {
+                opacity: 0;
+              }
+
+              66% {
+                opacity: calc(var(--brassOpacity) * 0.5);
+              }
+
+              82% {
+                opacity: var(--brassOpacity);
+              }
+
+              100% {
+                opacity: 0;
+              }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+              .serenity-blue-breath,
+              .serenity-warm-tide,
+              .serenity-brass-breath {
+                animation: none;
+              }
+
+              .serenity-blue-breath {
+                opacity: 0.22;
+              }
+
+              .serenity-warm-tide {
+                opacity: 0.07;
+              }
+
+              .serenity-brass-breath {
+                opacity: 0.035;
+              }
+            }
           `,
         }}
       />
