@@ -76,7 +76,7 @@ function Hero() {
     */
 
       // https://www.pexels.com/download/video/29525835/
-    src: "https://res.cloudinary.com/dombq6plz/video/upload/v1779878587/taaser_jyqk2t.mp4",
+    src: "https://www.pexels.com/download/video/29525835/",
   };
 
   const ease = [0.22, 1, 0.36, 1];
