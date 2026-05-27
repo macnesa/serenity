@@ -22,7 +22,7 @@ export default function Page() {
       <DeckAndSpecs/>
       {/* <Closing/> */}
       {/* <Gallery/> */}
-      <Reservation/>
+      {/* <Reservation/> */}
       <Footer/>
     </main>
   )

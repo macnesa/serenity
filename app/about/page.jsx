@@ -20,7 +20,7 @@ export default function Page() {
       <PhinisiHistory/>
       <TheCrew/>
       {/* <Testimonial/> */}
-      <Conversion/>
+      {/* <Conversion/> */}
       {/* <AboutOrigin/> */}
       {/* <Philosophy/>  */}
       {/* <AboutCrew/> */}

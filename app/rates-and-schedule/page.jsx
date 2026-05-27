@@ -25,7 +25,7 @@ export default function Page() {
        {/* <CharterRates/> */}
        {/* <Schedule/> */}
        {/* <InclusionsExclusions/> */}
-       <FinalCTA/>
+       {/* <FinalCTA/> */}
       <Footer/> 
     </main>
   )

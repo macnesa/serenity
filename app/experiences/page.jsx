@@ -36,7 +36,7 @@ export default function Page() {
       {/* <WhatsIncluded/> */}
       {/* <RatesBridge/> */}
       {/* <SocialExperience/> */}
-      <FinalClosing/>
+      {/* <FinalClosing/> */}
       {/* <ExperiencesIntro/> */}
       {/* <ExperienceModes/> */}
       {/* <Culinary/> */}
