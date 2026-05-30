@@ -3,6 +3,7 @@
 import {
   createContext,
   forwardRef,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
@@ -350,12 +351,12 @@ function parseInternalTarget(href) {
   }
 }
 
-export function PageTransitionProvider({ children }) {
+function PageTransitionProviderInner({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const reduceMotionPreference = useReducedMotion();
-  const reduceMotion = Boolean(reduceMotionPreference);
+  const reduceMotion = Boolean(reduceMotionPreference); 
 
   const searchString = searchParams?.toString() || "";
   const normalizedPathname = normalizePathname(pathname || "/");
@@ -827,6 +828,14 @@ export function PageTransitionProvider({ children }) {
         onRevealComplete={handleRevealComplete}
       />
     </PageTransitionContext.Provider>
+  );
+}
+
+export function PageTransitionProvider({ children }) {
+  return (
+    <Suspense fallback={null}>
+      <PageTransitionProviderInner>{children}</PageTransitionProviderInner>
+    </Suspense>
   );
 }
 
